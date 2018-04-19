@@ -10,6 +10,8 @@ import custom_feature_calculating.EWMA as featureLibEWMA
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+import pandas as pd
+import numpy as np
 
 # data collecting
 # or extract from db
@@ -77,6 +79,9 @@ print("Mean squared error: %.2f"
 print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
 df_now = ts.get_realtime_quotes(tick_code)
+# df_now = pd.DataFrame(np.array(0).reshape(1, 1))
+
+df_now['open'] = df['close'].tail(1).values
 df_now['ma5'] = df['ma5'].tail(1).values
 df_now['ma10'] = df['ma10'].tail(1).values
 df_now['ma20'] = df['ma20'].tail(1).values
@@ -88,10 +93,10 @@ df_now['ewma'] = df['ewma'].tail(1).values
 df_now['fi'] = df['fi'].tail(1).values
 
 df_x_toady = df_now[feature].values
-
-print('开盘价格:%s' % df_now[['open']].values)
+# print('开盘价格:%s' % df_now[['open']].values)
+print('昨日收盘价格:%s' % df_now[['open']].values)
 df_y_toady_pred = reg.predict(df_x_toady);
-print('预测价格:%s' % df_y_toady_pred)
+print('预测收盘价格:%s' % df_y_toady_pred)
 
 # Plot outputs
 plt.scatter(df_x_test[:, 0], df_y_test, color='black')
