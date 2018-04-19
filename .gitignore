@@ -18,3 +18,5 @@ debug_coverage*/**
 analysis/**
 bin/**
 obj/**
+.vscode/launch.json
+.vscode/settings.json
