@@ -15,15 +15,14 @@ import numpy as np
 
 # data collecting
 # or extract from db
-tick_code = '600179'
+tick_code = '002266'
 df = ts.get_hist_data(tick_code)  # 一次性获取上证数据
 df = df.sort_index()
 
 #获取上证指数
-tick_code = 'sh'
-df_sh = ts.get_hist_data(tick_code)  # 一次性获取上证数据
+df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
 #填充上证指数到训练集
-df['open_sh'] = df_sh['open']
+df['rt_sh'] = df_sh['close']
 
 n = 5
 # add feature to df
@@ -37,7 +36,7 @@ df = df.dropna()
 # print test
 print(df.tail(1))
 
-feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','open_sh']
+feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','rt_sh','turnover']
 # ^^^^^^^ need more features
 
 count = len(df.index)
@@ -84,6 +83,8 @@ print("Mean squared error: %.2f"
 # r2_score - sklearn评分方法
 print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
+df_sh = ts.get_k_data('sh')  # 一次性获取上证数据
+
 df_now = ts.get_realtime_quotes(tick_code)
 # df_now = pd.DataFrame(np.array(0).reshape(1, 1))
 
@@ -97,8 +98,8 @@ df_now['cci'] = df['cci'].tail(1).values
 df_now['evm'] = df['evm'].tail(1).values
 df_now['ewma'] = df['ewma'].tail(1).values
 df_now['fi'] = df['fi'].tail(1).values
-df_now['open_sh'] = df['open_sh'].tail(1).values
-
+df_now['rt_sh'] = df['rt_sh'].tail(1).values
+df_now['turnover'] = df['turnover'].tail(1).values
 df_x_toady = df_now[feature].values
 # print('开盘价格:%s' % df_now[['open']].values)
 print('昨日收盘价格:%s' % df_now[['open']].values)

@@ -19,7 +19,7 @@ from datetime import datetime
 
 # data collecting
 # or extract from db
-tick_code = '600179'
+tick_code = '601211'
 
 def predict():
     param = {
@@ -40,7 +40,7 @@ def predict():
     }
     df_sh = get_price_data(param_sh)
     #填充上证指数到训练集
-    df['open_sh'] = df_sh['Open']
+    df['rt_sh'] = df_sh['Close']
 
     n = 10
     # add feature to df
@@ -58,7 +58,7 @@ def predict():
     # print last data
     #print(df)
 
-    feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc','open_sh']
+    feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc','rt_sh']
     # ^^^^^^^ need more features
 
     count = len(df.index)
@@ -107,7 +107,7 @@ def predict():
     #print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
 
     # r2_score - sklearn评分方法
-    print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
+    #print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
     reg.fit(df_x_all, df_y_all)
 
