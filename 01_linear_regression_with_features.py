@@ -19,6 +19,12 @@ tick_code = '600179'
 df = ts.get_hist_data(tick_code)  # 一次性获取上证数据
 df = df.sort_index()
 
+#获取上证指数
+tick_code = 'sh'
+df_sh = ts.get_hist_data(tick_code)  # 一次性获取上证数据
+#填充上证指数到训练集
+df['open_sh'] = df_sh['open']
+
 n = 5
 # add feature to df
 df = featureLibBB.BBANDS(df, n)
@@ -31,7 +37,7 @@ df = df.dropna()
 # print test
 print(df.tail(1))
 
-feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi']
+feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','open_sh']
 # ^^^^^^^ need more features
 
 count = len(df.index)
@@ -91,6 +97,7 @@ df_now['cci'] = df['cci'].tail(1).values
 df_now['evm'] = df['evm'].tail(1).values
 df_now['ewma'] = df['ewma'].tail(1).values
 df_now['fi'] = df['fi'].tail(1).values
+df_now['open_sh'] = df['open_sh'].tail(1).values
 
 df_x_toady = df_now[feature].values
 # print('开盘价格:%s' % df_now[['open']].values)

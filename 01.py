@@ -37,5 +37,12 @@ quote_ctx.get_stock_quote('600179')
 #df = ts.get_h_data('600000',start='2017-01-05',end='2017-01-09')
 #print(df)
 
-df_now = ts.get_realtime_quotes('600000')
-print(df_now)
+#df_now = ts.get_realtime_quotes('600000')
+#print(df_now)
+
+#获取上证指数k线数据
+#df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
+df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='5min', start_date='2017-01-18', end_date='2017-02-18')
+#df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
+print(df_sh)
+

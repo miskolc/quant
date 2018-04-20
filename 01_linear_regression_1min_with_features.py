@@ -32,6 +32,16 @@ def predict():
     #rename cloumns to lowercase
     df = df.rename(columns={"Open": "open", "High": "high","Low":"low", "Close":"close", "Volume":"volume"})
 
+    #获取上证指数
+    param_sh = {
+        'q': '000001', # Stock symbol (ex: "AAPL")
+        'i': "60", # Interval size in seconds ("86400" = 1 day intervals)
+        'p': "%sY" % '5' # Period (Ex: "1Y" = 1 year)
+    }
+    df_sh = get_price_data(param_sh)
+    #填充上证指数到训练集
+    df['open_sh'] = df_sh['Open']
+
     n = 10
     # add feature to df
     df = featureLibBB.BBANDS(df, n)
@@ -48,7 +58,7 @@ def predict():
     # print last data
     #print(df)
 
-    feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc']
+    feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc','open_sh']
     # ^^^^^^^ need more features
 
     count = len(df.index)
@@ -97,7 +107,7 @@ def predict():
     #print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
 
     # r2_score - sklearn评分方法
-    #print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
+    print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
     reg.fit(df_x_all, df_y_all)
 
