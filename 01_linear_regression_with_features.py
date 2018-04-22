@@ -10,103 +10,80 @@ import custom_feature_calculating.EWMA as featureLibEWMA
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-import pandas as pd
-import numpy as np
-
-# data collecting
-# or extract from db
-tick_code = '002266'
-df = ts.get_hist_data(tick_code)  # 一次性获取上证数据
-df = df.sort_index()
-
-#获取上证指数
-df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
-#填充上证指数到训练集
-df['rt_sh'] = df_sh['close']
-
-n = 5
-# add feature to df
-df = featureLibBB.BBANDS(df, n)
-df = featureLibCCI.CCI(df, n)
-df = featureLibFI.ForceIndex(df, n)
-df = featureLibEVM.EVM(df, n)
-df = featureLibEWMA.EWMA(df, n)
-df = df.dropna()
-
-# print test
-print(df.tail(1))
-
-feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','rt_sh','turnover']
-# ^^^^^^^ need more features
-
-count = len(df.index)
-# traning
-train_count = int(len(df.index) * 0.7)
-# testing
-test_count = int(len(df.index) * 0.3)
-
-# cross validation miss
-# !!!!!!!!!!!!!!!!!!
+from sklearn.model_selection import train_test_split
 
 
-### !!!!!IMPROVEMENT
+def predict(code='600179', show_plot=False):
+    df = ts.get_hist_data(code)  # 一次性获取上证数据
+    df = df.sort_index()
 
-# get x traning custome features head n rows
-df_x_train = df[feature].head(train_count).values
+    # 获取上证指数
+    df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
+    # 填充上证指数到训练集
+    df['rt_sh'] = df_sh['close']
 
-# get traning close price head n rows
-df_y_train = df['close'].head(train_count).values
+    n = 5
+    # add feature to df
+    df = featureLibBB.BBANDS(df, n)
+    df = featureLibCCI.CCI(df, n)
+    df = featureLibFI.ForceIndex(df, n)
+    df = featureLibEVM.EVM(df, n)
+    df = featureLibEWMA.EWMA(df, n)
+    df = df.dropna()
+    # Normalization
+    df_norm = (df - df.mean()) / (df.max() - df.min())
+    # print test
+    # print(df.tail(1))
 
-# get x testing custome feature tail n rows
-df_x_test = df[feature].tail(test_count).values
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
 
-# get y tesing custome close price n rows
-df_y_test = df['close'].tail(test_count).values
+    # ^^^^^^^ need more features
 
-# choose linear regression model
-reg = linear_model.LinearRegression()
+    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
-# fit model with data(training)
-reg.fit(df_x_train, df_y_train)
+    # choose linear regression model
+    reg = linear_model.LinearRegression()
 
-# test predict
-df_y_test_pred = reg.predict(df_x_test)
+    # fit model with data(training)
+    reg.fit(df_x_train, df_y_train)
 
-# The Coefficients (系数 auto gen)
-print('Coefficients: \n', reg.coef_)
-# The Intercept(截距/干扰/噪声 auto gen)
-print('Intercept: \n', reg.intercept_)
-# The mean squared error(均方误差)
-print("Mean squared error: %.2f"
-      % mean_squared_error(df_y_test, df_y_test_pred))
+    # test predict
+    df_y_test_pred = reg.predict(df_x_test)
 
-# r2_score - sklearn评分方法
-print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
+    # The Coefficients (系数 auto gen)
+    print('Coefficients: \n', reg.coef_)
+    # The Intercept(截距/干扰/噪声 auto gen)
+    print('Intercept: \n', reg.intercept_)
+    # The mean squared error(均方误差)
+    print("Mean squared error: %.2f"
+          % mean_squared_error(df_y_test, df_y_test_pred))
 
-df_sh = ts.get_k_data('sh')  # 一次性获取上证数据
+    # r2_score - sklearn评分方法
+    print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
-df_now = ts.get_realtime_quotes(tick_code)
-# df_now = pd.DataFrame(np.array(0).reshape(1, 1))
+    reg.fit(df[feature], df['close'])
 
-df_now['open'] = df['close'].tail(1).values
-df_now['ma5'] = df['ma5'].tail(1).values
-df_now['ma10'] = df['ma10'].tail(1).values
-df_now['ma20'] = df['ma20'].tail(1).values
-df_now['ubb'] = df['ubb'].tail(1).values
-df_now['lbb'] = df['lbb'].tail(1).values
-df_now['cci'] = df['cci'].tail(1).values
-df_now['evm'] = df['evm'].tail(1).values
-df_now['ewma'] = df['ewma'].tail(1).values
-df_now['fi'] = df['fi'].tail(1).values
-df_now['rt_sh'] = df['rt_sh'].tail(1).values
-df_now['turnover'] = df['turnover'].tail(1).values
-df_x_toady = df_now[feature].values
-# print('开盘价格:%s' % df_now[['open']].values)
-print('昨日收盘价格:%s' % df_now[['open']].values)
-df_y_toady_pred = reg.predict(df_x_toady);
-print('预测收盘价格:%s' % df_y_toady_pred)
+    df_now = df.tail(1)
+    df_now['open'] = df_now['close']
 
-# Plot outputs
-plt.scatter(df_x_test[:, 0], df_y_test, color='black')
-plt.plot(df_x_test[:, 0], df_y_test_pred, color='blue', linewidth=3)
-plt.show()
+    df_x_toady = df_now[feature].values
+
+    print('昨日收盘价格:%s' % df_now[['open']].values)
+    df_y_toady_pred = reg.predict(df_x_toady);
+    print('预测收盘价格:%s' % df_y_toady_pred)
+
+    # Plot outputs
+
+    if show_plot:
+        plt.scatter(df_x_test['open'], df_y_test, color='black')
+        plt.plot(df_x_test['open'], df_y_test_pred, color='blue', linewidth=3)
+        plt.show()
+
+
+if __name__ == "__main__":
+      code = input("Enter the code: ")
+      # code is null
+      if not code.strip():
+            predict()
+      else:
+            predict(code)

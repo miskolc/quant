@@ -42,7 +42,16 @@ quote_ctx.get_stock_quote('600179')
 
 #获取上证指数k线数据
 #df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
-df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='5min', start_date='2017-01-18', end_date='2017-02-18')
+#df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='5min', start_date='2017-01-18', end_date='2017-02-18')
 #df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
-print(df_sh)
 
+
+#df_sh = ts.get_k_data('sh')
+#000001
+#df_sh=ts.bar(conn=ts.get_apis(), code='000001.sh',freq='1min', start_date='2018-01-18', end_date='2018-02-18')
+#print(df_sh.tail(1))
+
+df_sh=ts.bar(conn=ts.get_apis(), code='000001',asset='INDEX',freq='1min', start_date='2016-01-01', end_date='2018-04-20')
+#engine = create_engine('mysql://root:root@localhost/quantitative?charset=utf8')
+#df_sh.to_sql('tick_data_1',engine,if_exists='append')
+print(df_sh.tail(1))
