@@ -56,9 +56,9 @@ def predict():
     df = df.dropna()
 
     df_norm = (df - df.mean()) / (df.max() - df.min())
-    #df.to_csv("result.csv")
+    df.to_csv("result.csv")
     # print last data
-    print(df.tail(1))
+    #print(df.tail(1))
 
     feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc','rt_sh']
     # ^^^^^^^ need more features
