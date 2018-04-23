@@ -9,6 +9,7 @@ def exc_time(func):
         start_time = datetime.now()
         tmp = func(*args, **kv)
         end_time = datetime.now()
+        print('\n')
         print("%s executed in %s ms" % (func.__name__, (end_time - start_time) * 1000))
         return tmp
 
