@@ -19,12 +19,13 @@ from common_tools import exc_time
 # code: 上证代码->'000001'
 # freq: 1min/5min
 @exc_time.exc_time
-def index_retrieval(code, freq, start_date, end_date):
+def index_retrieval(code, freq, start_date, end_date, table_name='tick_data_1min_sh'):
     conn = ts.get_apis()
     try:
         data = ts.bar(conn=conn, code=code, asset='INDEX', freq=freq,
                       start_date=start_date, end_date=end_date)
-        data.to_sql('tick_data_1min', engine.create(), if_exists='append')
+        data['code'] = 'sh'
+        data.to_sql(table_name, engine.create(), if_exists='append')
     except Exception as e:
         print(e)
     finally:
