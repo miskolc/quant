@@ -9,7 +9,7 @@ from custom_feature_calculating.SMA import SMA
 def fill_for_line_regression(df):
     n = 5
     df = BBANDS(df, 20)
-    # df = CCI(df, 20)
+    df = CCI(df, 20)
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
@@ -23,7 +23,7 @@ def fill_for_line_regression(df):
 def fill_for_line_regression_predict(df):
     n = 5
     df = BBANDS(df, 20)
-    # df = CCI(df, 20)
+    df = CCI(df, 20)
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)

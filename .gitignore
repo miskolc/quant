@@ -21,3 +21,4 @@ obj/**
 .vscode/launch.json
 .vscode/settings.json
 .idea/**
+*.csv
