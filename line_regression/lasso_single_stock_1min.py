@@ -1,70 +1,32 @@
 # Close price predict
-
-
 import sys
+
 sys.path.append("../../")
 print(sys.path)
 
-import tushare as ts#
-from googlefinance.client import get_price_data, get_prices_data, get_prices_time_data
-
-from sqlalchemy import create_engine
-import custom_feature_calculating.Square as featureLibSquare
+from googlefinance.client import get_price_data
 from sklearn.metrics import mean_squared_error, r2_score
-import matplotlib.pyplot as plt
-from sklearn import linear_model
 import time
 from datetime import datetime
 from sklearn.linear_model import LassoCV
+from sklearn.model_selection import train_test_split
+
+# ^^^^^^^ need more features
+feature = ['open', 'high', 'low', 'volume']
 
 
-
-# data collecting
-# or extract from db
-tick_code = '600179'
-
-def predict():
+def train(tick_code):
     param = {
-        'q': tick_code, # Stock symbol (ex: "AAPL")
-        'i': "60", # Interval size in seconds ("86400" = 1 day intervals)
-        'p': "%sY" % '5' # Period (Ex: "1Y" = 1 year)
+        'q': tick_code,  # Stock symbol (ex: "AAPL")
+        'i': "60",  # Interval size in seconds ("86400" = 1 day intervals)
+        'p': "%sY" % '5'  # Period (Ex: "1Y" = 1 year)
     }
     # get price data (return pandas dataframe)
     df = get_price_data(param)
-    #rename cloumns to lowercase
-    df = df.rename(columns={"Open": "open", "High": "high","Low":"low", "Close":"close", "Volume":"volume"})
+    # rename columns to lowercase
+    df = df.rename(columns={"Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume": "volume"})
 
-    feature = ['open', 'high', 'low', 'volume']
-    # ^^^^^^^ need more features
-
-    count = len(df.index)
-    # traning
-    train_count = int(len(df.index) * 0.7)
-    # testing
-    test_count = int(len(df.index) * 0.3)
-
-    # cross validation miss
-    # !!!!!!!!!!!!!!!!!!
-
-
-    ### !!!!!IMPROVEMENT
-    # get all x data 
-    df_x_all = df[feature].values
-
-    # get all y data 
-    df_y_all = df['close'].values
-
-    # get x traning custome features head n rows
-    df_x_train = df[feature].head(train_count).values
-
-    # get traning close price head n rows
-    df_y_train = df['close'].head(train_count).values
-
-    # get x testing custome feature tail n rows
-    df_x_test = df[feature].tail(test_count).values
-
-    # get y tesing custome close price n rows
-    df_y_test = df['close'].tail(test_count).values
+    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3, random_state=42)
 
     # choose linear regression model
     reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
@@ -76,21 +38,17 @@ def predict():
     df_y_test_pred = reg.predict(df_x_test)
 
     # The Coefficients (系数 auto gen)
-    print('Coefficients: \n', reg.coef_)
-    #The Intercept(截距/干扰/噪声 auto gen)
-    print('Intercept: \n', reg.intercept_)
-    # The mean squared error(均方误差)
-    print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
+    # The Intercept(截距/干扰/噪声 auto gen)
+    print('Coefficients:%s, Intercept:%s, Alpha:%s, Mean squared error: %.2f, Variance score: %.2f' % (
+        reg.coef_, reg.intercept_, reg.alpha_, mean_squared_error(df_y_test, df_y_test_pred),r2_score(df_y_test, df_y_test_pred)))
 
-    # r2_score - sklearn评分方法
-    print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
+    reg.fit(df[feature], df['close'])
 
-    reg.fit(df_x_all, df_y_all)
+    return df, reg
 
-    # 回测?
-    #df_y_all_pred = reg.predict(df_x_all)
-    #print('the difference =', np.subtract(df_y_all, df_y_all_pred))
+pre_predict = 0.0
 
+def predict(df, model):
     # 拿最后一个节点的close price去预测价格
     df['open'] = df['close']
     df_now = df.tail(1)
@@ -98,19 +56,30 @@ def predict():
     df_x_now = df_now[feature].values
 
     dt = datetime.now()
-    df_y_toady_pred = reg.predict(df_x_now);
-    print('当前时间:%s, 输入价格:%s, 预测价格:%s' % (dt.strftime( '%Y-%m-%d %H:%M:%S' ) ,df_now[['open']].values, df_y_toady_pred))
+    df_y_now_pred = model.predict(df_x_now);
 
+    global pre_predict
+    if pre_predict == 0:
 
-    # Plot outputs
-    #plt.scatter(df_x_test[:, 0], df_y_test, color='black')
-    #plt.plot(df_x_test[:, 0], df_y_test_pred, color='blue', linewidth=3)
-    #plt.show()
+        pre_predict = df_y_now_pred[0]
+        print(
+            '%s, 输入价格:%s, 预测价格:%s' % (
+                dt.strftime('%Y-%m-%d %H:%M:%S'), df_now['open'].values[0], df_y_now_pred[0]))
+    else:
+        pre_predict = pre_predict - df_now['open'].values[0]
+
+        if pre_predict > 0 :
+            print(
+                '%s, 误差:\033[0;37;41m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
+                dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
+        else:
+            print(
+                '%s, 误差:\033[0;37;42m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
+                    dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
 
 
 if __name__ == "__main__":
-    while 1==1:
-        predict()
+    while 1 == 1:
+        df, reg = train('600179')
+        predict(df, reg)
         time.sleep(60)
- 
-   
