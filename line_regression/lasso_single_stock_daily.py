@@ -56,8 +56,8 @@ def predict(code='600179', show_plot=False):
     # Plot outputs
 
     if show_plot:
-        plt.scatter(df_x_test['open'], df_y_test, color='black')
-        plt.plot(df_x_test['open'], df_y_test_pred, color='blue', linewidth=3)
+        plt.scatter(df_x_test.index, df_y_test, color='black')
+        plt.scatter(df_x_test.index, df_y_test_pred, color='blue')
         plt.show()
 
 

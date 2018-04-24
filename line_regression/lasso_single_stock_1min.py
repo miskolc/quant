@@ -74,7 +74,7 @@ def predict(df, model):
                 dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
         else:
             print(
-                '%s, 误差:\033[0;37;42m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
+                '%s, 误差:\033[0;37;41m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
                     dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
 
 
