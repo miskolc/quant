@@ -8,41 +8,42 @@ import custom_feature_calculating.EMV as featureLibEVM
 import custom_feature_calculating.EWMA as featureLibEWMA
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
-from sklearn import linear_model
+from sklearn.linear_model import LassoCV
 from sklearn.model_selection import train_test_split
-import pandas as pd
-from dao import engine
 
-#predict
+
 def predict(code='600179', show_plot=False):
-    df = pd.read_sql_query('select * from tick_data where code !=\'sh\'', engine.create())
+    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = df.sort_index()
+
 
     # 获取上证指数
-    df_sh = pd.read_sql_query('select * from tick_data where code =\'sh\'', engine.create())
+    df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
     n = 5
     # add feature to df
-    df = featureLibBB.BBANDS(df, n)
+    df = featureLibBB.BBANDS(df, 20)
     df = featureLibCCI.CCI(df, n)
     df = featureLibFI.ForceIndex(df, n)
-    df = featureLibEVM.EVM(df, n)
+    df = featureLibEVM.EMV(df, n)
     df = featureLibEWMA.EWMA(df, n)
     # 填充上证指数到训练集
     df['rt_sh'] = df_sh['close']
     df = df.dropna()
-
     # Normalization
-    #df_norm = (df - df.mean()) / (df.max() - df.min())
+    df_norm = (df - df.mean()) / (df.max() - df.min())
     # print test
-    print(df.tail(1))
+    # print(df.tail(1))
 
     feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','rt_sh','turnover']
 
     # ^^^^^^^ need more features
 
+
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression(normalize=True)
+
+    reg = LassoCV(alphas = [1, 0.1, 0.001, 0.0005], normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -63,30 +64,13 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['close'])
 
-    df_now = ts.get_hist_data(code)
-    df_sh = ts.get_hist_data(code).head(1)
-
-    df_now = df_now.sort_index()
-
-    n = 5
-    # add feature to df
-    df_now = featureLibBB.BBANDS(df_now, n)
-    df_now = featureLibCCI.CCI(df_now, n)
-    df_now = featureLibFI.ForceIndex(df_now, n)
-    df_now = featureLibEVM.EVM(df_now, n)
-    df_now = featureLibEWMA.EWMA(df_now, n)
-    # 填充上证指数到训练集
-    df_now['rt_sh'] = df_sh['close']
-
-    df_now = df_now.tail(1)
-    df_now.to_csv("result.csv")
-    df_now = df_now.dropna()
+    df_now = df.tail(1)
     df_now['open'] = df_now['close']
 
-
+    df_x_toady = df_now[feature].values
 
     print('昨日收盘价格:%s' % df_now[['open']].values)
-    df_y_toady_pred = reg.predict(df_now[feature]);
+    df_y_toady_pred = reg.predict(df_x_toady);
     print('预测收盘价格:%s' % df_y_toady_pred)
 
     # Plot outputs
@@ -99,8 +83,8 @@ def predict(code='600179', show_plot=False):
 
 if __name__ == "__main__":
       code = input("Enter the code: ")
-      # code is null
+
       if not code.strip():
-            predict()
+            predict(show_plot=True)
       else:
             predict(code)

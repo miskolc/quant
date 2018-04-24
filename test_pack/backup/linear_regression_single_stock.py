@@ -23,7 +23,7 @@ def predict(code='600179', show_plot=False):
     df = featureLibBB.BBANDS(df, n)
     df = featureLibCCI.CCI(df, n)
     df = featureLibFI.ForceIndex(df, n)
-    df = featureLibEVM.EVM(df, n)
+    df = featureLibEVM.EMV(df, n)
     df = featureLibEWMA.EWMA(df, n)
     # 填充上证指数到训练集
     df['rt_sh'] = df_sh['close']
@@ -40,7 +40,7 @@ def predict(code='600179', show_plot=False):
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression()
+    reg = linear_model.LinearRegression(normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)

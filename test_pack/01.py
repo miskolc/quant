@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 # 导入futuquant api
 import futuquant as ft
 
-df_sh = ts.get_hist_data('600179') #一次性获取全部日k线数据
-print(df_sh)
+#df_sh = ts.get_hist_data('600179') #一次性获取全部日k线数据
+#print(df_sh)
 
 #df_now = ts.get_realtime_quotes("600179")
 #df = ts.get_k_data('600179', ktype='5') #一次性获取全部日k线数据
@@ -55,3 +55,6 @@ quote_ctx.get_stock_quote('600179')
 #engine = create_engine('mysql://root:root@localhost/quantitative?charset=utf8')
 #df_sh.to_sql('tick_data_1',engine,if_exists='append')
 #print(df_sh.tail(1))
+
+df = ts.get_realtime_quotes('600179') #Single stock symbol
+print(df.head(10))

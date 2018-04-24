@@ -17,13 +17,14 @@ from dao import engine
 # 爬取指数1min窗口数据
 # code: 上证代码->'000001'
 # freq: 1min/5min
-@decorators.exc_time
-def index_retrieval(code, freq, start_date, end_date):
+
+def index_retrieval(code, freq, start_date, end_date, table_name='tick_data_1min_sh'):
     conn = ts.get_apis()
     try:
         data = ts.bar(conn=conn, code=code, asset='INDEX', freq=freq,
                       start_date=start_date, end_date=end_date)
-        data.to_sql('tick_data_1min', engine.create(), if_exists='append')
+        data['code'] = 'sh'
+        data.to_sql(table_name, engine.create(), if_exists='append')
     except Exception as e:
         print(e)
     finally:
@@ -91,14 +92,23 @@ def price_retrieval_60min(code, start_date, end_date):
 
 # 爬取每天股票价格
 @decorators.exc_time
-def price_retrieval_daily(code, start_date, end_date):
+def price_retrieval_daily(code, start_date, end_date, table_name='tick_data'):
     try:
         data = ts.get_hist_data(code=code, start=start_date, end=end_date)
         data['code'] = code
-        data.to_sql('tick_data', engine.create(), if_exists='append')
+        data.to_sql(table_name, engine.create(), if_exists='append')
     except Exception as e:
         print(e)
 
+
+# 或取每天股票价格
+@decorators.exc_time
+def get_price_daily(code, start_date, end_date):
+    try:
+        data = ts.get_hist_data(code=code, start=start_date, end=end_date)
+        data['code'] = code
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     # 当前时间

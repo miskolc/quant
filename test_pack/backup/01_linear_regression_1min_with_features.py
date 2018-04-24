@@ -1,21 +1,23 @@
 # Close price predict
+
+
+import sys
+sys.path.append("../../")
+print(sys.path)
+
 import tushare as ts#
 from googlefinance.client import get_price_data, get_prices_data, get_prices_time_data
 
 from sqlalchemy import create_engine
-import custom_feature_calculating.BBANDS as featureLibBB
-import custom_feature_calculating.CCI as featureLibCCI
-import custom_feature_calculating.FI as featureLibFI
-import custom_feature_calculating.EMV as featureLibEVM
-import custom_feature_calculating.EWMA as featureLibEWMA
-import custom_feature_calculating.SMA as featureLibSMA
-import custom_feature_calculating.ROC as featureLibROC
 import custom_feature_calculating.Square as featureLibSquare
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 import time
 from datetime import datetime
+from sklearn.linear_model import LassoCV
+
+
 
 # data collecting
 # or extract from db
@@ -32,35 +34,7 @@ def predict():
     #rename cloumns to lowercase
     df = df.rename(columns={"Open": "open", "High": "high","Low":"low", "Close":"close", "Volume":"volume"})
 
-    #获取上证指数
-    param_sh = {
-        'q': '000001', # Stock symbol (ex: "AAPL")
-        'i': "60", # Interval size in seconds ("86400" = 1 day intervals)
-        'p': "%sY" % '5' # Period (Ex: "1Y" = 1 year)
-    }
-    df_sh = get_price_data(param_sh)
-    #填充上证指数到训练集
-    df['rt_sh'] = df_sh['Close']
-
-    n = 10
-    # add feature to df
-    df = featureLibBB.BBANDS(df, n)
-    df = featureLibCCI.CCI(df, 20)
-    df = featureLibFI.ForceIndex(df, n)
-    df = featureLibEVM.EVM(df, n)
-    df = featureLibEWMA.EWMA(df, n)
-    df = featureLibSMA.SMA(df,5)
-    df = featureLibSMA.SMA(df,10)
-    df = featureLibSMA.SMA(df,20)
-    df = featureLibROC.ROC(df,n)
-    df = df.dropna()
-
-    df_norm = (df - df.mean()) / (df.max() - df.min())
-    df.to_csv("result.csv")
-    # print last data
-    #print(df.tail(1))
-
-    feature = ['open', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'ma5','ma10','ma20','roc','rt_sh']
+    feature = ['open', 'high', 'low', 'volume']
     # ^^^^^^^ need more features
 
     count = len(df.index)
@@ -93,7 +67,7 @@ def predict():
     df_y_test = df['close'].tail(test_count).values
 
     # choose linear regression model
-    reg = linear_model.LinearRegression()
+    reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -103,7 +77,7 @@ def predict():
 
     # The Coefficients (系数 auto gen)
     #print('Coefficients: \n', reg.coef_)
-    # The Intercept(截距/干扰/噪声 auto gen)
+    #The Intercept(截距/干扰/噪声 auto gen)
     #print('Intercept: \n', reg.intercept_)
     # The mean squared error(均方误差)
     #print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
@@ -118,8 +92,9 @@ def predict():
     #print('the difference =', np.subtract(df_y_all, df_y_all_pred))
 
     # 拿最后一个节点的close price去预测价格
+    df['open'] = df['close']
     df_now = df.tail(1)
-    df_now['open'] = df_now['close']
+
     df_x_now = df_now[feature].values
 
     dt = datetime.now()  
