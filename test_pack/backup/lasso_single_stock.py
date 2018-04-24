@@ -14,6 +14,7 @@ from sklearn.model_selection import train_test_split
 
 def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    print(df)
     df = df.sort_index()
 
 

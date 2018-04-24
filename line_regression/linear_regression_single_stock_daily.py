@@ -1,40 +1,28 @@
 # Close price predict
 
 import tushare as ts
-import custom_feature_calculating.BBANDS as featureLibBB
-import custom_feature_calculating.CCI as featureLibCCI
-import custom_feature_calculating.FI as featureLibFI
-import custom_feature_calculating.EMV as featureLibEVM
-import custom_feature_calculating.EWMA as featureLibEWMA
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
-import pandas as pd
-from dao import engine
+from custom_feature_calculating import feature as feature_service
 
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = pd.read_sql_query('select * from tick_data where code =\'%s\'' % code, engine.create())
+    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = df.sort_index()
 
     # 获取上证指数
-    df_sh = pd.read_sql_query('select * from tick_data where code =\'sh\'', engine.create())
-    n = 5
+    df_sh = ts.get_hist_data('sh', start='2015-01-01')  # 一次性获取上证数据
+    df_sh = df_sh.sort_index()
     # add feature to df
-    df = featureLibBB.BBANDS(df, n)
-    df = featureLibCCI.CCI(df, n)
-    df = featureLibFI.ForceIndex(df, n)
-    df = featureLibEVM.EMV(df, n)
-    df = featureLibEWMA.EWMA(df, n)
+    df = feature_service.fill_for_line_regression_predict(df)
+    df = df.dropna()
+
     # 填充上证指数到训练集
     df['rt_sh'] = df_sh['close']
     df = df.dropna()
-
-    # Normalization
-    # df_norm = (df - df.mean()) / (df.max() - df.min())
-    # print test
-    print(df.tail(1))
 
     feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
 
@@ -43,7 +31,7 @@ def predict(code='600179', show_plot=False):
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression(normalize=True)
+    reg = linear_model.LinearRegression()
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -64,22 +52,7 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['close'])
 
-    df_now = ts.get_hist_data(code)
-    df_sh = ts.get_hist_data(code).head(1)
-
-    df_now = df_now.sort_index()
-
-    n = 5
-    # add feature to df
-    df_now = featureLibBB.BBANDS(df_now, n)
-    df_now = featureLibCCI.CCI(df_now, n)
-    df_now = featureLibFI.ForceIndex(df_now, n)
-    df_now = featureLibEVM.EMV(df_now, n)
-    df_now = featureLibEWMA.EWMA(df_now, n)
-    # 填充上证指数到训练集
-    df_now['rt_sh'] = df_sh['close']
-
-    df_now = df_now.tail(1)
+    df_now = df.tail(1)
     df_now.to_csv("result.csv")
     df_now = df_now.dropna()
     df_now['open'] = df_now['close']

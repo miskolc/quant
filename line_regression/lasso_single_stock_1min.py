@@ -76,14 +76,14 @@ def predict():
     df_y_test_pred = reg.predict(df_x_test)
 
     # The Coefficients (系数 auto gen)
-    #print('Coefficients: \n', reg.coef_)
+    print('Coefficients: \n', reg.coef_)
     #The Intercept(截距/干扰/噪声 auto gen)
-    #print('Intercept: \n', reg.intercept_)
+    print('Intercept: \n', reg.intercept_)
     # The mean squared error(均方误差)
-    #print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
+    print("Mean squared error: %.2f"% mean_squared_error(df_y_test, df_y_test_pred))
 
     # r2_score - sklearn评分方法
-    #print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
+    print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
     reg.fit(df_x_all, df_y_all)
 
@@ -97,10 +97,10 @@ def predict():
 
     df_x_now = df_now[feature].values
 
-    dt = datetime.now()  
-    print('当前时间:%s, 输入价格:%s' % (dt.strftime( '%Y-%m-%d %H:%M:%S' ) ,df_now[['open']].values))
+    dt = datetime.now()
     df_y_toady_pred = reg.predict(df_x_now);
-    print('预测价格:%s' % df_y_toady_pred)
+    print('当前时间:%s, 输入价格:%s, 预测价格:%s' % (dt.strftime( '%Y-%m-%d %H:%M:%S' ) ,df_now[['open']].values, df_y_toady_pred))
+
 
     # Plot outputs
     #plt.scatter(df_x_test[:, 0], df_y_test, color='black')

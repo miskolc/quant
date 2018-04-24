@@ -41,7 +41,8 @@ quote_ctx.get_stock_quote('600179')
 #print(df_now)
 
 #获取上证指数k线数据
-#df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
+df_sh = ts.get_hist_data('600179', ktype='5',start='2018-04-24')
+print(df_sh)
 #df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='5min', start_date='2017-01-18', end_date='2017-02-18')
 #df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
 
@@ -56,5 +57,5 @@ quote_ctx.get_stock_quote('600179')
 #df_sh.to_sql('tick_data_1',engine,if_exists='append')
 #print(df_sh.tail(1))
 
-df = ts.get_realtime_quotes('600179') #Single stock symbol
-print(df.head(10))
+#df = ts.get_realtime_quotes('600179') #Single stock symbol
+#print(df.head(10))
