@@ -13,11 +13,11 @@ from sklearn.model_selection import train_test_split
 
 
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code)  # 一次性获取上证数据
+    df = ts.get_hist_data(code,start='2015-01-01')  # 一次性获取上证数据
     df = df.sort_index()
-
+    print(df)
     # 获取上证指数
-    df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
+    df_sh = ts.get_hist_data('sh',start='2015-01-01')  # 一次性获取上证数据
     n = 5
     # add feature to df
     df = featureLibBB.BBANDS(df, n)
