@@ -9,6 +9,7 @@ from dao import engine
 from sklearn.externals import joblib
 from custom_feature_calculating import feature as feature_service
 import numpy as np
+
 # predict
 
 
@@ -16,7 +17,6 @@ feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'rt
 
 
 def train(code='600179', show_plot=True):
-
     sql = 'SELECT  t1.open, t1.close, t1.high, t1.low, t1.vol as volume,t2.close as rt_sh' \
           ' from tick_data_1min_hs300 t1' \
           ' LEFT JOIN tick_data_1min_sh t2 on t1.datetime = t2.datetime and t2.code=\'sh\'' \
@@ -27,7 +27,7 @@ def train(code='600179', show_plot=True):
 
     df = df.dropna()
     df.to_csv("result.csv")
-    #print(df[~df.isin([ np.inf, -np.inf]).any(1)])
+    # print(df[~df.isin([ np.inf, -np.inf]).any(1)])
 
     # ^^^^^^^ need more features
 
@@ -86,7 +86,7 @@ def predict_min(code):
     conn = ts.get_apis()
     try:
         df = ts.bar(conn=conn, code=code, freq='1min',
-                      start_date='2018-04-24', end_date='2018-04-24')
+                    start_date='2018-04-24', end_date='2018-04-24')
 
         df = df.rename(columns={'vol': 'volume'})
 
@@ -94,14 +94,13 @@ def predict_min(code):
         df = df.dropna()
 
         df_sh = ts.bar(conn=conn, code='000001', asset='INDEX', freq='1min',
-                      start_date='2018-04-24', end_date='2018-04-24')
+                       start_date='2018-04-24', end_date='2018-04-24')
 
         df['rt_sh'] = df_sh['close']
 
         df_today = df.head(1)
         print(df_today)
         df_today['open'] = df['close']
-
         print('输入价格:%s' % df_today[['open']].values)
         df_x_toady = df[feature].tail(1).values
         df_y_toady_pred = reg.predict(df_x_toady);
@@ -113,7 +112,6 @@ def predict_min(code):
     finally:
         ts.close_apis(conn)
 
+
 if __name__ == "__main__":
-     #train('600179')
-     #predict_daily('600179')
-     predict_min('600179')
+    predict_min('600179')

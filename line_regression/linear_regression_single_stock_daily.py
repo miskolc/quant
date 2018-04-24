@@ -13,7 +13,8 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from dao import engine
 
-#predict
+
+# predict
 def predict(code='600179', show_plot=False):
     df = pd.read_sql_query('select * from tick_data where code =\'%s\'' % code, engine.create())
 
@@ -31,11 +32,11 @@ def predict(code='600179', show_plot=False):
     df = df.dropna()
 
     # Normalization
-    #df_norm = (df - df.mean()) / (df.max() - df.min())
+    # df_norm = (df - df.mean()) / (df.max() - df.min())
     # print test
     print(df.tail(1))
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','rt_sh','turnover']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
 
     # ^^^^^^^ need more features
 
@@ -83,8 +84,6 @@ def predict(code='600179', show_plot=False):
     df_now = df_now.dropna()
     df_now['open'] = df_now['close']
 
-
-
     print('昨日收盘价格:%s' % df_now[['open']].values)
     df_y_toady_pred = reg.predict(df_now[feature]);
     print('预测收盘价格:%s' % df_y_toady_pred)
@@ -98,9 +97,9 @@ def predict(code='600179', show_plot=False):
 
 
 if __name__ == "__main__":
-      code = input("Enter the code: ")
-      # code is null
-      if not code.strip():
-            predict()
-      else:
-            predict(code)
+    code = input("Enter the code: ")
+    # code is null
+    if not code.strip():
+        predict()
+    else:
+        predict(code)
