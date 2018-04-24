@@ -1,5 +1,5 @@
 # lasso model trainng and  predict
-
+import tushare as ts
 from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LassoCV
@@ -10,21 +10,24 @@ from sklearn.externals import joblib
 from custom_feature_calculating import feature as feature_service
 import numpy as np
 # predict
+
+
+feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'evm', 'ewma', 'fi', 'rt_sh']
+
+
 def train(code='600179', show_plot=True):
 
     sql = 'SELECT  t1.open, t1.close, t1.high, t1.low, t1.vol as volume,t2.close as rt_sh' \
           ' from tick_data_1min_hs300 t1' \
           ' LEFT JOIN tick_data_1min_sh t2 on t1.datetime = t2.datetime and t2.code=\'sh\'' \
-          ' where t1.code in (\'000001\' )'
+          ' where t1.code =\'%s\'' % code
 
     df = pd.read_sql_query(sql, engine.create())
     df = feature_service.fill_for_line_regression(df)
 
     df = df.dropna()
-
+    df.to_csv("result.csv")
     #print(df[~df.isin([ np.inf, -np.inf]).any(1)])
-
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh']
 
     # ^^^^^^^ need more features
 
@@ -57,11 +60,60 @@ def train(code='600179', show_plot=True):
         plt.show()
 
 
+def predict_daily(code):
+    reg = joblib.load('model/lasso.pkl');
+
+    df = ts.get_hist_data(code, start='2018-03-01')  # 一次性获取上证数据
+    # 获取上证指数
+    df_sh = ts.get_hist_data('sh', start='2018-03-01')  # 一次性获取上证数据
+    df = df.sort_index()
+    # 填充上证指数到训练集
+    df['rt_sh'] = df_sh['close']
+    df = feature_service.fill_for_line_regression_predict(df)
+    df = df.dropna()
+
+    df_today = df.tail(1)
+    df_today['open'] = df['close']
+
+    print('昨日收盘价格:%s' % df_today[['open']].values)
+    df_x_toady = df[feature].tail(1).values
+    df_y_toady_pred = reg.predict(df_x_toady);
+    print('预测收盘价格:%s' % df_y_toady_pred)
+
+
+def predict_min(code):
+    reg = joblib.load('model/lasso.pkl');
+    conn = ts.get_apis()
+    try:
+        df = ts.bar(conn=conn, code=code, freq='1min',
+                      start_date='2018-04-24', end_date='2018-04-24')
+
+        df = df.rename(columns={'vol': 'volume'})
+
+        df = feature_service.fill_for_line_regression(df)
+        df = df.dropna()
+
+        df_sh = ts.bar(conn=conn, code='000001', asset='INDEX', freq='1min',
+                      start_date='2018-04-24', end_date='2018-04-24')
+
+        df['rt_sh'] = df_sh['close']
+
+        df_today = df.head(1)
+        print(df_today)
+        df_today['open'] = df['close']
+
+        print('输入价格:%s' % df_today[['open']].values)
+        df_x_toady = df[feature].tail(1).values
+        df_y_toady_pred = reg.predict(df_x_toady);
+        print('预测价格:%s' % df_y_toady_pred)
+
+
+    except Exception as e:
+        print(e)
+    finally:
+        ts.close_apis(conn)
 
 if __name__ == "__main__":
-    code = input("Enter the code: ")
-    # code is null
-    if not code.strip():
-        train()
-    else:
-        train(code)
+     #train('600179')
+     #predict_daily('600179')
+     predict_min('600179')

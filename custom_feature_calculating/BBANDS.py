@@ -12,7 +12,7 @@ import pandas as pd
 
 
 def BBANDS(data, ndays):
-    # MA 5日平均值
+
     MA = pd.Series(pd.Series.rolling(data['close'], ndays).mean())
     # SD 标准偏差
     SD = pd.Series(pd.Series.rolling(data['close'], ndays).std())

@@ -27,3 +27,16 @@ df = df.rename(columns={"Open": "open", "High": "high","Low":"low", "Close":"clo
 
 
 df = df.rename(columns={"Open": "open", "High": "high", "Close":"close", "Volume":"volume"})
+
+# 获取上证指数
+'''
+param_sh = {
+    'q': '000001', # Stock symbol (ex: "AAPL")
+    'i': "60", # Interval size in seconds ("86400" = 1 day intervals)
+    'p': "%sY" % '5' # Period (Ex: "1Y" = 1 year)
+}
+df_sh = get_price_data(param_sh)
+#填充上证指数到训练集
+df['rt_sh'] = df_sh['Open']
+df.dropna()
+'''

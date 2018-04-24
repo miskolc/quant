@@ -6,19 +6,18 @@
 
 from __future__ import print_function
 
-import functools
-from googlefinance.client import get_price_data, get_prices_data, get_prices_time_data
-from sqlalchemy import create_engine
-import tushare as ts
 from datetime import datetime, timedelta
+
+import tushare as ts
+
+from common_tools import decorators
 from dao import engine
-from common_tools import exc_time
 
 
 # 爬取指数1min窗口数据
 # code: 上证代码->'000001'
 # freq: 1min/5min
-@exc_time.exc_time
+
 def index_retrieval(code, freq, start_date, end_date, table_name='tick_data_1min_sh'):
     conn = ts.get_apis()
     try:
@@ -35,7 +34,7 @@ def index_retrieval(code, freq, start_date, end_date, table_name='tick_data_1min
 # 爬取股票价格1min窗口数据
 # code: '600179'
 # freq: 1min
-@exc_time.exc_time
+@decorators.exc_time
 def price_retrieval_1min(code, start_date, end_date, table_name='tick_data_1min'):
     conn = ts.get_apis()
     try:
@@ -49,7 +48,7 @@ def price_retrieval_1min(code, start_date, end_date, table_name='tick_data_1min'
 
 
 # 爬取股票价格5min窗口数据
-@exc_time.exc_time
+@decorators.exc_time
 def price_retrieval_5min(code, start_date, end_date):
     conn = ts.get_apis()
     try:
@@ -64,7 +63,7 @@ def price_retrieval_5min(code, start_date, end_date):
 
 
 # 爬取股票价格30min窗口数据
-@exc_time.exc_time
+@decorators.exc_time
 def price_retrieval_30min(code, start_date, end_date):
     conn = ts.get_apis()
     try:
@@ -78,7 +77,7 @@ def price_retrieval_30min(code, start_date, end_date):
 
 
 # 爬取股票价格60min窗口数据
-@exc_time.exc_time
+@decorators.exc_time
 def price_retrieval_60min(code, start_date, end_date):
     conn = ts.get_apis()
     try:
@@ -92,15 +91,24 @@ def price_retrieval_60min(code, start_date, end_date):
 
 
 # 爬取每天股票价格
-@exc_time.exc_time
-def price_retrieval_daily(code, start_date, end_date):
+@decorators.exc_time
+def price_retrieval_daily(code, start_date, end_date, table_name='tick_data'):
     try:
         data = ts.get_hist_data(code=code, start=start_date, end=end_date)
         data['code'] = code
-        data.to_sql('tick_data', engine.create(), if_exists='append')
+        data.to_sql(table_name, engine.create(), if_exists='append')
     except Exception as e:
         print(e)
 
+
+# 或取每天股票价格
+@decorators.exc_time
+def get_price_daily(code, start_date, end_date):
+    try:
+        data = ts.get_hist_data(code=code, start=start_date, end=end_date)
+        data['code'] = code
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     # 当前时间

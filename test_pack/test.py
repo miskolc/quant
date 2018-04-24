@@ -7,6 +7,7 @@ from yahoo_finance import Share
 import datetime
 import pandas_datareader.data as web
 import futuquant as ft
+from statsmodels.tsa.stattools import adfuller
 
 
 # antong_df = ts.get_hist_data('600179')
@@ -38,5 +39,6 @@ import futuquant as ft
 # quote_ctx.get_market_snapshot(code_list)  # 获取市场快照
 # quote_ctx.get_plate_list(market, plate_class)        #获取板块集合下的子板块列表
 # quote_ctx.get_plate_stock(market, stock_code)        #获取板块下的股票列表
+
 
 

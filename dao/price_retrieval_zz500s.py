@@ -20,10 +20,10 @@ if __name__ == "__main__":
     # end = now.strftime('%Y-%m-%d')
     # print('start=%s,end=%s' % (start, end))
 
-    df = ts.get_zz500s()
-
-    sz500_codes = df["code"].values;
-    for code in sz500_codes:
-        price_retrieval.price_retrieval_daily(code, '2018-04-23', '2018-04-23')
+    #df = ts.get_zz500s()
+    price_retrieval.price_retrieval_daily('000725', '2015-01-23', '2018-04-23')
+    #sz500_codes = df["code"].values;
+    #for code in sz500_codes:
+        #price_retrieval.price_retrieval_daily(code, '2018-04-23', '2018-04-23')
 
         # price_retrieval.price_retrieval_daily('sh', '2015-01-01', start)

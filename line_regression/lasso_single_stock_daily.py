@@ -16,7 +16,7 @@ from dao import engine
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = pd.read_sql_query('select * from tick_data where code !=\'sh\'', engine.create())
+    df = pd.read_sql_query('select * from tick_data where code =\'600179\'', engine.create())
 
     # 获取上证指数
     df_sh = pd.read_sql_query('select * from tick_data where code =\'sh\'', engine.create())
@@ -25,7 +25,7 @@ def predict(code='600179', show_plot=False):
     df = featureLibBB.BBANDS(df, n)
     df = featureLibCCI.CCI(df, n)
     df = featureLibFI.ForceIndex(df, n)
-    df = featureLibEVM.EVM(df, n)
+    df = featureLibEVM.EMV(df, n)
     df = featureLibEWMA.EWMA(df, n)
     # 填充上证指数到训练集
     df['rt_sh'] = df_sh['close']
@@ -74,7 +74,7 @@ def predict(code='600179', show_plot=False):
     df_now = featureLibBB.BBANDS(df_now, n)
     df_now = featureLibCCI.CCI(df_now, n)
     df_now = featureLibFI.ForceIndex(df_now, n)
-    df_now = featureLibEVM.EVM(df_now, n)
+    df_now = featureLibEVM.EMV(df_now, n)
     df_now = featureLibEWMA.EWMA(df_now, n)
     # 填充上证指数到训练集
     df_now['rt_sh'] = df_sh['close']
