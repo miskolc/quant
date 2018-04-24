@@ -28,14 +28,26 @@ def cross_validation(X, y):
     print("Optimised parameters found on training set:")
     print(model.best_estimator_, "\n")
 
+    # The grid_scores_ attribute was deprecated in version 0.18
+    #
+    #
+    # print("Grid scores calculated on training set:")
+    # for params, mean_score, scores in model.grid_scores_:
+    #     print("%0.3f for %r" % (mean_score, params))
+
     print("Grid scores calculated on training set:")
-    for params, mean_score, scores in model.grid_scores_:
-        print("%0.3f for %r" % (mean_score, params))
+    means = model.cv_results_['mean_test_score']
+    stds = model.cv_results_['std_test_score']
+
+    for mean, std, params in zip(means, stds, model.cv_results_['params']):
+        print("%0.3f (+/-%0.03f) for %r"
+              % (mean, std * 2, params))
+
 
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = ts.get_hist_data(code, start='2016-01-01')  # 一次性获取上证数据
     df = df.sort_index()
 
     # add feature to df
