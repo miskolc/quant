@@ -7,7 +7,7 @@ import pandas as pd
 
 '''
 def EWMA(data, ndays):
-    EMA = pd.Series(pd.Series.ewm(data['close'], span=ndays, min_periods=ndays - 1).mean(),
+    EMA = pd.Series(pd.Series.ewm(data['close'], span=ndays, min_periods=ndays).mean(),
                     name='ewma')
     data = data.join(EMA)
     return data
