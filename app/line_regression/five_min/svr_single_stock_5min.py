@@ -87,12 +87,11 @@ def predict(code='600179', show_plot=False):
 
     svr.fit(df[feature], df['next_open'])
 
-    dt = datetime.now()
-    df_now = ts.get_hist_data(code, start='2018-04-01', end=dt.strftime('%Y-%m-%d'), ktype='5')
+    df_now = ts.get_hist_data(code, ktype='5')
     df_now = df_now.sort_index()
     df_now = fill_for_line_regression_5min(df_now)
 
-    print('当前价格:%s' % df_now['open'].tail(1).values)
+    print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = svr.predict(preprocessing.scale(df_now[feature].tail(1)));
 
     print('SVR Model, 预测价格:%s' % df_y_toady_pred)

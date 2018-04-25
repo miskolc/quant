@@ -1,5 +1,5 @@
-
 feature = ['open'
+    , 'close'
     , 'low'
     , 'high'
     , 'price_change'
@@ -24,5 +24,5 @@ feature = ['open'
     , 'sh_open'
     , 'sh_close'
     , 'macd'
-    
+    , 'ulto'
            ]

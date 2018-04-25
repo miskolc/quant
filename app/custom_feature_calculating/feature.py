@@ -9,7 +9,7 @@ import app.custom_feature_calculating.price_change as price_change
 from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
 import app.custom_feature_calculating.index_sh_5min as index_sh_5min
-import app.custom_feature_calculating.UO as UO
+from app.custom_feature_calculating.Ulto import Ulto
 
 def fill_for_line_regression(df):
     n = 5
@@ -59,4 +59,5 @@ def fill_for_line_regression_5min(df):
     df = price_change.fill(df,10)
     df = price_change.fill(df,20)
     df = macd.fill(df)
+    df = Ulto(df)
     return df
