@@ -37,9 +37,9 @@ def Ulto(data):
     BP = data['close'] - data['low']
     TR = data['high'] - data['low']
 
-    av_7 = pd.rolling_sum(BP, 7) / pd.rolling_sum(TR, 7)
-    av_14 = pd.rolling_sum(BP, 14) / pd.rolling_sum(TR, 14)
-    av_28 = pd.rolling_sum(BP, 28) / pd.rolling_sum(TR, 28)
+    av_7 = pd.Series.rolling(BP, 7).sum() / pd.Series.rolling(TR, 7).sum()
+    av_14 = pd.Series.rolling(BP, 14).sum() / pd.Series.rolling(TR, 14).sum()
+    av_28 = pd.Series.rolling(BP, 28).sum() / pd.Series.rolling(TR, 28).sum()
 
     ulto = 100 * ((4 * av_7) + (2 * av_14) + av_28) / (4 + 2 + 1)
 
