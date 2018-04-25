@@ -53,6 +53,7 @@ def predict(df, model):
     dt = datetime.now()
     df_y_now_pred = model.predict(df_x_now);
 
+
     global pre_predict
     if pre_predict == 0:
 
@@ -64,13 +65,13 @@ def predict(df, model):
         deviation = pre_predict - df_now['open'].values[0]
         pre_predict = df_y_now_pred[0]
 
-        if pre_predict > 0 :
+        if pre_predict > 0:
             print(
                 '%s, 幅度:\033[0;37;41m%.2f ↑\033[0m,当前价格:%s, 预测价格:%s' % (
                 dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
         else:
             print(
-                '%s, 幅度:\022[0;37;41m%.2f ↓\022[0m,当前价格:%s, 预测价格:%s' % (
+                '%s, 幅度:\033[0;37;42m%.2f ↓\033[0m,当前价格:%s, 预测价格:%s' % (
                     dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
 
 
