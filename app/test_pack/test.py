@@ -67,8 +67,9 @@ import matplotlib.pyplot as plt
 
 '''
 
-
+#
 # df = ts.get_hist_data('600179', start='2018-01-01')
+# print(df)
 # Close = df['close'].head(1).values[0]
 # Minimum = df['low'].head(1).values[0]
 # Maximum = df['high'].head(1).values[0]
@@ -83,7 +84,9 @@ import matplotlib.pyplot as plt
 # av_7 = get_x_period_av(df, 7)
 # av_14 = get_x_period_av(df, 14)
 # av_28 = get_x_period_av(df, 28)
-# 
+#
 # UO_value = 100 * ((4 * av_7) + (2 * av_14) + av_28)/(4+2+1)
 #
 # print(UO_value)
+
+
