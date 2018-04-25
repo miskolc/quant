@@ -65,7 +65,7 @@ def predict(code='600179', show_plot=False):
     cross_validation(X, y)
 
     # choose SVR model
-    svr = SVR(kernel=str('rbf'), C=1000, gamma=0.001)
+    svr = SVR(kernel=str('rbf'), C=100, gamma=0.001)
 
     # fit model with data(training)
     svr.fit(df_x_train, df_y_train)
