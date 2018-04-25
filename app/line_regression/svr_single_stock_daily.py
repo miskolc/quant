@@ -47,15 +47,18 @@ def cross_validation(X, y):
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = ts.get_hist_data(code, start='2016-01-01')  # 一次性获取上证数据
     df = df.sort_index()
 
     # add feature to df
     df = fill_for_line_regression_predict(df)
     df = df.dropna()
     # print(df.tail(1))
-    feature = ['open', 'low', 'high', 'volume', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb',
-               'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close']
+    feature = ['open', 'low', 'high','price_change', 'volume',
+               'ma_price_change_5','ma_price_change_10','ma_price_change_20'
+                ,'v_ma5','v_ma10','v_ma20'
+                ,'ma5', 'ma10', 'ma20',
+                'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close']
     # ^^^^^^^ need more features
 
     X = df[feature].copy()
@@ -88,7 +91,8 @@ def predict(code='600179', show_plot=False):
     svr.fit(df[feature], df['close'])
 
     df_now = df.tail(1)
-    df_now['open'] = get_open_price(code)
+    open = get_open_price(code)
+    df_now['open'] = open
 
     print('今日开盘价格:%s' % df_now[['open']].values)
     df_y_toady_pred = svr.predict(preprocessing.scale(df_now[feature]));

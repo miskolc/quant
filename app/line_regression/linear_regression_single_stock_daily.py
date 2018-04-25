@@ -24,8 +24,11 @@ def predict(code='600179', show_plot=False):
     df['rt_sh'] = df_sh['close']
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover','pre_close']
-
+    feature = ['open', 'low', 'high','price_change', 'volume',
+               'ma_price_change_5','ma_price_change_10','ma_price_change_20'
+                ,'v_ma5','v_ma10','v_ma20'
+                ,'ma5', 'ma10', 'ma20',
+                'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close']
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
