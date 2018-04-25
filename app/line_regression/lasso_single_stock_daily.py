@@ -5,9 +5,8 @@ import tushare as ts
 from sklearn.linear_model import LassoCV
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-
 from app.custom_feature_calculating import feature as feature_service
-
+from app.dao.price_service import get_open_price
 
 # predict
 def predict(code='600179', show_plot=False):
@@ -18,7 +17,7 @@ def predict(code='600179', show_plot=False):
     df = feature_service.fill_for_line_regression_predict(df)
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
@@ -46,11 +45,10 @@ def predict(code='600179', show_plot=False):
     reg.fit(df[feature], df['close'])
 
     df_now = df.tail(1)
-    df_now.to_csv("result.csv")
     df_now = df_now.dropna()
-    df_now['open'] = df_now['close']
+    df_now['open'] = get_open_price(code)
 
-    print('昨日收盘价格:%s' % df_now[['open']].values)
+    print('今日开盘价格:%s' % df_now[['open']].values)
     df_y_toady_pred = reg.predict(df_now[feature]);
     print('预测收盘价格:%s' % df_y_toady_pred)
 

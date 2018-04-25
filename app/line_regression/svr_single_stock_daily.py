@@ -54,10 +54,10 @@ def predict(code='600179', show_plot=False):
     # add feature to df
     df = fill_for_line_regression_predict(df)
     df = df.dropna()
-
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
+    #print(df.tail(1))
+    feature = ['open','high','low', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
     # ^^^^^^^ need more features
-    print(df[['close','pre_close']].tail())
+
     X = df[feature].copy()
     X = preprocessing.scale(X)
     y = df['close']
@@ -66,7 +66,7 @@ def predict(code='600179', show_plot=False):
     cross_validation(X, y)
 
     # choose SVR model
-    svr = SVR(kernel=str('rbf'), C=100, gamma=0.001)
+    svr = SVR(kernel=str('rbf'), C=1000, gamma=0.0001)
 
     # fit model with data(training)
     svr.fit(df_x_train, df_y_train)

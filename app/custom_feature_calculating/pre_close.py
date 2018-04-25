@@ -1,7 +1,7 @@
 import tushare as ts
 
 
-#  add pre code price feature
+#  add pre price feature
 def fill(df):
     df['pre_close'] = df['close'].shift(-2)
     return df;

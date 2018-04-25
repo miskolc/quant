@@ -5,9 +5,8 @@ import tushare as ts
 from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-
 from app.custom_feature_calculating import feature as feature_service
-
+from app.dao.price_service import get_open_price
 
 # predict
 def predict(code='600179', show_plot=False):
@@ -25,7 +24,7 @@ def predict(code='600179', show_plot=False):
     df['rt_sh'] = df_sh['close']
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover','pre_close']
 
     # ^^^^^^^ need more features
 
@@ -54,9 +53,7 @@ def predict(code='600179', show_plot=False):
     reg.fit(df[feature], df['close'])
 
     df_now = df.tail(1)
-    df_now.to_csv("result.csv")
-    df_now = df_now.dropna()
-    df_now['open'] = df_now['close']
+    df_now['open'] = get_open_price(code)
 
     print('昨日收盘价格:%s' % df_now[['open']].values)
     df_y_toady_pred = reg.predict(df_now[feature]);
