@@ -7,6 +7,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
+from app.dao.price_service import get_open_price
 
 from app.custom_feature_calculating.feature import fill_for_line_regression_predict
 
@@ -54,9 +55,9 @@ def predict(code='600179', show_plot=False):
     df = fill_for_line_regression_predict(df)
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
     # ^^^^^^^ need more features
-
+    print(df[['close','pre_close']].tail())
     X = df[feature].copy()
     X = preprocessing.scale(X)
     y = df['close']
@@ -87,9 +88,9 @@ def predict(code='600179', show_plot=False):
     svr.fit(df[feature], df['close'])
 
     df_now = df.tail(1)
-    df_now['open'] = df_now['close']
+    df_now['open'] = get_open_price(code)
 
-    print('昨日收盘价格:%s' % df_now[['open']].values)
+    print('今日开盘价格:%s' % df_now[['open']].values)
     df_y_toady_pred = svr.predict(preprocessing.scale(df_now[feature]));
     print('预测收盘价格:%s' % df_y_toady_pred)
 
@@ -105,6 +106,6 @@ if __name__ == "__main__":
     code = input("Enter the code: ")
     # code is null
     if not code.strip():
-        predict(show_plot=True)
+        predict(show_plot=False)
     else:
         predict(code)
