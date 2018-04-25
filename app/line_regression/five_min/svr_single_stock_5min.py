@@ -1,5 +1,6 @@
 # Close price predict
 from datetime import datetime
+
 import matplotlib.pyplot as plt
 import tushare as ts
 from sklearn import preprocessing
@@ -7,9 +8,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
-from app.dao.price_service import get_open_price
 
 from app.custom_feature_calculating.feature import fill_for_line_regression_5min
+from app.line_regression.five_min.feature_constant import feature
 
 
 def cross_validation(X, y):
@@ -48,6 +49,7 @@ def cross_validation(X, y):
 
     return model.best_params_
 
+
 # predict
 def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, ktype='5')
@@ -57,14 +59,6 @@ def predict(code='600179', show_plot=False):
     # add feature to df
     df = fill_for_line_regression_5min(df)
     df = df.dropna()
-    df.to_csv('result.csv')
-    feature = ['open', 'low', 'high','price_change', 'volume'
-                ,'ma_price_change_5','ma_price_change_10','ma_price_change_20'
-                ,'v_ma5','v_ma10','v_ma20'
-                ,'ma5', 'ma10', 'ma20'
-                ,'ubb', 'lbb', 'cci', 'evm',
-               'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close','macd']
-
     # ^^^^^^^ need more features
 
     X = df[feature].copy()
@@ -94,7 +88,7 @@ def predict(code='600179', show_plot=False):
     svr.fit(df[feature], df['next_open'])
 
     dt = datetime.now()
-    df_now = ts.get_hist_data(code,start='2018-04-01',end=dt.strftime('%Y-%m-%d'), ktype='5')
+    df_now = ts.get_hist_data(code, start='2018-04-01', end=dt.strftime('%Y-%m-%d'), ktype='5')
     df_now = df_now.sort_index()
     df_now = fill_for_line_regression_5min(df_now)
 
