@@ -11,11 +11,12 @@ from app.dao.price_service import get_open_price
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = ts.get_hist_data(code, ktype='5')
     df = df.sort_index()
+    df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_predict(df)
+    df = feature_service.fill_for_line_regression_5min(df)
     df = df.dropna()
 
     feature = ['open', 'low', 'high','price_change', 'volume'
@@ -25,7 +26,7 @@ def predict(code='600179', show_plot=False):
                 ,'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close','macd']
     # ^^^^^^^ need more features
 
-    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
+    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
     # choose linear regression model
     reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
@@ -47,15 +48,15 @@ def predict(code='600179', show_plot=False):
     # r2_score - sklearn评分方法
     print('Variance score: %.2f' % r2_score(df_y_test, df_y_test_pred))
 
-    reg.fit(df[feature], df['close'])
+    reg.fit(df[feature], df['next_open'])
 
-    df_now = df.tail(1)
-    df_now = df_now.dropna()
-    df_now['open'] = get_open_price(code)
+    df_now = ts.get_hist_data(code,start='2018-03-01',end='2018-04-25', ktype='5')
+    df_now = df_now.sort_index()
+    df_now = feature_service.fill_for_line_regression_5min(df_now)
 
-    print('今日开盘价格:%s' % df_now[['open']].values)
-    df_y_toady_pred = reg.predict(df_now[feature]);
-    print('预测收盘价格:%s' % df_y_toady_pred)
+    print('输入特征值\n:%s' % df_now[feature].tail(1).values)
+    df_y_toady_pred = reg.predict(df_now[feature].tail(1));
+    print('预测价格:%s' % df_y_toady_pred)
 
     # Plot outputs
 
