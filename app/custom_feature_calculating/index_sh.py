@@ -7,7 +7,7 @@ def fill(df):
 
     df['sh_open'] = df_sh['open']
     df['sh_close'] = df_sh['close']
-    pass
+    return df
 
 
 if __name__ == "__main__":

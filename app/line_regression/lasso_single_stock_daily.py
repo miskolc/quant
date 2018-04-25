@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from app.custom_feature_calculating import feature as feature_service
 from app.dao.price_service import get_open_price
 
+
 # predict
 def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
@@ -17,7 +18,8 @@ def predict(code='600179', show_plot=False):
     df = feature_service.fill_for_line_regression_predict(df)
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
+    feature = ['open', 'low', 'high', 'volume', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb',
+               'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close']
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)

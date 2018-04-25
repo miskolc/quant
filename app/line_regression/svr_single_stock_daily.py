@@ -45,7 +45,6 @@ def cross_validation(X, y):
               % (mean, std * 2, params))
 
 
-
 # predict
 def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
@@ -54,8 +53,9 @@ def predict(code='600179', show_plot=False):
     # add feature to df
     df = fill_for_line_regression_predict(df)
     df = df.dropna()
-    #print(df.tail(1))
-    feature = ['open','high','low', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close']
+    # print(df.tail(1))
+    feature = ['open', 'low', 'high', 'volume', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb',
+               'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close']
     # ^^^^^^^ need more features
 
     X = df[feature].copy()
@@ -95,7 +95,7 @@ def predict(code='600179', show_plot=False):
     print('预测收盘价格:%s' % df_y_toady_pred)
 
     # Plot outputs
-    #print(df_x_test[:, 0])
+    # print(df_x_test[:, 0])
     if show_plot:
         plt.scatter(df_x_test[:, 0], df_y_test, color='black')
         plt.scatter(df_x_test[:, 0], df_y_test_pred, color='blue')
