@@ -54,9 +54,9 @@ def predict(code='600179', show_plot=False):
     df_now = df_now.sort_index()
     df_now = feature_service.fill_for_line_regression_5min(df_now)
 
-    print('输入特征值\n:%s' % df_now[feature].tail(1).values)
+    print('当前价格:%s' % df_now[feature].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));
-    print('预测价格:%s' % df_y_toady_pred)
+    print('Lasso Model, 预测价格:%s' % df_y_toady_pred)
 
     # Plot outputs
 
@@ -65,6 +65,7 @@ def predict(code='600179', show_plot=False):
         plt.scatter(df_x_test.index, df_y_test_pred, color='blue')
         plt.show()
 
+    return df_y_toady_pred
 
 if __name__ == "__main__":
     code = input("Enter the code: ")

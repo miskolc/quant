@@ -1,5 +1,5 @@
 # Close price predict
-
+from datetime import datetime
 import matplotlib.pyplot as plt
 import tushare as ts
 from sklearn import preprocessing
@@ -29,13 +29,14 @@ def cross_validation(X, y):
     print("Optimised parameters found on training set:")
     print(model.best_params_, "\n")
 
-    # The grid_scores_ attribute was deprecated in version 0.18
-    #
-    #
-    # print("Grid scores calculated on training set:")
-    # for params, mean_score, scores in model.grid_scores_:
-    #     print("%0.3f for %r" % (mean_score, params))
-
+    '''
+    #The grid_scores_ attribute was deprecated in version 0.18
+    
+    
+    print("Grid scores calculated on training set:")
+    for params, mean_score, scores in model.grid_scores_:
+         print("%0.3f for %r" % (mean_score, params))
+    
     print("Grid scores calculated on training set:")
     means = model.cv_results_['mean_test_score']
     stds = model.cv_results_['std_test_score']
@@ -43,8 +44,9 @@ def cross_validation(X, y):
     for mean, std, params in zip(means, stds, model.cv_results_['params']):
         print("%0.3f (+/-%0.03f) for %r"
               % (mean, std * 2, params))
+    '''
 
-    return model.best_params_;
+    return model.best_params_
 
 # predict
 def predict(code='600179', show_plot=False):
@@ -55,12 +57,13 @@ def predict(code='600179', show_plot=False):
     # add feature to df
     df = fill_for_line_regression_5min(df)
     df = df.dropna()
-
+    df.to_csv('result.csv')
     feature = ['open', 'low', 'high','price_change', 'volume'
                 ,'ma_price_change_5','ma_price_change_10','ma_price_change_20'
                 ,'v_ma5','v_ma10','v_ma20'
                 ,'ma5', 'ma10', 'ma20'
-                ,'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close','macd']
+                ,'ubb', 'lbb', 'cci', 'evm',
+               'ewma', 'fi', 'turnover', 'pre_close', 'sh_open', 'sh_close','macd']
 
     # ^^^^^^^ need more features
 
@@ -90,19 +93,22 @@ def predict(code='600179', show_plot=False):
 
     svr.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code,start='2018-03-01',end='2018-04-25', ktype='5')
+    dt = datetime.now()
+    df_now = ts.get_hist_data(code,start='2018-04-01',end=dt.strftime('%Y-%m-%d'), ktype='5')
     df_now = df_now.sort_index()
     df_now = fill_for_line_regression_5min(df_now)
 
-    print('输入特征值\n:%s' % df_now[feature].tail(1).values)
+    print('当前价格:%s' % df_now['open'].tail(1).values)
     df_y_toady_pred = svr.predict(preprocessing.scale(df_now[feature].tail(1)));
 
-    print('预测价格:%s' % df_y_toady_pred)
+    print('SVR Model, 预测价格:%s' % df_y_toady_pred)
 
     if show_plot:
         plt.scatter(df_x_test[:, 0], df_y_test, color='black')
         plt.scatter(df_x_test[:, 0], df_y_test_pred, color='blue')
         plt.show()
+
+    return df_y_toady_pred
 
 
 if __name__ == "__main__":

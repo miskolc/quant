@@ -16,7 +16,7 @@ from app.dao import engine
 
 # 爬取指数1min窗口数据
 # code: 上证代码->'000001'
-# freq: 1min/5min
+# freq: 1min/five_min
 
 def index_retrieval(code, freq, start_date, end_date, table_name='tick_data_1min_sh'):
     conn = ts.get_apis()
@@ -52,7 +52,7 @@ def price_retrieval_1min(code, start_date, end_date, table_name='tick_data_1min'
 def price_retrieval_5min(code, start_date, end_date):
     conn = ts.get_apis()
     try:
-        data = ts.bar(conn=conn, code=code, freq='5min',
+        data = ts.bar(conn=conn, code=code, freq='five_min',
                       start_date=start_date, end_date=end_date)
         data.to_sql('tick_data_5min', engine.create(), if_exists='append')
     except Exception as e:
