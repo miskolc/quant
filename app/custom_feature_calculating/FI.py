@@ -1,9 +1,10 @@
 import pandas as pd
 
-# FI Force Index - 力量指数
+# FI Force Index
 '''
-Force Index(1) = {Close (current period)  -  Close (prior period)} x Volume
-Force Index(13) = 13-period EMA of Force Index(1)
+ * 力量指数
+ * Force Index(1) = {Close (current period)  -  Close (prior period)} x Volume
+ * Force Index(13) = 13-period EMA of Force Index(1)
 '''
 
 

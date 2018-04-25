@@ -2,7 +2,7 @@ import pandas as pd
 
 # Compute the Bollinger Bands
 '''
-
+  * 布林线指标 - 标准差及信赖区间
   * Middle Band = 20-day simple moving average (SMA)
   * Upper Band = 20-day SMA + (20-day standard deviation of price x 2) 
   * Lower Band = 20-day SMA - (20-day standard deviation of price x 2)

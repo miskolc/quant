@@ -1,10 +1,11 @@
 import pandas as pd
 
-# CCI Commodity Channel Index - 顺势指标
+# CCI Commodity Channel Index
 '''
-CCI = (Typical Price  -  20-period SMA of TP) / (.015 x Mean Deviation)
-Typical Price (TP) = (High + Low + Close)/3
-Constant = .015
+ * 顺势指标
+ * CCI = (Typical Price  -  20-period SMA of TP) / (.015 x Mean Deviation)
+ * Typical Price (TP) = (High + Low + Close)/3
+ * Constant = .015
 '''
 
 

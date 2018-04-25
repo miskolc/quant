@@ -1,7 +1,12 @@
 import pandas as pd
 
 
-# EMV Ease of Movement - 简易波动指标
+# EMV Ease of Movement
+
+'''
+* 简易波动指标
+
+'''
 def EMV(data, ndays):
     dm = ((data['high'] + data['low']) / 2) - ((data['high'].shift(1) + data['low'].shift(1)) / 2)
     br = (data['volume'] / 100000000) / ((data['high'] - data['low']))
