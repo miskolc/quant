@@ -3,6 +3,7 @@ from app.custom_feature_calculating.CCI import CCI
 from app.custom_feature_calculating.EMV import EMV
 from app.custom_feature_calculating.EWMA import EWMA
 from app.custom_feature_calculating.SMA import SMA
+import app.custom_feature_calculating.pre_close as pre_close
 
 from app.custom_feature_calculating.FI import ForceIndex
 
@@ -17,6 +18,7 @@ def fill_for_line_regression(df):
     df = SMA(df, 5)
     df = SMA(df, 10)
     df = SMA(df, 20)
+    df = pre_close.fill(df)
 
     return df
 
@@ -28,5 +30,6 @@ def fill_for_line_regression_predict(df):
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
+    df = pre_close.fill(df)
 
     return df
