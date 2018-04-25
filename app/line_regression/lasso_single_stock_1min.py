@@ -66,11 +66,11 @@ def predict(df, model):
 
         if pre_predict > 0 :
             print(
-                '%s, 幅度:\033[0;37;41m%.2f ↑\033[0m,输入价格:%s, 预测价格:%s' % (
+                '%s, 幅度:\033[0;37;41m%.2f ↑\033[0m,当前价格:%s, 预测价格:%s' % (
                 dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
         else:
             print(
-                '%s, 幅度:\022[0;37;41m%.2f ↓\022[0m,输入价格:%s, 预测价格:%s' % (
+                '%s, 幅度:\022[0;37;41m%.2f ↓\022[0m,当前价格:%s, 预测价格:%s' % (
                     dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
 
 
