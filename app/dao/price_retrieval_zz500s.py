@@ -4,10 +4,7 @@
 # engine.py
 
 
-import tushare as ts
-from datetime import datetime, timedelta
-
-from dao import price_retrieval
+from app.dao import price_retrieval
 
 # 中证500成份股, 股票价格获取
 if __name__ == "__main__":

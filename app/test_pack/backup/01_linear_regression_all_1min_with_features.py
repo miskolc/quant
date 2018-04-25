@@ -1,23 +1,18 @@
 # Close price predict
-import tushare as ts#
-from googlefinance.client import get_price_data, get_prices_data, get_prices_time_data
 
-from sqlalchemy import create_engine
 import custom_feature_calculating.BBANDS as featureLibBB
 import custom_feature_calculating.CCI as featureLibCCI
-import custom_feature_calculating.FI as featureLibFI
 import custom_feature_calculating.EMV as featureLibEVM
 import custom_feature_calculating.EWMA as featureLibEWMA
-import custom_feature_calculating.SMA as featureLibSMA
 import custom_feature_calculating.ROC as featureLibROC
-import custom_feature_calculating.Square as featureLibSquare
-from sklearn.metrics import mean_squared_error, r2_score
+import custom_feature_calculating.SMA as featureLibSMA
 import matplotlib.pyplot as plt
-from sklearn import linear_model
-import time
-from datetime import datetime
 import pandas as pd
-from sklearn import preprocessing
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+from sqlalchemy import create_engine
+
+import app.custom_feature_calculating.FI as featureLibFI
 
 # data collecting
 # or extract from db

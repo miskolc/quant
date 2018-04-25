@@ -1,9 +1,10 @@
-from custom_feature_calculating.BBANDS import BBANDS
-from custom_feature_calculating.CCI import CCI
-from custom_feature_calculating.FI import ForceIndex
-from custom_feature_calculating.EMV import EMV
-from custom_feature_calculating.EWMA import EWMA
-from custom_feature_calculating.SMA import SMA
+from app.custom_feature_calculating.BBANDS import BBANDS
+from app.custom_feature_calculating.CCI import CCI
+from app.custom_feature_calculating.EMV import EMV
+from app.custom_feature_calculating.EWMA import EWMA
+from app.custom_feature_calculating.SMA import SMA
+
+from app.custom_feature_calculating.FI import ForceIndex
 
 
 def fill_for_line_regression(df):

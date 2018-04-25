@@ -1,26 +1,29 @@
 # Close price predict
 
-import tushare as ts
 import custom_feature_calculating.BBANDS as featureLibBB
 import custom_feature_calculating.CCI as featureLibCCI
-import custom_feature_calculating.FI as featureLibFI
 import custom_feature_calculating.EMV as featureLibEVM
 import custom_feature_calculating.EWMA as featureLibEWMA
-from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
-from sklearn import linear_model
+import tushare as ts
+from sklearn.linear_model import LassoCV
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+
+import app.custom_feature_calculating.FI as featureLibFI
 
 
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code,start='2015-01-01')  # 一次性获取上证数据
-    df = df.sort_index()
+    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
     print(df)
+    df = df.sort_index()
+
+
     # 获取上证指数
-    df_sh = ts.get_hist_data('sh',start='2015-01-01')  # 一次性获取上证数据
+    df_sh = ts.get_hist_data('sh')  # 一次性获取上证数据
     n = 5
     # add feature to df
-    df = featureLibBB.BBANDS(df, n)
+    df = featureLibBB.BBANDS(df, 20)
     df = featureLibCCI.CCI(df, n)
     df = featureLibFI.ForceIndex(df, n)
     df = featureLibEVM.EMV(df, n)
@@ -33,14 +36,16 @@ def predict(code='600179', show_plot=False):
     # print test
     # print(df.tail(1))
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi','rt_sh','turnover']
 
     # ^^^^^^^ need more features
+
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression(normalize=True)
+
+    reg = LassoCV(alphas = [1, 0.1, 0.001, 0.0005], normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -80,8 +85,8 @@ def predict(code='600179', show_plot=False):
 
 if __name__ == "__main__":
       code = input("Enter the code: ")
-      # code is null
+
       if not code.strip():
-            predict()
+            predict(show_plot=True)
       else:
             predict(code)

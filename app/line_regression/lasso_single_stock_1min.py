@@ -1,9 +1,4 @@
 # Close price predict
-import sys
-
-sys.path.append("../../")
-print(sys.path)
-
 from googlefinance.client import get_price_data
 from sklearn.metrics import mean_squared_error, r2_score
 import time
@@ -66,16 +61,17 @@ def predict(df, model):
             '%s, 输入价格:%s, 预测价格:%s' % (
                 dt.strftime('%Y-%m-%d %H:%M:%S'), df_now['open'].values[0], df_y_now_pred[0]))
     else:
-        pre_predict = pre_predict - df_now['open'].values[0]
+        deviation = pre_predict - df_now['open'].values[0]
+        pre_predict = df_y_now_pred[0]
 
         if pre_predict > 0 :
             print(
                 '%s, 误差:\033[0;37;41m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
-                dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
+                dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
         else:
             print(
                 '%s, 误差:\033[0;37;41m%.2f\033[0m,输入价格:%s, 预测价格:%s' % (
-                    dt.strftime('%Y-%m-%d %H:%M:%S'), 1.1, df_now['open'].values[0], df_y_now_pred[0]))
+                    dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, df_now['open'].values[0], df_y_now_pred[0]))
 
 
 if __name__ == "__main__":

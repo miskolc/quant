@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 
 import tushare as ts
 
-from common_tools import decorators
-from dao import engine
+from app.common_tools import decorators
+from app.dao import engine
 
 
 # 爬取指数1min窗口数据

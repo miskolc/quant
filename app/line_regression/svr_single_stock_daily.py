@@ -1,14 +1,14 @@
 # Close price predict
 
-import tushare as ts
-from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
+import tushare as ts
 from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from custom_feature_calculating import feature as feature_service
-from sklearn.svm import SVR
-import pandas as pd
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVR
+
+from app.custom_feature_calculating.feature import fill_for_line_regression_predict
 
 
 def cross_validation(X, y):
@@ -47,11 +47,11 @@ def cross_validation(X, y):
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, start='2016-01-01')  # 一次性获取上证数据
+    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
     df = df.sort_index()
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_predict(df)
+    df = fill_for_line_regression_predict(df)
     df = df.dropna()
 
     feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover']

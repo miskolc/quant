@@ -1,7 +1,5 @@
 # ae.h - 2018/4/23
-from dao.price_retrieval import price_retrieval_1min
-import tushare as ts
-import numpy as np
+from app.dao.price_retrieval import price_retrieval_1min
 
 if __name__ == '__main__':
     price_retrieval_1min('600179', '2018-04-24', '2018-04-24', table_name='tick_data_1min_hs300')

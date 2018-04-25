@@ -1,14 +1,14 @@
 # lasso model trainng and  predict
-import tushare as ts
-from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LassoCV
-from sklearn.model_selection import train_test_split
 import pandas as pd
-from dao import engine
+import tushare as ts
 from sklearn.externals import joblib
-from custom_feature_calculating import feature as feature_service
-import numpy as np
+from sklearn.linear_model import LassoCV
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+
+from app.custom_feature_calculating import feature as feature_service
+from app.dao import engine
 
 # predict
 

@@ -1,10 +1,6 @@
 # ae.h - 2018/4/23
 
-import pandas as pd
-import numpy as np
-from statsmodels.tsa.stattools import adfuller
-from dao import engine
-from common_tools.GBM_verify import gmb_test
+from app.common_tools import gmb_test
 
 
 #code_df = pd.read_sql_query('SELECT DISTINCT code from tick_data_1min_hs300', engine.create())

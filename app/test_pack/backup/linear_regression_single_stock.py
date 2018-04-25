@@ -1,37 +1,47 @@
 # Close price predict
 
-import tushare as ts
-from sklearn.metrics import mean_squared_error, r2_score
+import custom_feature_calculating.BBANDS as featureLibBB
+import custom_feature_calculating.CCI as featureLibCCI
+import custom_feature_calculating.EMV as featureLibEVM
+import custom_feature_calculating.EWMA as featureLibEWMA
 import matplotlib.pyplot as plt
+import tushare as ts
 from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from custom_feature_calculating import feature as feature_service
+
+import app.custom_feature_calculating.FI as featureLibFI
 
 
-# predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
+    df = ts.get_hist_data(code,start='2015-01-01')  # 一次性获取上证数据
     df = df.sort_index()
-
+    print(df)
     # 获取上证指数
-    df_sh = ts.get_hist_data('sh', start='2015-01-01')  # 一次性获取上证数据
-    df_sh = df_sh.sort_index()
+    df_sh = ts.get_hist_data('sh',start='2015-01-01')  # 一次性获取上证数据
+    n = 5
     # add feature to df
-    df = feature_service.fill_for_line_regression_predict(df)
-    df = df.dropna()
-
+    df = featureLibBB.BBANDS(df, n)
+    df = featureLibCCI.CCI(df, n)
+    df = featureLibFI.ForceIndex(df, n)
+    df = featureLibEVM.EMV(df, n)
+    df = featureLibEWMA.EWMA(df, n)
     # 填充上证指数到训练集
     df['rt_sh'] = df_sh['close']
     df = df.dropna()
+    # Normalization
+    df_norm = (df - df.mean()) / (df.max() - df.min())
+    # print test
+    # print(df.tail(1))
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi']
 
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression()
+    reg = linear_model.LinearRegression(normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -53,12 +63,12 @@ def predict(code='600179', show_plot=False):
     reg.fit(df[feature], df['close'])
 
     df_now = df.tail(1)
-    df_now.to_csv("result.csv")
-    df_now = df_now.dropna()
     df_now['open'] = df_now['close']
 
+    df_x_toady = df_now[feature].values
+
     print('昨日收盘价格:%s' % df_now[['open']].values)
-    df_y_toady_pred = reg.predict(df_now[feature]);
+    df_y_toady_pred = reg.predict(df_x_toady);
     print('预测收盘价格:%s' % df_y_toady_pred)
 
     # Plot outputs
@@ -70,9 +80,9 @@ def predict(code='600179', show_plot=False):
 
 
 if __name__ == "__main__":
-    code = input("Enter the code: ")
-    # code is null
-    if not code.strip():
-        predict()
-    else:
-        predict(code)
+      code = input("Enter the code: ")
+      # code is null
+      if not code.strip():
+            predict()
+      else:
+            predict(code)

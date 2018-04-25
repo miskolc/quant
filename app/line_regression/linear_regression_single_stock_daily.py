@@ -1,11 +1,12 @@
 # Close price predict
 
-import tushare as ts
-from sklearn.metrics import mean_squared_error, r2_score
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LassoCV
+import tushare as ts
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from custom_feature_calculating import feature as feature_service
+
+from app.custom_feature_calculating import feature as feature_service
 
 
 # predict
@@ -13,17 +14,25 @@ def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, start='2015-01-01')  # 一次性获取上证数据
     df = df.sort_index()
 
+    # 获取上证指数
+    df_sh = ts.get_hist_data('sh', start='2015-01-01')  # 一次性获取上证数据
+    df_sh = df_sh.sort_index()
     # add feature to df
     df = feature_service.fill_for_line_regression_predict(df)
     df = df.dropna()
 
-    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'turnover']
+    # 填充上证指数到训练集
+    df['rt_sh'] = df_sh['close']
+    df = df.dropna()
+
+    feature = ['open', 'ma5', 'ma10', 'ma20', 'ubb', 'lbb', 'cci', 'evm', 'ewma', 'fi', 'rt_sh', 'turnover']
+
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3)
 
     # choose linear regression model
-    reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
+    reg = linear_model.LinearRegression()
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -56,8 +65,8 @@ def predict(code='600179', show_plot=False):
     # Plot outputs
 
     if show_plot:
-        plt.scatter(df_x_test.index, df_y_test, color='black')
-        plt.scatter(df_x_test.index, df_y_test_pred, color='blue')
+        plt.scatter(df_x_test['open'], df_y_test, color='black')
+        plt.plot(df_x_test['open'], df_y_test_pred, color='blue', linewidth=3)
         plt.show()
 
 

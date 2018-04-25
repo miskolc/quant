@@ -2,8 +2,9 @@
 
 import pandas as pd
 from statsmodels.tsa.stattools import adfuller
-from dao import engine
-from common_tools import decorators
+
+from app.common_tools import decorators
+from app.dao import engine
 
 
 @decorators.exc_time

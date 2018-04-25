@@ -8,7 +8,6 @@
 from __future__ import print_function
 
 from sqlalchemy import create_engine
-from custom_feature_calculating import feature
 
 # Obtain a database connection to the MySQL instance
 db_host = 'localhost'
