@@ -2,22 +2,19 @@
 
 import matplotlib.pyplot as plt
 import tushare as ts
-from sklearn.linear_model import LassoCV
+from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+
 from app.custom_feature_calculating import feature as feature_service
-from app.dao.price_service import get_open_price
-from sklearn import linear_model
-from app.line_regression.five_min.feature_constant import feature
+from app.line_regression.feature_constant import feature
 
 
 # predict
 def predict(code='600179', show_plot=False):
-<<<<<<< HEAD
-    df = ts.get_hist_data(code, '2016-01-01')
-=======
+
     df = ts.get_k_data(code,'2016-01-01')
->>>>>>> 9c60bcc72c3ffd956006ac40bbd7278eff3be63f
+
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 

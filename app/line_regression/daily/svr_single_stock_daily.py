@@ -1,5 +1,4 @@
 # Close price predict
-from datetime import datetime
 
 import matplotlib.pyplot as plt
 import tushare as ts
@@ -10,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 
 from app.custom_feature_calculating.feature import fill_for_line_regression_daily
-from app.line_regression.five_min.feature_constant import feature
+from app.line_regression.feature_constant import feature
 
 
 def cross_validation(X, y):

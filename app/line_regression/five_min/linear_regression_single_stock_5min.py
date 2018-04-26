@@ -2,13 +2,12 @@
 
 import matplotlib.pyplot as plt
 import tushare as ts
-from sklearn.linear_model import LassoCV
+from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+
 from app.custom_feature_calculating import feature as feature_service
-from app.dao.price_service import get_open_price
-from sklearn import linear_model
-from app.line_regression.five_min.feature_constant import feature
+from app.line_regression.feature_constant import feature
 
 
 # predict
@@ -26,7 +25,7 @@ def predict(code='600179', show_plot=False):
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
     # choose linear regression model
-    reg = linear_model.LinearRegression()
+    reg = linear_model.LinearRegression(normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)

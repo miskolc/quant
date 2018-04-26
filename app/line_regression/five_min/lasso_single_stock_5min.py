@@ -5,9 +5,10 @@ import tushare as ts
 from sklearn.linear_model import LassoCV
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+
 from app.custom_feature_calculating import feature as feature_service
-from app.dao.price_service import get_open_price
-from app.line_regression.five_min.feature_constant import feature
+from app.line_regression.feature_constant import feature
+
 
 # predict
 def predict(code='600179', show_plot=False):
@@ -25,7 +26,7 @@ def predict(code='600179', show_plot=False):
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
     # choose linear regression model
-    reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
+    reg = LassoCV(alphas=[10,1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -33,6 +34,7 @@ def predict(code='600179', show_plot=False):
     # test predict
     df_y_test_pred = reg.predict(df_x_test)
 
+    print('Alpha: \n', reg.alpha_)
     # The Coefficients (系数 auto gen)
     print('Coefficients: \n', reg.coef_)
     # The Intercept(截距/干扰/噪声 auto gen)

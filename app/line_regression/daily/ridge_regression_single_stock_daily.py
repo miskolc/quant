@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import tushare as ts
-from sklearn.linear_model import LassoCV
+from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
@@ -12,21 +12,20 @@ from app.line_regression.feature_constant import feature
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_k_data(code, start='2016-01-01')
+    df = ts.get_k_data(code)
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_daily(df)
+    df = feature_service.fill_for_line_regression_5min(df)
     df = df.dropna()
-
 
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
     # choose linear regression model
-    reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
+    reg = linear_model.RidgeCV(alphas=[0.01,0.01,0.1, 1.0, 10.0], normalize=True)
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -34,6 +33,7 @@ def predict(code='600179', show_plot=False):
     # test predict
     df_y_test_pred = reg.predict(df_x_test)
 
+    print('Alpha: \n', reg.alpha_)
     # The Coefficients (系数 auto gen)
     print('Coefficients: \n', reg.coef_)
     # The Intercept(截距/干扰/噪声 auto gen)
@@ -49,11 +49,11 @@ def predict(code='600179', show_plot=False):
 
     df_now = ts.get_k_data(code)
     df_now = df_now.sort_index()
-    df_now = feature_service.fill_for_line_regression_daily(df_now)
+    df_now = feature_service.fill_for_line_regression_5min(df_now)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));
-    print('Lasso Model, 预测价格:%s' % df_y_toady_pred)
+    print('Linear Regression Model, 预测价格:%s' % df_y_toady_pred)
 
     # Plot outputs
 
@@ -64,10 +64,12 @@ def predict(code='600179', show_plot=False):
 
     return df_y_toady_pred
 
+
 if __name__ == "__main__":
     code = input("Enter the code: ")
     # code is null
     if not code.strip():
+
         predict()
     else:
         predict(code)

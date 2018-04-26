@@ -4,7 +4,7 @@ import app.line_regression.five_min.svr_single_stock_5min as svr_single_stock_5m
 import tushare as ts
 
 if __name__ == "__main__":
-    list = ('000001',)
+    list = ('600179','000001','000725', '601211', '600000','600050','000651','601398')
 
     rs = []
     for code in list:
