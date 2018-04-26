@@ -11,7 +11,7 @@ from app.line_regression.five_min.feature_constant import feature
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, ktype='5')
+    df = ts.get_k_data(code, ktype='5')
     
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
@@ -19,7 +19,6 @@ def predict(code='600179', show_plot=False):
     # add feature to df
     df = feature_service.fill_for_line_regression_5min(df)
     df = df.dropna()
-
 
     # ^^^^^^^ need more features
 
@@ -47,7 +46,7 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code, ktype='5')
+    df_now = ts.get_k_data(code, ktype='5')
     df_now = df_now.sort_index()
     df_now = feature_service.fill_for_line_regression_5min(df_now)
 

@@ -52,7 +52,7 @@ def cross_validation(X, y):
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, ktype='5')
+    df = ts.get_k_data(code, ktype='5')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
@@ -87,7 +87,7 @@ def predict(code='600179', show_plot=False):
 
     svr.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code, ktype='5')
+    df_now = ts.get_k_data(code, ktype='5')
     df_now = df_now.sort_index()
     df_now = fill_for_line_regression_5min(df_now)
 
