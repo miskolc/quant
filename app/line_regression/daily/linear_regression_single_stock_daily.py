@@ -7,26 +7,25 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from app.custom_feature_calculating import feature as feature_service
 from app.dao.price_service import get_open_price
+from sklearn import linear_model
 from app.line_regression.five_min.feature_constant import feature
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, ktype='5')
-    
+    df = ts.get_hist_data(code,'2016-01-01')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_5min(df)
+    df = feature_service.fill_for_line_regression_daily(df)
     df = df.dropna()
-
 
     # ^^^^^^^ need more features
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
     # choose linear regression model
-    reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)
+    reg = linear_model.LinearRegression()
 
     # fit model with data(training)
     reg.fit(df_x_train, df_y_train)
@@ -47,13 +46,13 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code, ktype='5')
+    df_now = ts.get_hist_data(code)
     df_now = df_now.sort_index()
-    df_now = feature_service.fill_for_line_regression_5min(df_now)
+    df_now = feature_service.fill_for_line_regression_daily(df_now)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));
-    print('Lasso Model, 预测价格:%s' % df_y_toady_pred)
+    print('Linear Regression Model, 预测价格:%s' % df_y_toady_pred)
 
     # Plot outputs
 

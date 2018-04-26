@@ -11,13 +11,12 @@ from app.line_regression.five_min.feature_constant import feature
 
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code, ktype='5')
-    
+    df = ts.get_hist_data(code, start='2016-01-01')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_5min(df)
+    df = feature_service.fill_for_line_regression_daily(df)
     df = df.dropna()
 
 
@@ -47,9 +46,9 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code, ktype='5')
+    df_now = ts.get_hist_data(code)
     df_now = df_now.sort_index()
-    df_now = feature_service.fill_for_line_regression_5min(df_now)
+    df_now = feature_service.fill_for_line_regression_daily(df_now)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));

@@ -77,6 +77,6 @@ def predict(df, model):
 
 if __name__ == "__main__":
     while 1 == 1:
-        df, reg = train('600050')
+        df, reg = train('600179')
         predict(df, reg)
         time.sleep(60)

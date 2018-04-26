@@ -61,3 +61,19 @@ def fill_for_line_regression_5min(df):
     df = macd.fill(df)
     df = Ulto(df)
     return df
+
+def fill_for_line_regression_daily(df):
+    n = 5
+    df = BBANDS(df, 20)
+    df = CCI(df, 20)
+    df = ForceIndex(df, 13)
+    df = EMV(df, n)
+    df = EWMA(df, n)
+    df = pre_close.fill(df)
+    df = index_sh.fill(df)
+    df = price_change.fill(df,5)
+    df = price_change.fill(df,10)
+    df = price_change.fill(df,20)
+    df = macd.fill(df)
+    df = Ulto(df)
+    return df
