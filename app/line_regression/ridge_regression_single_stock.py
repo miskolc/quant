@@ -10,8 +10,10 @@ from app.dao.price_service import get_k_data, get_training_data
 
 
 # predict
-def predict(code='600179', show_plot=False):
-    df = get_training_data(code, 'D')
+def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
+
+    if df is None:
+        df = get_training_data(code, ktype)
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
@@ -28,11 +30,12 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['next_open'])
 
-    df_now = get_k_data(code, 'D')
+    if df_now is None:
+        df_now = get_k_data(code, ktype)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));
-    print('Ridge Regression Model, 预测价格:%s' % df_y_toady_pred)
+    print('Linear Regression Model, 预测价格:%s' % df_y_toady_pred)
 
     # Plot outputs
     drawer.make_training_plt(show_plot, df_x_test, df_y_test, df_y_test_pred)

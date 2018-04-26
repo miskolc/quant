@@ -8,7 +8,6 @@ import app.custom_feature_calculating.index_sh as index_sh
 import app.custom_feature_calculating.price_change as price_change
 from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
-import app.custom_feature_calculating.index_sh_5min as index_sh_5min
 from app.custom_feature_calculating.Ulto import Ulto
 import numpy as np
 
@@ -48,14 +47,13 @@ def fill_for_line_regression_predict(df):
     return df
 
 
-def fill_for_line_regression_5min(df):
+def fill_for_5min(df):
     n = 5
     df = BBANDS(df, 20)
     df = CCI(df, 20)
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
-    df = pre_close.fill(df)
     df = index_sh_5min.fill(df)
 #    df = price_change.fill(df,5)
 #    df = price_change.fill(df,10)
@@ -69,15 +67,13 @@ def fill_for_line_regression_5min(df):
     df.replace([np.inf, -np.inf], np.nan)
     return df
 
-def fill_for_line_regression_daily(df):
+def fill(df, ktype):
     n = 5
     df = BBANDS(df, 20)
     df = CCI(df, 20)
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
-    df = pre_close.fill(df)
-    df = index_sh.fill(df)
 #    df = price_change.fill(df,5)
 #    df = price_change.fill(df,10)
 #    df = price_change.fill(df,20)

@@ -8,8 +8,8 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 
-from app.custom_feature_calculating.feature import fill_for_line_regression_daily
-from app.line_regression.feature_constant import feature
+from app.contants.feature_constant import feature
+from app.custom_feature_calculating.feature import fill_daily
 
 
 def cross_validation(X, y):
@@ -56,7 +56,7 @@ def predict(code='600179', show_plot=False):
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = fill_for_line_regression_daily(df)
+    df = fill_daily(df)
     df = df.dropna()
     # ^^^^^^^ need more features
 
@@ -88,7 +88,7 @@ def predict(code='600179', show_plot=False):
 
     df_now = ts.get_k_data(code)
     df_now = df_now.sort_index()
-    df_now = fill_for_line_regression_daily(df_now)
+    df_now = fill_daily(df_now)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = svr.predict(preprocessing.scale(df_now[feature].tail(1)));

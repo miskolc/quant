@@ -6,8 +6,8 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
+from app.contants.feature_constant import feature
 from app.custom_feature_calculating import feature as feature_service
-from app.line_regression.feature_constant import feature
 
 
 # predict
@@ -19,7 +19,7 @@ def predict(code='600179', show_plot=False):
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
-    df = feature_service.fill_for_line_regression_daily(df)
+    df = feature_service.fill_daily(df)
     # ^^^^^^^ need more features
     df = df.dropna()
 
@@ -51,7 +51,7 @@ def predict(code='600179', show_plot=False):
 
     df_now = ts.get_k_data(code)
     df_now = df_now.sort_index()
-    df_now = feature_service.fill_for_line_regression_daily(df_now)
+    df_now = feature_service.fill_daily(df_now)
 
     print('当前价格:%s' % df_now['close'].tail(1).values)
     df_y_toady_pred = reg.predict(df_now[feature].tail(1));
