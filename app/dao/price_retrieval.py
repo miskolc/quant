@@ -52,7 +52,7 @@ def price_retrieval_1min(code, start_date, end_date, table_name='tick_data_1min'
 def price_retrieval_5min(code, start_date, end_date):
     conn = ts.get_apis()
     try:
-        data = ts.bar(conn=conn, code=code, freq='five_min',
+        data = ts.bar(conn=conn, code=code, freq='5min',
                       start_date=start_date, end_date=end_date)
         data.to_sql('tick_data_5min', engine.create(), if_exists='append')
     except Exception as e:
@@ -120,8 +120,8 @@ if __name__ == "__main__":
     end = now.strftime('%Y-%m-%d')
     print('start=%s,end=%s' % (start, end))
 
-
-
+    price_retrieval_5min('000651','2016-01-01', '2018-04-26')
+    #index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
     # price retrieval
     # index_retrieval('000001', '1min', '2016-01-01', '2018-04-20')
     # price_retrieval('600179', '1min', '2016-01-01', '2018-04-20')
