@@ -70,7 +70,7 @@ def fill_for_5min(df):
 def fill(df, ktype):
     n = 5
     df = BBANDS(df, 20)
-    df = CCI(df, 20)
+    df = CCI(df, 14)
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)

@@ -9,11 +9,10 @@ def get_open_price(code):
 
 
 def get_training_data(code, ktype='D'):
-    df = ts.get_k_data(code, ktype=ktype, start='2016-01-01')
+    df = ts.get_k_data(code, ktype=ktype)
     df = df.set_index('date')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
-
     # add feature to df
     df = feature_service.fill(df, ktype)
     df = df.dropna()
@@ -21,15 +20,15 @@ def get_training_data(code, ktype='D'):
 
 
 def get_k_data(code, ktype='D'):
-    df = ts.get_k_data(code, ktype=ktype, start='2016-01-01')
+    df = ts.get_k_data(code, ktype=ktype)
     df = df.set_index('date')
+    df = df.sort_index()
     # add feature to df
     df = feature_service.fill(df, ktype)
 
-    df = df.sort_index()
     df = df.dropna()
     return df
 
-get_k_data
+
 if __name__ == "__main__":
-    get_training_data('600179', '5')
+    get_training_data('000001', 'D')

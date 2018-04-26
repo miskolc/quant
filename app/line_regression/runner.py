@@ -6,13 +6,15 @@ import app.line_regression.linear_regression_single_stock as linear_regression_s
 from app.dao.price_service import get_training_data, get_k_data
 
 if __name__ == "__main__":
-    list = ['000001', ]
+    list = ['600179','000725','601211', '600050', '000651','000001', ]
     ktype = '5'
 
     rs = []
     for code in list:
         df = get_training_data(code, ktype)
+
         df_now = get_k_data(code, ktype)
+        df_now.to_csv('result.csv')
 
         df_rea = ts.get_realtime_quotes(code)
         svr_price, price = svr_single_stock.predict(code, df=df, df_now=df_now)
