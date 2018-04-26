@@ -10,6 +10,7 @@ from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
 import app.custom_feature_calculating.index_sh_5min as index_sh_5min
 from app.custom_feature_calculating.Ulto import Ulto
+import numpy as np
 
 def fill_for_line_regression(df):
     n = 5
@@ -43,6 +44,7 @@ def fill_for_line_regression_predict(df):
     df = price_change.fill(df,10)
     df = price_change.fill(df,20)
     df = macd.fill(df)
+    df = SMA(df, 30)
     return df
 
 
@@ -54,12 +56,17 @@ def fill_for_line_regression_5min(df):
     df = EMV(df, n)
     df = EWMA(df, n)
     df = pre_close.fill(df)
-    df = index_sh_5min.fill(df)
-    df = price_change.fill(df,5)
-    df = price_change.fill(df,10)
-    df = price_change.fill(df,20)
+#    df = index_sh_5min.fill(df)
+#    df = price_change.fill(df,5)
+#    df = price_change.fill(df,10)
+#    df = price_change.fill(df,20)
     df = macd.fill(df)
     df = Ulto(df)
+    df = SMA(df, 30)
+    df = SMA(df, 20)
+    df = SMA(df, 10)
+    df = SMA(df, 5)
+    df.replace([np.inf, -np.inf], np.nan)
     return df
 
 def fill_for_line_regression_daily(df):
@@ -70,10 +77,16 @@ def fill_for_line_regression_daily(df):
     df = EMV(df, n)
     df = EWMA(df, n)
     df = pre_close.fill(df)
-    df = index_sh.fill(df)
-    df = price_change.fill(df,5)
-    df = price_change.fill(df,10)
-    df = price_change.fill(df,20)
+#    df = index_sh.fill(df)
+#    df = price_change.fill(df,5)
+#    df = price_change.fill(df,10)
+#    df = price_change.fill(df,20)
     df = macd.fill(df)
     df = Ulto(df)
+    df = SMA(df, 30)
+    df = SMA(df, 20)
+    df = SMA(df, 10)
+    df = SMA(df, 5)
+
+    df.replace([np.inf, -np.inf], np.nan)
     return df

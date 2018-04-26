@@ -13,7 +13,11 @@ from app.line_regression.five_min.feature_constant import feature
 
 # predict
 def predict(code='600179', show_plot=False):
+<<<<<<< HEAD
     df = ts.get_hist_data(code, '2016-01-01')
+=======
+    df = ts.get_k_data(code,'2016-01-01')
+>>>>>>> 9c60bcc72c3ffd956006ac40bbd7278eff3be63f
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
@@ -48,7 +52,7 @@ def predict(code='600179', show_plot=False):
 
     reg.fit(df[feature], df['next_open'])
 
-    df_now = ts.get_hist_data(code)
+    df_now = ts.get_k_data(code)
     df_now = df_now.sort_index()
     df_now = feature_service.fill_for_line_regression_daily(df_now)
 
