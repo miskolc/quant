@@ -10,6 +10,7 @@ from app.dao.price_service import get_open_price
 from sklearn import linear_model
 from app.line_regression.five_min.feature_constant import feature
 
+
 # predict
 def predict(code='600179', show_plot=False):
     df = ts.get_hist_data(code, ktype='5')
@@ -63,10 +64,12 @@ def predict(code='600179', show_plot=False):
 
     return df_y_toady_pred
 
+
 if __name__ == "__main__":
     code = input("Enter the code: ")
     # code is null
     if not code.strip():
+
         predict()
     else:
         predict(code)

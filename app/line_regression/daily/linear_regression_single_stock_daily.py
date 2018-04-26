@@ -10,17 +10,19 @@ from app.dao.price_service import get_open_price
 from sklearn import linear_model
 from app.line_regression.five_min.feature_constant import feature
 
+
 # predict
 def predict(code='600179', show_plot=False):
-    df = ts.get_hist_data(code,'2016-01-01')
+    df = ts.get_hist_data(code, '2016-01-01')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
 
     # add feature to df
     df = feature_service.fill_for_line_regression_daily(df)
+    # ^^^^^^^ need more features
     df = df.dropna()
 
-    # ^^^^^^^ need more features
+    # df.to_csv('result.csv')
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
@@ -62,6 +64,7 @@ def predict(code='600179', show_plot=False):
         plt.show()
 
     return df_y_toady_pred
+
 
 if __name__ == "__main__":
     code = input("Enter the code: ")

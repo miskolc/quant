@@ -9,6 +9,7 @@ import pandas_datareader.data as web
 import futuquant as ft
 from statsmodels.tsa.stattools import adfuller
 import matplotlib.pyplot as plt
+from app.common_tools.GBM_verify import gmb_test
 
 # tick_df = pd.DataFrame()
 # df = ts.get_hist_data('600179')
