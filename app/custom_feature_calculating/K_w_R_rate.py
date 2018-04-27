@@ -1,6 +1,7 @@
 # ae.h - 2018/4/27
 
 '''
+
 william's R%
 
 * %R = (Highest High - Close)/(Highest High - Lowest Low) * -100
