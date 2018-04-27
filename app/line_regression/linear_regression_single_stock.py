@@ -1,7 +1,7 @@
 # Close price predict
 
 from sklearn import linear_model
-from sklearn.model_selection import cross_val_predict, cross_val_score
+from sklearn.model_selection import cross_val_score
 
 import app.common_tools.drawer as drawer
 import app.common_tools.logger as logger
@@ -21,10 +21,10 @@ def trained_linear_model(df=None):
 
     model = linear_model.LinearRegression(normalize=True)
 
-    print('current: %s' % df['next_open'].tail(1).values)
+    # print('current: %s' % df['next_open'].tail(1).values)
     X = df[feature]
     y = df['next_open']
-    predicted = cross_val_predict(model, X, y, cv=10)
+    # cross_val_predict(model, X, y, cv=10)
 
     # print(type(y.values))
     # print(type(predicted))
