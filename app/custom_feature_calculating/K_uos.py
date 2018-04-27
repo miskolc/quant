@@ -41,7 +41,7 @@ def Ulto(data):
     av_14 = pd.Series.rolling(BP, 14).sum() / pd.Series.rolling(TR, 14).sum()
     av_28 = pd.Series.rolling(BP, 28).sum() / pd.Series.rolling(TR, 28).sum()
 
-    ulto = pd.Series(100 * ((4 * av_7) + (2 * av_14) + av_28) / (4 + 2 + 1) , name='ulto')
+    ulto = pd.Series(100 * ((4 * av_7) + (2 * av_14) + av_28) / (4 + 2 + 1) , name='uos')
     data = data.join(ulto)
     # Ulto = pd.Series(100 * ((4 * (pd.rolling_sum(BP, 7) / pd.rolling_sum(TR, 7))) + (
     #     2 * (pd.rolling_sum(BP, 14) / pd.rolling_sum(TR, 14))) + (pd.rolling_sum(BP, 28) / pd.rolling_sum(TR, 28)) / (
