@@ -32,5 +32,5 @@ feature = ['open'
     ,'kdjd'
     ,'kdjj'
     ,'dma'
-    ,'atr'
+    #,'atr'
            ]

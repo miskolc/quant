@@ -35,7 +35,8 @@ def fill(df, ktype):
     df['kdjd'] = stock.get('kdjd')
     df['kdjj'] = stock.get('kdjj')
     df['dma'] = stock.get('dma')
-    df['atr'] = stock.get('atr')
+
+    #df['atr'] = stock.get('atr')
     df = w_R_rate.w_R_rate(df, 10)
     df = w_R_rate.w_R_rate(df, 28)
     df = uos(df)
@@ -57,7 +58,7 @@ def fill_db_5min(df, ktype):
     #    df = price_change.fill(df,10)
     #    df = price_change.fill(df,20)
     df = macd.fill(df)
-    df = Ulto(df)
+    df = uos(df)
     df = SMA(df, 30)
     df = SMA(df, 20)
     df = SMA(df, 10)

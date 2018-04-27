@@ -120,7 +120,7 @@ if __name__ == "__main__":
     end = now.strftime('%Y-%m-%d')
     print('start=%s,end=%s' % (start, end))
 
-    price_retrieval_5min('000651','2016-01-01', '2018-04-26')
+    price_retrieval_5min('000001','2018-04-27', '2018-04-27')
     #index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
     # price retrieval
     # index_retrieval('000001', '1min', '2016-01-01', '2018-04-20')
