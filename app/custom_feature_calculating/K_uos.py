@@ -30,7 +30,7 @@ import tushare as ts
 '''
 
 
-def Ulto(data):
+def uos(data):
     # UO_V = pd.Series(100 * ((4 * av_7) + (2 * av_14) + av_28) / (4 + 2 + 1))
     # data = data.sort_index()
 
