@@ -27,7 +27,7 @@ def cross_validation(X, y):
 
     print("Optimised parameters found on training set:")
     print(model.best_params_, "\n")
-
+    print(model.best_estimator_, "\n")
     '''
     #The grid_scores_ attribute was deprecated in version 0.18
     
@@ -60,7 +60,8 @@ def predict(code='600179', ktype='5', show_plot=False, df = None, df_now=None):
     best_params_ = cross_validation(X, y)
 
     # choose SVR model
-    svr = SVR(kernel=str('rbf'), C=best_params_['C'], gamma=best_params_['gamma'])
+    svr = SVR(kernel=str('rbf'), C=best_params_['C'], gamma=best_params_['gamma'],
+              cache_size=200, degree=3, epsilon=1, max_iter=-1, shrinking=True, tol=0.001, verbose=False)
 
     # fit model with data(training)
     svr.fit(df_x_train, df_y_train)

@@ -75,7 +75,8 @@ def predict(code='600179', ktype='5', show_plot=False, df = None, df_now=None):
     best_params_ = cross_validation(X, y)
 
     # choose SVR model
-    svr = SVR(kernel=str('rbf'), C=best_params_['C'], gamma=best_params_['gamma'])
+    svr = SVR(kernel=str('rbf'), C=best_params_['C'], gamma=best_params_['gamma'],
+              cache_size=200, degree=3, epsilon=1, max_iter=-1, shrinking=True, tol=0.001, verbose=False)
 
     # fit model with data(training)
     svr.fit(df_x_train, df_y_train)
@@ -108,6 +109,6 @@ if __name__ == "__main__":
     code = input("Enter the code: ")
     # code is null
     if not code.strip():
-        predict(show_plot=True)
+        predict(show_plot=False)
     else:
         predict(code)

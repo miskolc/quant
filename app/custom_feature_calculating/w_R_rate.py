@@ -21,11 +21,11 @@ import pandas as pd
 import tushare as ts
 
 
-def w_R_rate(data):
-    highest_fourteen = pd.Series.rolling(data['high'], 14).max()
-    lowest_fourteen = pd.Series.rolling(data['low'], 14).min()
+def w_R_rate(data, ndays):
+    highest_fourteen = pd.Series.rolling(data['high'], ndays).max()
+    lowest_fourteen = pd.Series.rolling(data['low'], ndays).min()
     daily_close = pd.Series(data['close'])
-    the_w_R_rate = (highest_fourteen - daily_close) / (highest_fourteen - lowest_fourteen) * -100
+    the_w_R_rate = pd.Series(abs((highest_fourteen - daily_close) / (highest_fourteen - lowest_fourteen) * -100), name='wr%s' %ndays)
     data = data.join(the_w_R_rate)
 
     return data

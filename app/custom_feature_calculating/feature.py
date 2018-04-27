@@ -5,7 +5,7 @@ from app.custom_feature_calculating.EWMA import EWMA
 from app.custom_feature_calculating.SMA import SMA
 import app.custom_feature_calculating.pre_close as pre_close
 import app.custom_feature_calculating.index_sh as index_sh
-import app.custom_feature_calculating.price_change as price_change
+import app.custom_feature_calculating.w_R_rate as w_R_rate
 from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
 from app.custom_feature_calculating.Ulto import Ulto
@@ -52,7 +52,13 @@ def fill(df, ktype):
     df = SMA(df, 20)
     df = SMA(df, 10)
     df = SMA(df, 5)
-
+    df = w_R_rate.w_R_rate(df, 10)
+    df = w_R_rate.w_R_rate(df, 28)
+    df['kdjk'] = stock.get('kdjk')
+    df['kdjd'] = stock.get('kdjd')
+    df['kdjj'] = stock.get('kdjj')
+    df['dma'] = stock.get('dma')
+    df['atr'] = stock.get('atr')
     df.replace([np.inf, -np.inf], np.nan)
     return df
 
@@ -75,6 +81,12 @@ def fill_db_5min(df, ktype):
     df = SMA(df, 20)
     df = SMA(df, 10)
     df = SMA(df, 5)
-
+    df = w_R_rate.w_R_rate(df, 10)
+    df = w_R_rate.w_R_rate(df, 28)
+    df['kdjk'] = stock.get('kdjk')
+    df['kdjd'] = stock.get('kdjd')
+    df['kdjj'] = stock.get('kdjj')
+    df['dma'] = stock.get('dma')
+    df['atr'] = stock.get('atr')
     df.replace([np.inf, -np.inf], np.nan)
     return df
