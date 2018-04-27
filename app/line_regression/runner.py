@@ -21,9 +21,9 @@ if __name__ == "__main__":
         svr_price, price = svr_single_stock.predict(code, df=df, df_now=df_now)
         lr_price = linear_regression_single_stock.predict(code, df=df, df_now=df_now)
         lasso_price = lasso_single_stock.predict(code, df=df, df_now=df_now)
-        ride = ridge_regression_single_stock.predict(code, df=df, df_now=df_now)
+        ridge = ridge_regression_single_stock.predict(code, df=df, df_now=df_now)
         str = 'code: {}, name: {}, price: {}, SVR: {}, LR: {}, Lasso: {}, Ride: {}'. \
-            format(code, df_rea['name'].tail(1)[0], price, svr_price[0], lr_price[0], lasso_price[0], ride[0])
+            format(code, df_rea['name'].tail(1)[0], price, svr_price[0], lr_price[0], lasso_price[0], ridge[0])
         rs.append(str)
 
     for str in rs:
