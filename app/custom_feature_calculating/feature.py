@@ -65,6 +65,7 @@ def fill_db_5min(df, ktype):
     df = SMA(df, 10)
     df = SMA(df, 5)
     df = w_R_rate.w_R_rate(df, 10)
+    df = w_R_rate.w_R_rate(df, 14)
     df = w_R_rate.w_R_rate(df, 28)
     df['kdjk'] = stock.get('kdjk')
     df['kdjd'] = stock.get('kdjd')
