@@ -38,6 +38,7 @@ def fill(df, ktype):
 
     #df['atr'] = stock.get('atr')
     df = w_R_rate.w_R_rate(df, 10)
+    df = w_R_rate.w_R_rate(df, 14)
     df = w_R_rate.w_R_rate(df, 28)
     df = uos(df)
     df.replace([np.inf, -np.inf], np.nan)
