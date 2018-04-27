@@ -5,10 +5,10 @@ from app.custom_feature_calculating.EWMA import EWMA
 from app.custom_feature_calculating.SMA import SMA
 import app.custom_feature_calculating.pre_close as pre_close
 import app.custom_feature_calculating.index_sh as index_sh
-import app.custom_feature_calculating.w_R_rate as w_R_rate
+import app.custom_feature_calculating.K_w_R_rate as w_R_rate
 from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
-from app.custom_feature_calculating.Ulto import Ulto
+from app.custom_feature_calculating.K_uos import Ulto
 import numpy as np
 from stockstats import StockDataFrame
 
