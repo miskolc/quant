@@ -90,5 +90,13 @@ from app.common_tools.GBM_verify import gmb_test
 #
 # print(UO_value)
 
+df = pd.read_csv('/Users/yw.h/quant-awesome/app/line_regression/result.csv')
+y = df['close']
+x = df['date']
 
+plt.figure()
+
+plt.scatter(x, y)
+
+plt.show()
 
