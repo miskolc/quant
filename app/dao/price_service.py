@@ -8,8 +8,8 @@ def get_open_price(code):
     return df['open'][0]
 
 
-def get_training_data(code, ktype='D'):
-    df = ts.get_k_data(code, ktype=ktype)
+def get_training_data(code, ktype='D', start=None, end=None):
+    df = ts.get_k_data(code, ktype=ktype, start='', end='')
     df = df.set_index('date')
     df = df.sort_index()
     df['next_open'] = df['open'].shift(-1)
@@ -19,7 +19,7 @@ def get_training_data(code, ktype='D'):
     return df
 
 
-def get_k_data(code, ktype='D'):
+def get_k_data(code, ktype='D', ):
     df = ts.get_k_data(code, ktype=ktype)
     df = df.set_index('date')
     df = df.sort_index()

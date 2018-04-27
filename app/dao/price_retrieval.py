@@ -110,6 +110,7 @@ def get_price_daily(code, start_date, end_date):
     except Exception as e:
         print(e)
 
+
 if __name__ == "__main__":
     # 当前时间
     now = datetime.now()
@@ -120,8 +121,8 @@ if __name__ == "__main__":
     end = now.strftime('%Y-%m-%d')
     print('start=%s,end=%s' % (start, end))
 
-    price_retrieval_5min('000001','2018-04-27', '2018-04-27')
-    #index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
+    price_retrieval_5min('000001', '2018-04-27', '2018-04-27')
+    index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
     # price retrieval
     # index_retrieval('000001', '1min', '2016-01-01', '2018-04-20')
     # price_retrieval('600179', '1min', '2016-01-01', '2018-04-20')

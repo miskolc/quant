@@ -1,55 +1,42 @@
 # Close price predict
 
 from sklearn import linear_model
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_predict, cross_val_score
 
 import app.common_tools.drawer as drawer
 import app.common_tools.logger as logger
 from app.contants.feature_constant import feature
 from app.dao.price_service import get_k_data, get_training_data
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 
 # predict
-def predict(code='600179', ktype='D', show_plot=False, df=None, df_now=None):
+def trained_linear_model(df=None):
     if df is None:
-        df = get_training_data(code, ktype)
-        print(df)
-    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
+        df = get_training_data('600179', ktype='D', start='2017-01-01', end='2017-10-10')
+        # print(df)
+    # df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['next_open'], test_size=.3)
 
-    # choose ridge regression model
-    reg = linear_model.LinearRegression(normalize=True)
+    model = linear_model.LinearRegression(normalize=True)
 
-    # fit model with data(training)
-    reg.fit(df_x_train, df_y_train)
+    print('current: %s' % df['next_open'].tail(1).values)
+    X = df[feature]
+    y = df['next_open']
+    predicted = cross_val_predict(model, X, y, cv=10)
 
-    # test predict
-    df_y_test_pred = reg.predict(df_x_test)
+    # print(type(y.values))
+    # print(type(predicted))
 
-    logger.log_model(reg, df_y_test, df_y_test_pred)
+    # print((y.values - predicted))
 
-    reg.fit(df[feature], df['next_open'])
-
-    if df_now is None:
-        df_now = get_k_data(code, ktype)
-
-    print('当前价格:%s' % df_now['close'].tail(1).values)
-    df_y_toady_pred = reg.predict(df_now[feature].tail(1));
-    print('Linear Regression Model, 预测价格:%s' % df_y_toady_pred)
-
-    # Plot outputs
-    #drawer.make_training_plt(show_plot, df_x_test, df_y_test, df_y_test_pred)
-
-    plt.scatter(df_x_test.index, df_y_test, color='black')
-    plt.scatter(df_x_test.index, df_y_test_pred, color='red')
-    plt.show()
-
-    return df_y_toady_pred
+    model.fit(X, y)
+    print((cross_val_score(model, X, y, cv=10).mean()))
+    return model
 
 
 if __name__ == "__main__":
-    code = input("Enter the code: ")
-    # code is null
-    if not code.strip():
-        predict()
-    else:
-        predict(code)
+    df_now = get_training_data('600179', ktype='D', start='2018-01-01', end='2018-04-20')
+    predict_y = trained_linear_model().predict(df_now[feature].tail(1))
+    print(predict_y)
