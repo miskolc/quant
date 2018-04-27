@@ -108,6 +108,6 @@ if __name__ == "__main__":
     code = input("Enter the code: ")
     # code is null
     if not code.strip():
-        predict(show_plot=False)
+        predict(show_plot=True)
     else:
         predict(code)

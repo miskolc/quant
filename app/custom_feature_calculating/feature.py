@@ -10,6 +10,7 @@ from app.custom_feature_calculating.FI import ForceIndex
 import app.custom_feature_calculating.MACD as macd
 from app.custom_feature_calculating.Ulto import Ulto
 import numpy as np
+from stockstats import StockDataFrame
 
 
 def fill_for_5min(df):
@@ -33,9 +34,11 @@ def fill_for_5min(df):
     return df
 
 def fill(df, ktype):
+    stock = StockDataFrame.retype(df)
     n = 5
     df = BBANDS(df, 20)
-    df = CCI(df, 14)
+    #df = CCI(df, 14)
+    df['cci'] = stock.get('cci')
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
@@ -55,8 +58,10 @@ def fill(df, ktype):
 
 def fill_db_5min(df, ktype):
     n = 5
+    stock = StockDataFrame.retype(df)
+
     df = BBANDS(df, 20)
-    df = CCI(df, 14)
+    df['cci'] = stock.get('cci')
     df = ForceIndex(df, 13)
     df = EMV(df, n)
     df = EWMA(df, n)
