@@ -45,7 +45,7 @@ def cross_validation(X, y):
               % (mean, std * 2, params))
     '''
 
-    return model.best_params_
+    return model.best_estimator_
 
 
 # predict
@@ -57,11 +57,10 @@ def predict(code='600179', ktype='5', show_plot=False, df = None, df_now=None):
     y = df['next_open']
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(X, y, test_size=.3, random_state=21)
 
-    best_params_ = cross_validation(X, y)
+    best_estimator_ = cross_validation(X, y)
 
     # choose SVR model
-    svr = SVR(kernel=str('rbf'), C=best_params_['C'], gamma=best_params_['gamma'],
-              cache_size=200, degree=3, epsilon=1, max_iter=-1, shrinking=True, tol=0.001, verbose=False)
+    svr = best_estimator_
 
     # fit model with data(training)
     svr.fit(df_x_train, df_y_train)
