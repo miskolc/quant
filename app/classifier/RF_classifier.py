@@ -9,6 +9,7 @@ from app.dao.price_service import get_k_data, get_training_data
 import tushare as ts
 
 
+
 def RF_clf():
     df = ts.bar('600179', conn=ts.get_apis())
     df['price_change'] = df['close'] - df['close'].shift(-1)
