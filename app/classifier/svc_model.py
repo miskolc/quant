@@ -54,6 +54,4 @@ def svc_classifier():
 
 
 if __name__ == '__main__':
-    t1 = Timer("svc_classifier()", "from __main__ import svc_classifier")
     svc_classifier()
-    print(t1)
