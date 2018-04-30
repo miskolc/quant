@@ -9,6 +9,7 @@ from app.dao.price_service import get_k_data, get_training_data
 import tushare as ts
 
 
+
 def RF_clf():
     df = ts.bar('600179', conn=ts.get_apis())
     df['price_change'] = df['close'] - df['close'].shift(-1)
@@ -20,8 +21,8 @@ def RF_clf():
     y = df['direction'].values.ravel()
     rf0 = RandomForestClassifier(oob_score=True, random_state=10)
 
-    print(x.shape)
-    print(y.shape)
+    # print(x.shape)
+    # print(y.shape)
 
     rf0.fit(x, y)
     print(rf0.oob_score_)
@@ -42,7 +43,7 @@ def RF_clf():
     print(gsearch_weak.best_params_, '\n')
     print(gsearch_weak.best_score_)
 
-    #强网格测试
+    # 强网格测试
     param_test_strong = {'max_depth': range(3, 14, 2), 'min_samples_split': range(50, 201, 20)}
     gsearch_strong = GridSearchCV(estimator=RandomForestClassifier(n_estimators=20,
                                                                    min_samples_leaf=20, max_features='sqrt',
@@ -61,7 +62,7 @@ def RF_clf():
     print("AUC Score (Train): %f" % metrics.roc_auc_score(y, y_predprob))
     print('==================================================')
 
-    #最小样本测试
+    # 最小样本测试
     param_test_min = {'min_samples_split': range(80, 130, 20), 'min_samples_leaf': range(10, 60, 10)}
     gsearch_min = GridSearchCV(estimator=RandomForestClassifier(n_estimators=20, max_depth=3,
                                                                 max_features='sqrt', oob_score=True, random_state=10),
@@ -79,7 +80,7 @@ def RF_clf():
     print("AUC Score (Train): %f" % metrics.roc_auc_score(y, y_predprob))
     print('==================================================')
 
-    #最大特征测试
+    # 最大特征测试
 
     param_test_max = {'max_features': range(3, 6, 2)}
     gsearch_max = GridSearchCV(estimator=RandomForestClassifier(n_estimators=20, max_depth=3, min_samples_split=80,
