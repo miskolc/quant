@@ -49,13 +49,15 @@ def cross_validation(X, y):
 
 
 # predict
-def predict(code='600179', ktype='5', show_plot=False, df = None, df_now=None):
+def predict(code='600179', ktype='D', show_plot=False, df = None, df_now=None):
     if df is None:
         df = get_training_data(code, ktype)
+
+    df.to_csv('result.csv')
     # ^^^^^^^ need more features
     X = preprocessing.scale(df[feature])
     y = df['next_open']
-    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(X, y, test_size=.3, random_state=21)
+
 
     best_estimator_ = cross_validation(X, y)
 
@@ -63,14 +65,10 @@ def predict(code='600179', ktype='5', show_plot=False, df = None, df_now=None):
     svr = best_estimator_
 
     # fit model with data(training)
-    svr.fit(df_x_train, df_y_train)
-
-    # test predict
-    df_y_test_pred = svr.predict(df_x_test)
-
-    logger.log_model(svr, df_y_test, df_y_test_pred)
-
     svr.fit(X, y)
+
+    #logger.log_model(svr, X, y)
+    print(svr.score(X,y))
 
     if df_now is None:
         df_now = get_k_data(code, ktype)

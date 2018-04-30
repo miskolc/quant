@@ -94,9 +94,9 @@ def price_retrieval_60min(code, start_date, end_date):
 @decorators.exc_time
 def price_retrieval_daily(code, start_date, end_date, table_name='tick_data'):
     try:
-        data = ts.get_hist_data(code=code, start=start_date, end=end_date)
+        data = ts.get_k_data(code=code, start=start_date, end=end_date)
         data['code'] = code
-        data.to_sql(table_name, engine.create(), if_exists='append')
+        data.to_sql(table_name, engine.create(), if_exists='append', index=False)
     except Exception as e:
         print(e)
 
