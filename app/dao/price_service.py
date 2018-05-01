@@ -9,7 +9,11 @@ def get_open_price(code):
 
 
 def get_training_data(code, ktype='D', start=None, end=None):
-    df = ts.get_k_data(code, ktype=ktype, start=start, end=end)
+    df =None
+    if start== None and end == None:
+        df = ts.get_k_data(code, ktype=ktype)
+    else:
+        df = ts.get_k_data(code, ktype=ktype, start=start, end=end)
 
     df = df.set_index('date')
     df = df.sort_index()
