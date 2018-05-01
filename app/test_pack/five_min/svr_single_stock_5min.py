@@ -39,11 +39,11 @@ def get_train_data(code, start, end):
     engine = create_engine('mysql+pymysql://root:root@localhost:3306/quantitative')
     df = pd.read_sql_query(sql, engine, index_col='datetime')
 
-    df['next_close'] = df['close'].shift(-1)
+    df['next_close'] = df['close'].shift(-48)
 
     # add feature to df
     df = feature_service.fill_db_5min(df)
-    print(df)
+
     df = df.dropna()
 
 
@@ -61,14 +61,8 @@ def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
 
     df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(X, y, test_size=.3, random_state=21)
 
-    reg = linear_model.RidgeCV(alphas=[0.01, 0.01, 0.1, 1.0, 10.0], normalize=True)
-    reg.fit(X, y)
 
-    X, y = get_train_data(code, '2018-04-25','2018-04-28')
-    df_y_pred = reg.predict(X)
-    print(df_y_pred)
-    logger.log_model(reg, y, df_y_pred)
-    '''
+
     best_estimator_ = cross_validation(df_x_train, df_y_train)
     
     # choose SVR model
@@ -84,8 +78,8 @@ def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
     X, y = get_train_data(code, '2016-01-01','2017-01-01')
     df_y_pred = svr.predict(X)
     logger.log_model(svr, y, df_y_pred)
-'''
-'''
+
+
     if df_now is None:
         df_now = get_k_data(code, ktype)
 
@@ -101,7 +95,7 @@ def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
         plt.show()
 
     return df_y_toady_pred, df_x_now['close'].values[0]
-'''
+
 
 if __name__ == "__main__":
     code = input("Enter the code: ")

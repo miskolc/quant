@@ -21,10 +21,10 @@ def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
         engine = create_engine('mysql+pymysql://root:root@localhost:3306/quantitative')
         df = pd.read_sql_query(sql, engine,index_col='datetime')
 
-        df['next_open'] = df['open'].shift(-1)
+        df['next_open'] = df['open'].shift(-48)
 
         # add feature to df
-        df = feature_service.fill_db_5min(df, ktype)
+        df = feature_service.fill_db_5min(df)
         df.to_csv('result.csv')
         df = df.dropna()
 
