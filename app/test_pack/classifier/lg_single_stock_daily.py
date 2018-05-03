@@ -12,7 +12,8 @@ import app.custom_feature_calculating.MACD as macd
 from app.custom_feature_calculating.EMV import EMV
 from app.custom_feature_calculating.EWMA import EWMA
 from sklearn.model_selection import cross_val_score
-from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+
 
 def f(x):
     if x > 0:
@@ -59,12 +60,12 @@ def fill_feature(df):
     return df
 
 
-features = ["close", "low", "high", "volume", 'ma5', 'ma10', 'ma20', 'ubb', 'macd'
+features = ['close', 'low', 'high', 'volume', 'open', 'ma5', 'ma10', 'ma20', 'ubb', 'macd'
     , 'lbb', 'ewma', 'evm'
     , 'wr14', 'wr10', 'wr28', 'uos']
 
 
-def prepare_data(code, ktype='D'):
+def prepare_data(code, ktype='5'):
     df = ts.get_k_data(code, ktype=ktype)
     df = fill_feature(df)
     # df['direction'] = df['p_change'] > 0
@@ -79,7 +80,7 @@ def prepare_data(code, ktype='D'):
 
     y = df[["direction"]].values.ravel()
 
-    X = preprocessing.minmax_scale(X)
+    X = preprocessing.normalize(X)
     return X, y
 
 
@@ -87,13 +88,11 @@ def prepare_daily_data_from_db(code, start, end):
     pass
 
 
-def predict_data(code, ktype='D'):
+def predict_data(code, ktype='5'):
     df = ts.get_k_data(code, ktype=ktype)
-
     df = fill_feature(df)
     X = df[features]
 
-    # X = preprocessing.normalize(X)
     return X
 
 
@@ -107,36 +106,15 @@ def predit():
 
 if __name__ == "__main__":
     code = '600179'
-    X, y = prepare_data(code)
+    X, y = prepare_data(code, ktype='D')
 
+    model = LogisticRegression()
 
-
-    # Set the parameters by cross-validation
-    tuned_parameters = [
-        {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
-    ]
-    # Perform the grid search on the tuned parameters
-    model = GridSearchCV(SVC(C=1), tuned_parameters, cv=10, n_jobs=-1)
+    scores= cross_val_score(model, X, y, cv=10)
+    print(scores.mean())
     model.fit(X, y)
-
-    print("Optimised parameters found on training set:")
-    print(model.best_estimator_, "\n")
-
-    svc = model.best_estimator_
-
-    #svc.fit(X_train, y_train)
-    print(model.best_score_, "\n")
-    svc.fit(X, y)
-
-    #scores = cross_val_score(svc, X, y, cv=10, scoring='accuracy')
-    #print(scores)
-
-    #X, y = prepare_data(code, '2018-01-02', '2018-04-26', ktype='D')
-    #print(svc.score(X, y))
-
 
     X = predict_data(code)
     print(X[-1:]["close"])
-    y_test_pred = svc.predict(X[-1:])
+    y_test_pred = model.predict(X[-1:])
     print(y_test_pred)
-

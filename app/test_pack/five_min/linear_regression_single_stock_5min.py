@@ -24,7 +24,7 @@ def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):
         df['next_open'] = df['open'].shift(-1)
 
         # add feature to df
-        df = feature_service.fill_db_5min(df, ktype)
+        df = feature_service.fill_db_5min(df)
         df.to_csv('result.csv')
         df = df.dropna()
 

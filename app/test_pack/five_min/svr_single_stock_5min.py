@@ -39,7 +39,7 @@ def get_train_data(code, start, end):
     engine = create_engine('mysql+pymysql://root:root@localhost:3306/quantitative')
     df = pd.read_sql_query(sql, engine, index_col='datetime')
 
-    df['next_close'] = df['close'].shift(-48)
+    df['next_close'] = df['close'].shift(-1)
 
     # add feature to df
     df = feature_service.fill_db_5min(df)

@@ -100,6 +100,23 @@ def price_retrieval_daily(code, start_date, end_date, table_name='tick_data'):
     except Exception as e:
         print(e)
 
+        # 爬取每天股票价格
+
+
+@decorators.exc_time
+def price_retrieval_tick_data(code, date, table_name='tick_data'):
+    try:
+        df = ts.get_tick_data('600179', date=date)
+        df['code'] = code
+        df['date'] = date + ' ' + df['time']
+        df = df.drop(columns=['time'])
+        df = df.replace(['--'], 0)
+        print('date: %, count: %', (date, len(df.index)))
+        df.to_sql(table_name, engine.create(), if_exists='append', index=False)
+
+    except Exception as e:
+        print(e)
+
 
 # 或取每天股票价格
 @decorators.exc_time
@@ -107,6 +124,15 @@ def get_price_daily(code, start_date, end_date):
     try:
         data = ts.get_hist_data(code=code, start=start_date, end=end_date)
         data['code'] = code
+    except Exception as e:
+        print(e)
+
+
+def price_retrieval_realtime_quotes(code, table_name='tick_data_rt'):
+    try:
+        df = ts.get_realtime_quotes(code)
+        df['date'] = df['date'] + ' ' + df['time']
+        df.to_sql(table_name, engine.create(), if_exists='append', index=False)
     except Exception as e:
         print(e)
 
@@ -121,8 +147,8 @@ if __name__ == "__main__":
     end = now.strftime('%Y-%m-%d')
     print('start=%s,end=%s' % (start, end))
 
-    price_retrieval_5min('000001', '2018-04-27', '2018-04-27')
-    index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
+    price_retrieval_5min('600179', '2018-05-02', '2018-05-03')
+    # index_retrieval('000001', '5min', '2016-01-01', '2018-04-26', table_name='tick_data_5min')
     # price retrieval
     # index_retrieval('000001', '1min', '2016-01-01', '2018-04-20')
     # price_retrieval('600179', '1min', '2016-01-01', '2018-04-20')

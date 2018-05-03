@@ -5,10 +5,10 @@ import tushare as ts
 # The MACD Line is the 12-day Exponential Moving Average (EMA) less the 26-day EMA
 # MACD Line: (12-day EMA - 26-day EMA)
 # https://zh.wikipedia.org/wiki/MACD
-def fill(data):
-    sema = pd.Series(pd.Series.ewm(data['close'], span=12).mean(),
+def fill(data, col='close'):
+    sema = pd.Series(pd.Series.ewm(data[col], span=12).mean(),
                       name='sema')
-    lema = pd.Series(pd.Series.ewm(data['close'], span=26).mean(),
+    lema = pd.Series(pd.Series.ewm(data[col], span=26).mean(),
                       name='lema')
 
     data_dif = sema - lema
