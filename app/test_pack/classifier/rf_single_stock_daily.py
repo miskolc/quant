@@ -12,6 +12,7 @@ import app.custom_feature_calculating.MACD as macd
 from app.custom_feature_calculating.EMV import EMV
 from app.custom_feature_calculating.EWMA import EWMA
 from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 
 def f(x):
@@ -59,12 +60,12 @@ def fill_feature(df):
     return df
 
 
-features = ["close", "low", "high", "volume", 'ma5', 'ma10', 'ma20', 'ubb', 'macd'
+features = ['close', 'low', 'high', 'volume', 'open', 'ma5', 'ma10', 'ma20', 'ubb', 'macd'
     , 'lbb', 'ewma', 'evm'
     , 'wr14', 'wr10', 'wr28', 'uos']
 
 
-def prepare_data(code, ktype='D'):
+def prepare_data(code, start, end, ktype='5'):
     df = ts.get_k_data(code, ktype=ktype)
     df = fill_feature(df)
     # df['direction'] = df['p_change'] > 0
@@ -74,12 +75,12 @@ def prepare_data(code, ktype='D'):
     # df['direction'] = np.where(df['price_change'] > 0, 1, 0)
     df['direction'] = df['p_change'].shift(-1).apply(f)
     df = df.dropna()
-    df.to_csv('result.csv' )
+    df.to_csv('result_%s_%s.csv' % (start, end))
     X = df[features]
 
     y = df[["direction"]].values.ravel()
 
-    X = preprocessing.minmax_scale(X)
+    X = preprocessing.normalize(X)
     return X, y
 
 
@@ -87,13 +88,11 @@ def prepare_daily_data_from_db(code, start, end):
     pass
 
 
-def predict_data(code, ktype='D'):
-    df = ts.get_k_data(code, ktype=ktype)
-
+def predict_data(code, start, end, ktype='5'):
+    df = ts.get_k_data(code, start=start, end=end, ktype=ktype)
     df = fill_feature(df)
     X = df[features]
 
-    # X = preprocessing.normalize(X)
     return X
 
 
@@ -107,36 +106,21 @@ def predit():
 
 if __name__ == "__main__":
     code = '600179'
-    X, y = prepare_data(code)
+    X, y = prepare_data(code, '2015-01-01', '2018-05-02', ktype='D')
 
+    # 弱网格测试
+    param_test_weak = {'n_estimators': range(10, 71, 10)}
+    gsearch_weak = GridSearchCV(estimator=RandomForestClassifier(min_samples_split=100,
+                                                                 min_samples_leaf=20, max_depth=8, max_features='sqrt',
+                                                                 random_state=10),
+                                param_grid=param_test_weak, scoring='roc_auc', cv=5)
+    gsearch_weak.fit(X, y)
+    print(gsearch_weak.best_score_)
 
+    svc = gsearch_weak.best_estimator_
+    svc.fit(X,y)
 
-    # Set the parameters by cross-validation
-    tuned_parameters = [
-        {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
-    ]
-    # Perform the grid search on the tuned parameters
-    model = GridSearchCV(SVC(C=1), tuned_parameters, cv=10, n_jobs=-1)
-    model.fit(X, y)
-
-    print("Optimised parameters found on training set:")
-    print(model.best_estimator_, "\n")
-
-    svc = model.best_estimator_
-
-    #svc.fit(X_train, y_train)
-    print(model.best_score_, "\n")
-    svc.fit(X, y)
-
-    #scores = cross_val_score(svc, X, y, cv=10, scoring='accuracy')
-    #print(scores)
-
-    #X, y = prepare_data(code, '2018-01-02', '2018-04-26', ktype='D')
-    #print(svc.score(X, y))
-
-
-    X = predict_data(code)
+    X = predict_data(code, '2018-01-26', '2018-05-02')
     print(X[-1:]["close"])
     y_test_pred = svc.predict(X[-1:])
     print(y_test_pred)
-

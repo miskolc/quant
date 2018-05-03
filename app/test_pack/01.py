@@ -41,8 +41,9 @@ quote_ctx.get_stock_quote('600179')
 #print(df_now)
 
 #获取上证指数k线数据
-df_sh = ts.get_hist_data('600179', ktype='5',start='2018-04-24')
+df_sh = ts.get_hist_data('511880', start='2017-01-01', end='2018-01-01')
 print(df_sh)
+print(((df_sh['close']-df_sh['low'])/df_sh['low']).values.sum())
 #df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='five_min', start_date='2017-01-18', end_date='2017-02-18')
 #df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
 
