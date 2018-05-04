@@ -64,5 +64,5 @@ if __name__ == "__main__":
     # print(rs)
 
     rs = classifier_predict()
-    #rs = filter(rs)
+    rs = filter(rs)
     print(rs)
