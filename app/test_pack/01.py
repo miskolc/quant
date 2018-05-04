@@ -41,9 +41,9 @@ quote_ctx.get_stock_quote('600179')
 #print(df_now)
 
 #获取上证指数k线数据
-df_sh = ts.get_hist_data('511880', start='2017-01-01', end='2018-01-01')
-print(df_sh)
-print(((df_sh['close']-df_sh['low'])/df_sh['low']).values.sum())
+#df_sh = ts.get_hist_data('511880', start='2017-01-01', end='2018-01-01')
+#print(df_sh)
+#print(((df_sh['close']-df_sh['low'])/df_sh['low']).values.sum())
 #df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='five_min', start_date='2017-01-18', end_date='2017-02-18')
 #df_sh = ts.get_k_data('sh', ktype='5',start='2017-01-05')
 
@@ -60,3 +60,45 @@ print(((df_sh['close']-df_sh['low'])/df_sh['low']).values.sum())
 
 #df = ts.get_realtime_quotes('600179') #Single stock symbol
 #print(df.head(10))
+
+codes = ['600009', '600085', '600196', '600406', '600522', '600547', '600585',
+         '600685', '601009', '601012', '601601', '601607',
+         '601878', '601888', '000413', '000728', '000858',
+         '001979', '002024', '002146', '002230', '002310',
+         '002411', '002415', '002450', '002460', '002470',
+         '002714', '002831', '300070', '300072']
+
+
+list = []
+for code in codes:
+    df_sh = ts.get_hist_data(code)
+
+    if df_sh is None:
+        continue
+
+    date = df_sh.index.values[0]
+    if date < '2018-05-03':
+        continue
+
+    close = df_sh["close"].head(1).values[0]
+    ma5 = df_sh["ma5"].head(1).values[0]
+    ma10 = df_sh["ma10"].head(1).values[0]
+    ma20 = df_sh["ma20"].head(1).values[0]
+    if close > ma5 and close > ma10 and close > ma20:
+        list.append(code)
+
+p_change_list=[]
+for code in list:
+    df = ts.get_realtime_quotes(code)
+
+    df['p_change'] = (float(df['price']) - float(df['pre_close'])) / float(df['pre_close'])
+
+    p_change = df['p_change'].head(1).values[0]
+
+    print(code, p_change)
+    p_change_list.append(p_change)
+
+print(list)
+
+
+print(sum(p_change_list))

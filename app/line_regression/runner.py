@@ -6,7 +6,7 @@ import app.line_regression.linear_regression_single_stock as linear_regression_s
 from app.dao.price_service import get_training_data, get_k_data
 
 if __name__ == "__main__":
-    list = ['600179',]
+    list = ['002510',]
     #list = ['600',  ]
     ktype = 'D'
 

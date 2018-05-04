@@ -105,10 +105,14 @@ def predict(code):
               ("LSVC", lg, lsvc_scores.mean()),
               ]
 
+    pred_list = []
     for m in models:
         m[1].fit(X, y)
         y_test_pred = m[1].predict(X_pred[-1:])
         print("模型:%s, score:%s, 趋势:%s" % (m[0], m[2], y_test_pred))
+        pred_list.append(y_test_pred[0])
+
+    return pred_list
 
 if __name__ == "__main__":
 

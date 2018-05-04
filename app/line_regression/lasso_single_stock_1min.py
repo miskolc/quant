@@ -5,9 +5,10 @@ import time
 from datetime import datetime
 from sklearn.linear_model import LassoCV
 from sklearn.model_selection import train_test_split
+from app.custom_feature_calculating.MACD import fill
 
 # ^^^^^^^ need more features
-feature = ['open', 'high', 'low', 'volume']
+feature = ['open', 'high', 'low', 'volume','macd']
 
 
 def train(tick_code):
@@ -21,7 +22,9 @@ def train(tick_code):
     # rename columns to lowercase
     df = df.rename(columns={"Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume": "volume"})
 
-    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3, random_state=42)
+    df = fill(df, 'close')
+
+    df_x_train, df_x_test, df_y_train, df_y_test = train_test_split(df[feature], df['close'], test_size=.3, shuffle=False)
 
     # choose linear regression model
     reg = LassoCV(alphas=[1, 0.5, 0.25, 0.1, 0.005, 0.0025, 0.001], normalize=True)

@@ -1,4 +1,7 @@
-import tushare as ts
+import sys
+
+sys.path.append('/Users/chenchenzhong/02-project-test/666-quant-awesome')
+
 from sqlalchemy import create_engine
 import pandas as pd
 from app.custom_feature_calculating.MACD import fill
@@ -23,7 +26,7 @@ def prepare_tick_data_from_db(code):
     df['next_price'] = df['price'].shift(-1)
     df = fill(df, col='price')
     df = df.dropna()
-
+    df.to_csv('result.csv')
     X = df[feature]
     y = df['next_price']
 
@@ -91,7 +94,7 @@ def predict(code='600179'):
         if len(X.index) < 1:
             continue
 
-        y_pred = model.predict(X.tail(1)).round(2);
+        y_pred = model.predict(X.tail(1)).round(4);
         dt = datetime.now()
         price = X['price'].tail(1).values[0]
 
@@ -99,12 +102,12 @@ def predict(code='600179'):
 
         if deviation >= 0:
             print(
-                '%s, 幅度:\033[0;37;41m%.2f ↑\033[0m,当前价格:%s, 预测价格:%s' % (
+                '%s, 幅度:\033[0;37;41m%.4f ↑\033[0m,当前价格:%s, 预测价格:%s' % (
                     dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, price, y_pred[0]))
 
         else:
             print(
-                '%s, 幅度:\033[0;37;42m%.2f ↓\033[0m,当前价格:%s, 预测价格:%s' % (
+                '%s, 幅度:\033[0;37;42m%.4f ↓\033[0m,当前价格:%s, 预测价格:%s' % (
                     dt.strftime('%Y-%m-%d %H:%M:%S'), deviation, price, y_pred[0]))
 
 
@@ -112,6 +115,7 @@ def predict(code='600179'):
 
 if __name__ == "__main__":
     predict('600179')
+
 
 
 # gmb_test()
