@@ -9,6 +9,7 @@ import pandas as pd
 
 
 def SMA(data, ndays):
+
     # SMA - Simple Moving Average
     SMA = pd.Series(pd.Series.rolling(data['close'], ndays).mean(), name='ma%s' % ndays)
     data = data.join(SMA)
