@@ -1,3 +1,4 @@
+# coding=utf-8
 import tushare as ts
 from sklearn import preprocessing
 
@@ -106,13 +107,16 @@ def predict(code):
               ]
 
     pred_list = []
+    # with open('/Users/yw.h/Documents/hs300-selection-result.log', 'a', encoding='utf8') as f:
     for m in models:
         m[1].fit(X, y)
         y_test_pred = m[1].predict(X_pred[-1:])
         print("模型:%s, score:%s, 趋势:%s" % (m[0], m[2], y_test_pred))
+        # f.writelines("股票代码: %s 模型:%s, score:%s, 趋势:%s \n" % (code, m[0], m[2], y_test_pred))
         pred_list.append(y_test_pred[0])
 
     return pred_list
+
 
 if __name__ == "__main__":
 

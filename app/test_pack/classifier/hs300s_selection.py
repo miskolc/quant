@@ -1,8 +1,10 @@
+#coding=utf-8
+
 import tushare as ts
 
 from app.test_pack.classifier.classifier_runner import predict
 
-df = ts.get_hs300s()
+
 
 
 def vote(list):
@@ -35,12 +37,12 @@ def filter(codes):
     return list
 
 
-def classifier_predict():
+def classifier_predict(df):
     list = []
     for code in df['code'].values:
-        pred_list = predict(code)
-        print(pred_list)
-        rs = vote(pred_list)
+        pred_result = predict(code)
+        print(pred_result)
+        rs = vote(pred_result)
         if rs is True:
             list.append(code)
 
@@ -48,7 +50,7 @@ def classifier_predict():
 
 
 if __name__ == "__main__":
-    rs = classifier_predict()
+    rs = classifier_predict(ts.get_hs300s())
 
     rs = filter(rs)
 
