@@ -3,7 +3,7 @@
 import tushare as ts
 
 from app.test_pack.classifier.classifier_runner import predict
-
+import warnings
 
 
 
@@ -51,6 +51,8 @@ def classifier_predict(df):
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings(action='ignore', category=DeprecationWarning)
+
     rs = classifier_predict(ts.get_hs300s())
 
     rs = filter(rs)
