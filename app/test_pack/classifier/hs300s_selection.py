@@ -40,12 +40,16 @@ def filter(codes):
 
 def classifier_predict(df):
     list = []
+
     for code in df['code'].values:
-        pred_result = predict(code)
-        print(pred_result)
-        rs = vote(pred_result)
-        if rs is True:
-            list.append(code)
+        try:
+            pred_result = predict(code)
+            print(pred_result)
+            rs = vote(pred_result)
+            if rs is True:
+                list.append(code)
+        except Exception as e:
+            print(repr(e))
 
     return list
 
