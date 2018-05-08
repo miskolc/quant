@@ -14,7 +14,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import LinearSVC, SVC
-
+from xgboost import XGBClassifier
+import warnings
 
 def f(x):
     if x > 0:
@@ -54,7 +55,7 @@ def prepare_data(code, ktype='D'):
     df['direction'] = df['p_change'].shift(-1).apply(f)
     df = df.dropna()
     df.to_csv('result.csv')
-    X = df[features]
+    X = df[features].values
 
     y = df[["direction"]].values.ravel()
 
@@ -65,8 +66,14 @@ def prepare_data(code, ktype='D'):
 def predict_data(code, ktype='D'):
     df = ts.get_k_data(code, ktype=ktype)
     df = fill_feature(df)
-    X = df[features]
 
+    df = df.dropna();
+
+    print("股票代码:%s, close price:%s" % (code, df[-1:]["close"].values))
+
+    X = df[features].values
+
+    X = preprocessing.normalize(X)
     return X
 
 
@@ -74,18 +81,17 @@ def predict(code):
     X_pred = predict_data(code)
     X, y = prepare_data(code, ktype='D')
 
-    print("股票代码:%s, close price:%s" % (code, X_pred[-1:]["close"].values))
+
 
     lg = LogisticRegression()
     lg_scores = cross_val_score(lg, X, y, cv=10)
-    # RandomForestClassifier 弱网格测试
-    param_test_weak = {'n_estimators': range(100, 500, 100)}
-    gsearch_weak = GridSearchCV(estimator=RandomForestClassifier(min_samples_split=100,n_jobs=-1,
-                                                                 min_samples_leaf=20, max_depth=8, max_features='sqrt',
-                                                                 random_state=10),
-                                param_grid=param_test_weak, scoring='roc_auc', cv=5)
+    # 最小样本测试
+    param_test_min = {'min_samples_split': range(80, 130, 20), 'min_samples_leaf': range(10, 60, 10)}
+    gsearch_min = GridSearchCV(estimator=RandomForestClassifier(n_estimators=300, max_depth=3,
+                                                                max_features='sqrt', oob_score=True, random_state=10),
+                               param_grid=param_test_min, scoring='roc_auc', iid=False, cv=5)
 
-    gsearch_weak.fit(X, y)
+    gsearch_min.fit(X, y)
 
     # SVC
     tuned_parameters = [
@@ -99,10 +105,18 @@ def predict(code):
     lsvc = LinearSVC()
     lsvc_scores = cross_val_score(lsvc, X, y, cv=10)
 
+    #XGBClassifier
+    xgb_model = XGBClassifier(n_estimators=300)
+    parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
+    xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
+    xgb_search.fit(X, y)
+
+
     models = [("LR", lg, lg_scores.mean()),
-              ("RF", gsearch_weak.best_estimator_, gsearch_weak.best_score_),
+              ("RF", gsearch_min.best_estimator_, gsearch_min.best_score_),
               ("SVC", gsearch_svc.best_estimator_, gsearch_svc.best_score_),
-              ("LSVC", lg, lsvc_scores.mean()),
+              ("LSVC", lsvc, lsvc_scores.mean()),
+              ("XGB", xgb_search.best_estimator_, xgb_search.best_score_),
               ]
 
     pred_list = []
@@ -118,6 +132,7 @@ def predict(code):
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 
     code = input("Enter the code: ")
     if not code.strip():

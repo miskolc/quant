@@ -5,8 +5,9 @@ import tushare as ts
 import app.line_regression.linear_regression_single_stock as linear_regression_single_stock
 from app.dao.price_service import get_training_data, get_k_data
 
+
 if __name__ == "__main__":
-    list = ['002510',]
+    list = ['002460',]
     #list = ['600',  ]
     ktype = 'D'
 
