@@ -1,5 +1,7 @@
 #coding=utf-8
+import time
 
+import datetime
 import tushare as ts
 
 from app.test_pack.classifier.classifier_runner import predict
@@ -55,6 +57,7 @@ def classifier_predict(df):
 
 
 if __name__ == "__main__":
+    start_time = datetime.datetime.now()
     warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 
     rs = classifier_predict(ts.get_hs300s())
@@ -62,3 +65,6 @@ if __name__ == "__main__":
     rs = filter(rs)
 
     print(rs)
+    end_time = datetime.datetime.now()
+    duration = end_time - start_time
+    print(duration)
