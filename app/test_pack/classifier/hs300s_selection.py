@@ -17,6 +17,7 @@ def vote(list):
 
 
 def filter(codes):
+    print(codes)
     list = []
     for code in codes:
         df_sh = ts.get_hist_data(code)

@@ -78,10 +78,9 @@ def predict(code):
 
     lg = LogisticRegression()
     lg_scores = cross_val_score(lg, X, y, cv=10)
-
     # RandomForestClassifier 弱网格测试
-    param_test_weak = {'n_estimators': range(10, 71, 10)}
-    gsearch_weak = GridSearchCV(estimator=RandomForestClassifier(min_samples_split=100,
+    param_test_weak = {'n_estimators': range(100, 500, 100)}
+    gsearch_weak = GridSearchCV(estimator=RandomForestClassifier(min_samples_split=100,n_jobs=-1,
                                                                  min_samples_leaf=20, max_depth=8, max_features='sqrt',
                                                                  random_state=10),
                                 param_grid=param_test_weak, scoring='roc_auc', cv=5)

@@ -3,11 +3,10 @@
 
 # coding=utf-8
 
-import tushare as ts
 import pandas as pd
-import numpy as np
-from app.test_pack.classifier.nasdaq.classifier_runner import predict
+import tushare as ts
 
+from app.test_pack.classifier.nasdaq.classifier_runner import predict
 
 
 def vote(list):
@@ -46,11 +45,16 @@ def classifier_predict():
 
     list = []
     for code in sp_df['code'].values:
-        pred_result = predict(code)
-        print(pred_result)
-        rs = vote(pred_result)
-        if rs is True:
-            list.append(code)
+
+        try:
+            pred_result = predict(code)
+            print(pred_result)
+            rs = vote(pred_result)
+            if rs is True:
+                list.append(code)
+        except Exception as e:
+            print(e)
+
 
     return list
 

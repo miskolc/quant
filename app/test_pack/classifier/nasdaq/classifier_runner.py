@@ -51,6 +51,7 @@ def prepare_data(code, ktype='D'):
     }
     # get price data (return pandas dataframe)
     df = get_price_data(param)
+
     # rename columns to lowercase/Users/yw.h/quant-awesome/app/test_pack/classifier/sp500_selection.py
     df = df.rename(
         columns={"Code": "code", "Open": "open", "High": "high", "Low": "low", "Close": "close",
