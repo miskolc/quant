@@ -106,17 +106,17 @@ def predict(code):
     lsvc_scores = cross_val_score(lsvc, X, y, cv=10)
 
     #XGBClassifier
-    xgb_model = XGBClassifier(n_estimators=1000, n_jobs=-1)
-    parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
-    xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
-    xgb_search.fit(X, y)
+    # xgb_model = XGBClassifier(n_estimators=1000, n_jobs=-1)
+    # parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
+    # xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
+    # xgb_search.fit(X, y)
 
 
     models = [("LR", lg, lg_scores.mean()),
               ("RF", gsearch_min.best_estimator_, gsearch_min.best_score_),
               ("SVC", gsearch_svc.best_estimator_, gsearch_svc.best_score_),
               ("LSVC", lsvc, lsvc_scores.mean()),
-              ("XGB", xgb_search.best_estimator_, xgb_search.best_score_),
+              # ("XGB", xgb_search.best_estimator_, xgb_search.best_score_),
               ]
 
     pred_list = []
