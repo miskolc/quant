@@ -89,7 +89,7 @@ def predict(code):
     param_test_min = {'min_samples_split': range(80, 130, 20), 'min_samples_leaf': range(10, 60, 10)}
     gsearch_min = GridSearchCV(estimator=RandomForestClassifier(n_estimators=1000, max_depth=3,
                                                                 max_features='sqrt', oob_score=True, random_state=10),
-                               param_grid=param_test_min, scoring='roc_auc', iid=False, cv=5)
+                               param_grid=param_test_min, scoring='roc_auc', iid=False, cv=5, n_jobs=-1)
 
     gsearch_min.fit(X, y)
 
@@ -106,7 +106,7 @@ def predict(code):
     lsvc_scores = cross_val_score(lsvc, X, y, cv=10)
 
     #XGBClassifier
-    xgb_model = XGBClassifier(n_estimators=1000)
+    xgb_model = XGBClassifier(n_estimators=1000, n_jobs=-1)
     parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
     xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
     xgb_search.fit(X, y)
