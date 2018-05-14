@@ -102,11 +102,13 @@ from app.common_tools.GBM_verify import gmb_test
 # #差集
 # print('差集:')
 # print(list(set(l1).difference(set(l2))))
+#
+# start_time = datetime.datetime.now()
+#
+# end_time = datetime.datetime.now()
+# duration = end_time - start_time
+# print(start_time)
+# print(end_time)
+# print(duration)
 
-start_time = datetime.datetime.now()
 
-end_time = datetime.datetime.now()
-duration = end_time - start_time
-print(start_time)
-print(end_time)
-print(duration)
