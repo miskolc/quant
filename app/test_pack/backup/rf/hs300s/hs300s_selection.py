@@ -13,7 +13,7 @@ def vote(list):
         if item == 1:
             count += 1
 
-    return count / len(list) >= 1
+    return count / len(list) >= 0.8
 
 
 def filter(codes):

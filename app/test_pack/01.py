@@ -68,9 +68,9 @@ quote_ctx.get_stock_quote('600179')
 #          '002411', '002415', '002450', '002460', '002470',
 #          '002714', '002831', '300070', '300072']
 
-codes = ['600009', '600036', '600085', '600276', '600690', '601012', '002470', '300124']
+codes = ['600009', '002460']
 
-
+'''
 list = []
 for code in codes:
     df_sh = ts.get_hist_data(code)
@@ -88,9 +88,10 @@ for code in codes:
     ma20 = df_sh["ma20"].head(1).values[0]
     if close > ma5 and close > ma10 and close > ma20:
         list.append(code)
+'''
 
 p_change_list=[]
-for code in list:
+for code in codes:
     df = ts.get_realtime_quotes(code)
 
     df['p_change'] = (float(df['price']) - float(df['pre_close'])) / float(df['pre_close'])
@@ -100,7 +101,7 @@ for code in list:
     print(code, p_change)
     p_change_list.append(p_change)
 
-print(len(list))
+print(len(codes))
 
 
-print(sum(p_change_list)/len(list))
+print("%.2f" % (sum(p_change_list)/len(codes)))
