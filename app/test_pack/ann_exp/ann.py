@@ -6,15 +6,13 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 
-
 df = ts.get_hist_data('600179', start='2017-01-01', end='2018-04-04', ktype='D')
 
-df['direction'] = np.where(df['price_change'] > 0, 1, 0)
+df['direction'] = np.where(df['price_change'].shift(-1) > 0, 1, 0)
 
 n_features = list(df.columns.values)
 
 X_train, x_test, Y_train, y_test = train_test_split(df[n_features], df['direction'], test_size=.3)
-
 
 feature_len = len(df.columns.values)
 model = Sequential()
