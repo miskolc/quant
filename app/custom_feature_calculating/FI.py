@@ -9,6 +9,6 @@ import pandas as pd
 
 
 def ForceIndex(data, ndays):
-    FI = pd.Series(data['close'].diff(ndays) * data['volume'], name='fi')
+    FI = pd.Series(data['close'].diff(ndays) * data['volume'], name='fi%s'% ndays)
     data = data.join(FI)
     return data
