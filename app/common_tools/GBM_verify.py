@@ -4,7 +4,7 @@ import pandas as pd
 from statsmodels.tsa.stattools import adfuller
 
 from app.common_tools import decorators
-from app.dao import data_source
+from dao import data_source
 
 
 @decorators.exc_time

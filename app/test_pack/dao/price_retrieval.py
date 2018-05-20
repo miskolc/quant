@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 import tushare as ts
 
 from app.common_tools import decorators
-from app.dao import data_source
+from dao import data_source
 
 
 # 爬取指数1min窗口数据

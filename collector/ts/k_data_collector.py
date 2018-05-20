@@ -2,8 +2,8 @@
 
 import tushare as ts
 
-from app.collector.collector_logging import collector_logging as logging
-from app.dao.data_source import dataSource
+from dao.data_source import dataSource
+from collector.collector_logging import collector_logging as logging
 
 
 # collect k_data from tushare and save into db

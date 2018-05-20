@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import app.common_tools.drawer as drawer
 import app.common_tools.logger as logger
 from app.contants.feature_constant import feature
-from app.dao import get_k_data, get_training_data
+from dao import get_k_data, get_training_data
 from sqlalchemy import create_engine
 import pandas as pd
 import app.custom_feature_calculating.feature as feature_service

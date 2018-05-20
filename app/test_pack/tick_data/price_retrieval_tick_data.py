@@ -1,6 +1,6 @@
 from datetime import timedelta, date
 
-from app.dao import price_retrieval_tick_data
+from dao import price_retrieval_tick_data
 
 
 def daterange(start_date, end_date):

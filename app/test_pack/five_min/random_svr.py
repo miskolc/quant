@@ -9,7 +9,7 @@ from sklearn.svm import SVR
 
 import app.common_tools.logger as logger
 from app.contants.feature_constant import feature
-from app.dao import get_k_data, get_training_data
+from dao import get_k_data, get_training_data
 from sqlalchemy import create_engine
 import pandas as pd
 import app.custom_feature_calculating.feature as feature_service

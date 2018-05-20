@@ -1,8 +1,9 @@
-from app.collector.collector_logging import collector_logging as logging
+from collector.collector_logging import collector_logging as logging
+from collector.config import config
 from sqlalchemy import create_engine
-from app.collector.config import config
-from app.dao.data_source import dataSource
-import app.collector.ts.k_data_collector as k_data
+
+import collector.ts.k_data_collector as k_data
+from dao.data_source import dataSource
 
 
 def init_db():
