@@ -31,9 +31,9 @@ class QuantLogging(object):
             os.mkdir("log")
 
         file_handler = logging.handlers.TimedRotatingFileHandler('log/%s.log' % logger_name,
-                                                                 encoding='UTF-8', when='H',
+                                                                 encoding='UTF-8', when='D',
                                                                  interval=1,
-                                                                 backupCount=48)
+                                                                 backupCount=7)
         file_handler.setFormatter(logging_format)
         file_handler.setLevel(logging.ERROR)
         logger.addHandler(file_handler)
