@@ -10,7 +10,7 @@ from sklearn import linear_model
 from app.common_tools.logger import log_model
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
-from dao import price_retrieval_realtime_quotes
+from quant.dao import price_retrieval_realtime_quotes
 from time import sleep
 from sklearn.externals import joblib
 from datetime import datetime

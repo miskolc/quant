@@ -5,8 +5,9 @@ import tushare as ts
 from sklearn.linear_model import LassoCV
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+
 from app.custom_feature_calculating import feature as feature_service
-from dao import get_open_price
+from quant.dao import get_open_price
 
 
 # predict

@@ -1,15 +1,16 @@
 # Close price predict
 
+import pandas as pd
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
+from sqlalchemy import create_engine
 
 import app.common_tools.drawer as drawer
 import app.common_tools.logger as logger
-from app.contants.feature_constant import feature
-from dao import get_k_data, get_training_data
-from sqlalchemy import create_engine
-import pandas as pd
 import app.custom_feature_calculating.feature as feature_service
+from app.contants.feature_constant import feature
+from quant.dao import get_k_data
+
 
 # predict
 def predict(code='600179', ktype='5', show_plot=False, df=None, df_now=None):

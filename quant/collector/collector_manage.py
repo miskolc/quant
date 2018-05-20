@@ -1,9 +1,20 @@
-from collector.collector_logging import collector_logging as logging
-from collector.config import config
-from sqlalchemy import create_engine
+# greg.chen - 2018/5/19
 
-import collector.ts.k_data_collector as k_data
-from dao.data_source import dataSource
+import os
+import sys
+
+# Append project path to system path
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(ROOT_DIR)
+
+from quant.log.quant_logging import quant_logging as logging
+from quant.collector.config import config
+from sqlalchemy import create_engine
+import quant.collector.ts.k_data_collector as k_data
+from quant.dao.data_source import dataSource
+
+PROJECT_NAME = "quant-collector"
 
 
 def init_db():
@@ -21,14 +32,11 @@ def init_db():
 
 def init_logger():
     default_config = config['default']
-    PROJECT_NAME = "quant-collector"
+
     logging.create_logger(default_config.DEBUG, PROJECT_NAME)
 
 
 if __name__ == '__main__':
-
-    # logger = init_logger("quant_collector")
     init_logger();
     init_db();
     k_data.collect('600179', start='2015-01-01', end='2018-05-19')
-

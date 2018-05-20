@@ -1,10 +1,9 @@
+import tushare as ts
+
 import app.line_regression.lasso_single_stock as lasso_single_stock
 import app.line_regression.ridge_regression_single_stock as ridge_regression_single_stock
 import app.line_regression.svr_single_stock as svr_single_stock
-import tushare as ts
-import app.line_regression.linear_regression_single_stock as linear_regression_single_stock
-from dao import get_training_data, get_k_data
-
+from quant.dao import get_training_data, get_k_data
 
 if __name__ == "__main__":
     list = ['002460',]

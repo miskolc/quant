@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 import app.common_tools.logger as logger
 import app.custom_feature_calculating.feature as feature_service
 from app.contants.feature_constant import feature
-from dao import get_k_data
+from quant.dao import get_k_data
 
 
 def cross_validation(X, y):

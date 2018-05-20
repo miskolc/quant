@@ -4,7 +4,7 @@ import logging.handlers
 import os
 
 
-class CollectorLogging(object):
+class QuantLogging(object):
 
     @property
     def logger(self):
@@ -41,4 +41,4 @@ class CollectorLogging(object):
         self.logger = logger
 
 
-collector_logging = CollectorLogging()
+quant_logging = QuantLogging()

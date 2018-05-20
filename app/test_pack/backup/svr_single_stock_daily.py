@@ -7,9 +7,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
-from dao import get_open_price
 
 from app.custom_feature_calculating.feature import fill_for_line_regression_predict
+from quant.dao import get_open_price
 
 
 def cross_validation(X, y):

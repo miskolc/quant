@@ -2,11 +2,13 @@
 
 import tushare as ts
 
-from dao.data_source import dataSource
-from collector.collector_logging import collector_logging as logging
+from quant.common_tools.decorators import exc_time
+from quant.dao.data_source import dataSource
+from quant.log.quant_logging import quant_logging as logging
 
 
 # collect k_data from tushare and save into db
+@exc_time
 def collect(code, start, end, table_name='k_data'):
     try:
         logging.logger.debug(code)

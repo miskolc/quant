@@ -4,7 +4,7 @@ from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 
 from app.contants.feature_constant import feature
-from dao import get_training_data
+from quant.dao import get_training_data
 
 
 # predict
