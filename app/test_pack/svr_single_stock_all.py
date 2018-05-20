@@ -1,17 +1,18 @@
 # Close price predict
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn import preprocessing
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
+from sqlalchemy import create_engine
 
 import app.common_tools.logger as logger
-from app.contants.feature_constant import feature
-from app.dao.price_service import get_k_data, get_training_data
-from sqlalchemy import create_engine
-import pandas as pd
 import app.custom_feature_calculating.feature as feature_service
+from app.contants.feature_constant import feature
+from app.dao import get_k_data
+
 
 def cross_validation(X, y):
     X_train, X_test, y_train, y_test = train_test_split(

@@ -3,13 +3,8 @@
 from sklearn import linear_model
 from sklearn.model_selection import cross_val_score
 
-import app.common_tools.drawer as drawer
-import app.common_tools.logger as logger
 from app.contants.feature_constant import feature
-from app.dao.price_service import get_k_data, get_training_data
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
+from app.dao import get_training_data
 
 
 # predict

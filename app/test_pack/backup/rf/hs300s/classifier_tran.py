@@ -45,7 +45,7 @@ def predict(code):
     lsvc_scores = cross_val_score(lsvc, X, y, cv=10)
 
     #XGBClassifier
-    xgb_model = XGBClassifier(n_estimators=300)
+    xgb_model = XGBClassifier(n_estimators=100)
     parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
     xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
     xgb_search.fit(X, y)

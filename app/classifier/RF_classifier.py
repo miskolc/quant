@@ -4,8 +4,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
-from sklearn import cross_validation, metrics
-from app.dao.price_service import get_k_data, get_training_data
+from sklearn import metrics
 import tushare as ts
 
 

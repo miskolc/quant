@@ -18,7 +18,7 @@ def plot_res_series(df, ts1):
 
     plt.xlabel('差值')
     plt.ylabel('Price ($)')
-    plt.title('603993 / 002460')
+    plt.title('601398 / 601988')
     plt.legend()
     plt.show()
 
@@ -40,8 +40,8 @@ def plot_price_series(df, ts1, ts2):
     plt.show()
 
 
-df_g = ts.get_k_data("002460", start="2017-01-01", end="2018-05-11")
-df_m = ts.get_k_data("603993", start="2017-01-01", end="2018-05-11")
+df_g = ts.get_k_data("601988", start='2018-04-01', end='2018-05-16')
+df_m = ts.get_k_data("601398", start='2018-04-01', end='2018-05-16')
 
 #df_g["date"] = pd.to_datetime(df_g["date"])
 df_g = df_g.set_index('date')
@@ -60,11 +60,11 @@ df_m = df_m.set_index('date')
 #print(window)
 
 
-df = pd.DataFrame( index=df_m.index,columns=['603993', '002460', 'date'])
+df = pd.DataFrame( index=df_m.index,columns=['601398', '601988', 'date'])
 
 
-df["002460"] = df_g["close"]
-df["603993"] = df_m["close"]
+df["601988"] = df_g["close"]
+df["601398"] = df_m["close"]
 
 df["date"] = pd.to_datetime(df.index)
 df = df.dropna()
@@ -72,11 +72,11 @@ df = df.dropna()
 
 
 #reg = LinearRegression()
-#reg.fit(df["002460"].values.reshape(-1, 1), df["603993"].values.reshape(-1, 1))
+#reg.fit(df["601988"].values.reshape(-1, 1), df["601398"].values.reshape(-1, 1))
 #x = reg.coef_[0][0]
 
 
-df["res"] = df["603993"] /df["002460"]
+df["res"] = df["601398"] /df["601988"]
 df.to_csv('result.csv')
 print("平均值",df["res"].mean())
 print("方差",df["res"].std())
@@ -86,5 +86,6 @@ hres = hurst(df["res"])
 print(hres)
 
 print(df["res"].tail())
-plot_price_series(df, "002460", "603993")
+
+plot_price_series(df, "601988", "601398")
 plot_res_series(df, "res")

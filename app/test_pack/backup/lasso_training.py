@@ -8,7 +8,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
 from app.custom_feature_calculating import feature as feature_service
-from app.dao import engine
+from app.dao import data_source
 
 # predict
 
@@ -22,7 +22,7 @@ def train(code='600179', show_plot=True):
           ' LEFT JOIN tick_data_1min_sh t2 on t1.datetime = t2.datetime and t2.code=\'sh\'' \
           ' where t1.code =\'%s\'' % code
 
-    df = pd.read_sql_query(sql, engine.create())
+    df = pd.read_sql_query(sql, data_source.create())
     df = feature_service.fill_for_line_regression(df)
 
     df = df.dropna()

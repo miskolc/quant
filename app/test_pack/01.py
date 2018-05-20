@@ -68,7 +68,8 @@ quote_ctx.get_stock_quote('600179')
 #          '002411', '002415', '002450', '002460', '002470',
 #          '002714', '002831', '300070', '300072']
 
-codes = ['600009', '002460']
+codes = ['601607', '000333', '002460']
+
 
 '''
 list = []
@@ -104,4 +105,4 @@ for code in codes:
 print(len(codes))
 
 
-print("%.2f" % (sum(p_change_list)/len(codes)))
+print("%.4f" % (sum(p_change_list)/len(codes)))

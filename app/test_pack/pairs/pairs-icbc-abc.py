@@ -40,8 +40,8 @@ def plot_price_series(df, ts1, ts2):
     plt.show()
 
 
-df_g = ts.get_k_data("601288", start="2017-01-01", end="2018-05-11")
-df_m = ts.get_k_data("601398", start="2017-01-01", end="2018-05-11")
+df_g = ts.get_k_data("601288",  start='2018-04-01')
+df_m = ts.get_k_data("601398",  start='2018-04-01')
 
 #df_g["date"] = pd.to_datetime(df_g["date"])
 df_g = df_g.set_index('date')
@@ -82,9 +82,10 @@ print("平均值",df["res"].mean())
 print("方差",df["res"].std())
 print("区间",df["res"].mean() + df["res"].std(), df["res"].mean() -df["res"].std() )
 # H<0.5 The time series is mean revert
-hres = hurst(df["res"])
-print(hres)
+#hres = hurst(df["res"])
+#print(hres)
 
+print(df["res"].tail())
 
 plot_price_series(df, "601288", "601398")
 plot_res_series(df, "res")

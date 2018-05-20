@@ -6,9 +6,8 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVR
 
-import app.common_tools.logger as logger
 from app.contants.feature_constant import feature
-from app.dao.price_service import get_k_data, get_training_data
+from app.dao import get_k_data, get_training_data
 
 
 def cross_validation(X, y):

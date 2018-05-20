@@ -1,15 +1,7 @@
 # ae.h - 2018/4/19
 import functools
 import tushare as ts
-import pandas as pd
-import numpy as np
-from yahoo_finance import Share
-import datetime
-import pandas_datareader.data as web
-import futuquant as ft
-from statsmodels.tsa.stattools import adfuller
-import matplotlib.pyplot as plt
-from app.common_tools.GBM_verify import gmb_test
+
 
 # tick_df = pd.DataFrame()
 # df = ts.get_hist_data('600179')
@@ -19,8 +11,8 @@ from app.common_tools.GBM_verify import gmb_test
 # print(tick_df)
 
 
-# df = ts.get_tick_data('600179', date='2016-04-21', pause=5)
-# print(df)
+df = ts.get_hist_data('600690')
+print(df)
 
 
 

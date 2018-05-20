@@ -3,7 +3,7 @@ import app.line_regression.ridge_regression_single_stock as ridge_regression_sin
 import app.line_regression.svr_single_stock as svr_single_stock
 import tushare as ts
 import app.line_regression.linear_regression_single_stock as linear_regression_single_stock
-from app.dao.price_service import get_training_data, get_k_data
+from app.dao import get_training_data, get_k_data
 
 
 if __name__ == "__main__":

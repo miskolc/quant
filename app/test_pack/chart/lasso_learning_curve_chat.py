@@ -1,15 +1,13 @@
 # Close price predict
 
-from sklearn import linear_model
-from sklearn.model_selection import train_test_split
-
-import app.common_tools.drawer as drawer
-import app.common_tools.logger as logger
-from app.contants.feature_constant import feature
-from sklearn.model_selection import learning_curve
-from app.dao.price_service import get_k_data, get_training_data
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn import linear_model
+from sklearn.model_selection import learning_curve
+
+from app.contants.feature_constant import feature
+from app.dao import get_training_data
+
 
 # predict
 def predict(code='601398', show_plot=False, df=None, df_now=None):

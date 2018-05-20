@@ -4,13 +4,13 @@ import pandas as pd
 from statsmodels.tsa.stattools import adfuller
 
 from app.common_tools import decorators
-from app.dao import engine
+from app.dao import data_source
 
 
 @decorators.exc_time
 def gmb_test(code):
     time_close_df = pd.read_sql_query(sql='select datetime,close from tick_data_1min_hs300 where code=\'%s\'' % code,
-                                      con=engine.create(), index_col='datetime')
+                                      con=data_source.create(), index_col='datetime')
     adf_result = list(adfuller(time_close_df['close']))
     print('\n')
 
