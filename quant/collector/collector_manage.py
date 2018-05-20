@@ -38,12 +38,10 @@ def init_logger():
 if __name__ == '__main__':
     init_logger()
     init_db()
-<<<<<<< HEAD
-    k_data.collect_single('600179', start='2015-01-01', end='2018-05-19')
-=======
 
+    k_data.collect_single('600179', start='2015-01-01', end='2018-05-19')
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
     while True:
         schedule.run_pending()
         time.sleep(1)
->>>>>>> e72643ba3611adab3183d4153574c67eeff75153
+
