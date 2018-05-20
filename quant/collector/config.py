@@ -10,39 +10,23 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
 
-    db_host = '192.168.1.131:3306'
-    db_user = 'root'
-    db_pass = 'aGiOxoNrqbeT7XWW'
-    db_name = 'quant'
-
-    DATABASE_QUANT_URI = "mysql+mysqldb://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name + "?charset=utf8"
+    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.1.131:3306/quant?charset=utf8"
 
 
 class TestingConfig(Config):
     DEBUG = False
-
-    db_host = '192.168.1.131:3306'
-    db_user = 'root'
-    db_pass = 'aGiOxoNrqbeT7XWW'
-    db_name = 'quant'
-
-    DATABASE_QUANT_URI = "mysql+mysqldb://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name + "?charset=utf8"
+    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.1.131:3306/quant?charset=utf8"
 
 
 class RemoteDevelopmentConfig(Config):
     DEBUG = True
-
-    db_host = 's1.natapp.cc:33068'
-    db_user = 'root'
-    db_pass = 'aGiOxoNrqbeT7XWW'
-    db_name = 'quant'
-
-    DATABASE_QUANT_URI = "mysql+mysqldb://" + db_user + ":" + db_pass + "@" + db_host + "/" + db_name + "?charset=utf8"
+    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@s1.natapp.cc:33068/quant?charset=utf8"
 
 
 config = {
     "development": DevelopmentConfig,
     "remote-development": RemoteDevelopmentConfig,
+    "testing": TestingConfig,
     "default": None
 }
 
