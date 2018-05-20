@@ -5,7 +5,7 @@ import sys
 
 # Append project path to system path
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(CURRENT_DIR)
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
 from quant.log.quant_logging import quant_logging as logging
@@ -13,6 +13,8 @@ from quant.collector.config import config
 from sqlalchemy import create_engine
 import quant.collector.ts.k_data_collector as k_data
 from quant.dao.data_source import dataSource
+import schedule
+import time
 
 PROJECT_NAME = "quant-collector"
 
@@ -36,4 +38,12 @@ def init_logger():
 if __name__ == '__main__':
     init_logger()
     init_db()
+<<<<<<< HEAD
     k_data.collect_single('600179', start='2015-01-01', end='2018-05-19')
+=======
+
+    schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+>>>>>>> e72643ba3611adab3183d4153574c67eeff75153
