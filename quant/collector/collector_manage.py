@@ -34,6 +34,6 @@ def init_logger():
 
 
 if __name__ == '__main__':
-    init_logger();
-    init_db();
+    init_logger()
+    init_db()
     k_data.collect_single('600179', start='2015-01-01', end='2018-05-19')
