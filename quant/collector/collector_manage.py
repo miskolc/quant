@@ -5,7 +5,7 @@ import sys
 
 # Append project path to system path
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(CURRENT_DIR)
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
 from quant.log.quant_logging import quant_logging as logging
@@ -36,8 +36,8 @@ def init_logger():
 
 
 if __name__ == '__main__':
-    init_logger();
-    init_db();
+    init_logger()
+    init_db()
 
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
     while True:
