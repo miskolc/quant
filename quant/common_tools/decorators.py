@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 # ae.h - 2018/4/23
 import functools
 from quant.log.quant_logging import quant_logging as logging

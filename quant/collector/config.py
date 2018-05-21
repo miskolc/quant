@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/20
 
 import os
