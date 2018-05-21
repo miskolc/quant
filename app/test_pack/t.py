@@ -1,6 +1,7 @@
 # ae.h - 2018/4/19
 import functools
 import tushare as ts
+from talib import abstract
 
 
 # tick_df = pd.DataFrame()
