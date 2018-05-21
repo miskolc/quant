@@ -78,14 +78,14 @@ def classifier_predict100(df):
 if __name__ == "__main__":
     warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 
-    #rs = classifier_predict100(ts.get_hs300s())
+    rs = classifier_predict100(ts.get_hs300s())
 
-    #rs = filter(rs)
+    rs = filter(rs)
 
-    # print(rs)
+    print(rs)
 
     #rs = classifier_predict8(ts.get_hs300s())
-    rs= ['600009', '600019', '600036', '600048', '600104', '600153', '600196', '600309', '600390', '600482', '600519', '600547', '600549', '600585', '600690', '600741', '600887', '600900', '601012', '601155', '601318', '601601', '601888', '601958', '603799', '000060', '000063', '000333', '000568', '000768', '002230', '002310', '002415', '002456', '002601', '300003', '300124', '300136']
-    rs = filter(rs)
+
+    #rs = filter(rs)
 
     print(rs)
