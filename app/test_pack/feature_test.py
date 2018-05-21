@@ -15,9 +15,8 @@ bbands = abstract.Function('bbands')
 
 # ema_value = ema(df, timeperiod=5, price='close')
 
-bbands_value = bbands(df, 20, 2, 2)
+bbands_v = bbands(df, price='close')
 
-# print(df_slice)
 
-# print(ema_value)
-print(bbands_value)
+df = df.join(bbands_v)
+print(df)
