@@ -32,8 +32,9 @@ config = {
 }
 
 env = os.getenv('quant_env')
-if env is not None and config.has_key(env):
-    config["default"] = config["env"]
+
+if env is not None and env in config.keys():
+    config["default"] = config[env]
     pass
 else:
     config["default"] = DevelopmentConfig
