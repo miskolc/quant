@@ -1,0 +1,108 @@
+# -*- coding: UTF-8 -*-
+# greg.chen - 2018/5/21
+import tushare as ts
+from quant.common_tools.decorators import exc_time
+from quant.dao.data_source import dataSource
+from quant.log.quant_logging import quant_logging as logging
+from quant.collector.util.yahoo_finance_api import yahoo_finance_api
+import datetime
+'''
+    上证综合指数: 000001
+    深证成份指数: 399001
+    沪深300指数: 000300
+    中证小盘500指数: 000905
+    納斯達克指數: ^IXIC
+    恒生指數: ^HSI
+    标普500: ^GSPC
+    道琼斯指数: ^DJI
+'''
+
+
+@exc_time
+def collect_single_index_from_yahoo(code, start, end, table_name='index_k_data'):
+    try:
+        data = yahoo_finance_api.get_k_data(code, start_date=start, end_date=end)
+        data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
+    except Exception as e:
+        logging.logger.error(e)
+
+@exc_time
+def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
+    try:
+        delta = datetime.timedelta(days=-30)
+        now = datetime.datetime.now()
+
+        start = delta.strftime('%Y-%m-%d')
+        end = now.strftime('%Y-%m-%d')
+
+        data = yahoo_finance_api.get_k_data(code, start=start, end=end, index=True)
+        data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
+    except Exception as e:
+        logging.logger.error(e)
+
+@exc_time
+def collect_single_index_from_ts(code, start, end, table_name='index_k_data'):
+    try:
+        data = ts.get_k_data(code, start=start, end=end, index=True)
+        data['code'] = code
+        data['pre_close'] = data['close'].shift(1)
+        data = data.dropna()
+        data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
+    except Exception as e:
+        logging.logger.error(e)
+
+@exc_time
+def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
+    try:
+        data = ts.get_k_data(code, index=True)
+        data['code'] = code
+        data['pre_close'] = data['close'].shift(1)
+        data = data.tail(1)
+        data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
+    except Exception as e:
+        logging.logger.error(e)
+
+
+# 上证综合指数
+@exc_time
+def collect_sh_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_ts('000001', start, end, table_name)
+
+
+# 深证成份指数
+@exc_time
+def collect_sz_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_ts('399001', start, end, table_name)
+
+
+# 沪深300指数
+@exc_time
+def collect_hs300_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_ts('000300', start, end, table_name)
+
+
+# 中证小盘500指数
+@exc_time
+def collect_zz500_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_ts('000905', start, end, table_name)
+
+
+# 恒生指數
+@exc_time
+def collect_hsi_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_yahoo("^HSI",start, end,table_name)
+
+#  納斯達克指數: ^IXIC
+@exc_time
+def collect_ixic_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_yahoo("^IXIC",start, end,table_name)
+
+# 标普500: ^GSPC
+@exc_time
+def collect_gspc_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_yahoo("^GSPC",start, end,table_name)
+
+# 道琼斯指数: ^DJI
+@exc_time
+def collect_dji_index_full(start, end, table_name='index_k_data'):
+    collect_single_index_from_yahoo("^DJI",start, end,table_name)

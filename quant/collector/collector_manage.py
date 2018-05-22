@@ -12,7 +12,8 @@ sys.path.append(ROOT_DIR)
 from quant.log.quant_logging import quant_logging as logging
 from quant.collector.config import config
 from sqlalchemy import create_engine
-import quant.collector.ts.k_data_collector as k_data
+import quant.collector.k_data.k_data_collector as k_data
+import quant.collector.k_data.index_k_data_collector as index_k_data
 from quant.dao.data_source import dataSource
 import schedule
 import time
@@ -40,7 +41,12 @@ if __name__ == '__main__':
     init_logger()
     init_db()
 
-    k_data.collect_single('600179', start='2015-01-01', end='2018-05-19')
+    #index_k_data.collect_dji_index_full(start='2015-01-01',end='2018-5-22')
+    #index_k_data.collect_sz_index_full(start='2015-01-01',end='2018-5-22')
+
+    #index_k_data.collect_hs300_index_full(start='2015-01-01',end='2018-5-22')
+    #index_k_data.collect_zz500_index_full(start='2015-01-01',end='2018-5-22')
+
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
     while True:
         schedule.run_pending()

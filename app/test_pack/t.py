@@ -3,7 +3,6 @@ import functools
 import tushare as ts
 from talib import abstract
 
-
 # tick_df = pd.DataFrame()
 # df = ts.get_hist_data('600179')
 # for date in df.index.values:
@@ -12,10 +11,8 @@ from talib import abstract
 # print(tick_df)
 
 
-df = ts.get_hist_data('600690')
-print(df)
-
-
+#df = ts.get_hist_data('600690')
+#print(df)
 
 # df = ts.get_tick_data('600179', date='2018-04-23', pause=5)
 
@@ -105,3 +102,55 @@ print(df)
 # print(duration)
 
 
+
+#data = ts.get_k_data('HSI', index=True)
+#print(data.columns.values)
+'''
+import datetime
+import pandas as pd
+pd.core.common.is_list_like = pd.api.types.is_list_like
+
+
+import pandas_datareader.data as web
+
+start = datetime.datetime(2016, 1, 1) # or start = '1/1/2016'
+end = datetime.date.today()
+prices = web.DataReader('AAPL', 'google', start, end)
+print(prices.head())
+'''
+
+'''
+import quandl
+quandl.ApiConfig.api_key = 'RyYUVzsxeqqG9q1DV1v2'
+quandl.ApiConfig.api_version = '2015-04-09'
+
+data = quandl.get('WIKI/SPX', start_date="2015-01-01", end_date="2018-05-21")
+print(data.head())
+'''
+
+
+# https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=1526918400&period2=1526918400&interval=1d&events=history&crumb=puXaPSZI36G
+import requests
+import pandas as pd
+import io
+
+def get_cookie_value(r):
+    return {'B': r.cookies['B']}
+
+def get_page_data(symbol):
+    url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
+    r = requests.get(url)
+    cookie = get_cookie_value(r)
+    lines = r.content.decode('unicode-escape').strip(). replace('}', '\n')
+    return cookie, lines.split('\n')
+
+print(get_page_data('%5EGSPC'))
+
+'''
+url = 'https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=1526918400&period2=1526918400&interval=1d&events=history&crumb=puXaPSZI36G'
+
+urlData = requests.get(url).content
+print(urlData)
+df = pd.read_csv(io.StringIO(urlData.decode('utf-8')))
+print(df.head())
+'''
