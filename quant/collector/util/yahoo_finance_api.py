@@ -6,6 +6,7 @@ import pandas as pd
 import io
 from quant.log.quant_logging import quant_logging as logging
 
+
 class YahooFinanceApi:
     def get_page_data(self, symbol):
         url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
@@ -40,8 +41,9 @@ class YahooFinanceApi:
 
             cookie, crumb = self.get_cookie_crumb(code)
 
-            url = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events=history&crumb=%s" % (
-                code, start_date, end_date, crumb)
+            url = "https://query1.finance.yahoo.com/v7/finance/download/%s?period1=%s&period2=%s&interval=1d&events" \
+                  "=history&crumb=%s" % (
+                      code, start_date, end_date, crumb)
 
             print(url)
             response = requests.get(url, cookies=cookie)
@@ -60,4 +62,3 @@ class YahooFinanceApi:
 
 
 yahoo_finance_api = YahooFinanceApi()
-

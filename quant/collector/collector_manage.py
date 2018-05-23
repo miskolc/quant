@@ -41,11 +41,14 @@ if __name__ == '__main__':
     init_logger()
     init_db()
 
-    #index_k_data.collect_dji_index_full(start='2015-01-01',end='2018-5-22')
+    #index_k_data.collect_gspc_index_full(start='2015-01-01',end='2018-5-22')
     #index_k_data.collect_sz_index_full(start='2015-01-01',end='2018-5-22')
 
     #index_k_data.collect_hs300_index_full(start='2015-01-01',end='2018-5-22')
     #index_k_data.collect_zz500_index_full(start='2015-01-01',end='2018-5-22')
+    #index_k_data.collect_sh_index_daily()
+
+    #index_k_data.collect_index_daily()
 
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
     while True:

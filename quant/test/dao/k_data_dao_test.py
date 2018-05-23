@@ -4,7 +4,7 @@ from quant.dao.k_data_dao import k_data_dao
 from quant.log.quant_logging import quant_logging as logging
 
 
-class Test_k_data_dao(unittest.TestCase):
+class K_Data_Dao_Test(unittest.TestCase):
 
     def setUp(self):
         before_run()

@@ -8,11 +8,11 @@ from quant.dao import data_source
 
 
 @decorators.exc_time
-def gmb_test(code):
-    time_close_df = pd.read_sql_query(sql='select datetime,close from tick_data_1min_hs300 where code=\'%s\'' % code,
-                                      con=data_source.create(), index_col='datetime')
+def gmb_test(time_close_df):
+    #time_close_df = pd.read_sql_query(sql='select datetime,close from tick_data_1min_hs300 where code=\'%s\'' % code,
+                                      #con=data_source.create(), index_col='datetime')
     adf_result = list(adfuller(time_close_df['close']))
-    print('\n')
+    #print('\n')
 
     test_statics = adf_result[0]
     p_value = adf_result[1]

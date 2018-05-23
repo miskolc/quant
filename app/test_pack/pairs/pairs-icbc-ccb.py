@@ -40,8 +40,8 @@ def plot_price_series(df, ts1, ts2):
     plt.show()
 
 
-df_g = ts.get_k_data("601939", start="2017-01-01", end="2018-05-11")
-df_m = ts.get_k_data("601398", start="2017-01-01", end="2018-05-11")
+df_g = ts.get_k_data("601939", start="2017-01-01")
+df_m = ts.get_k_data("601398", start="2017-01-01")
 
 #df_g["date"] = pd.to_datetime(df_g["date"])
 df_g = df_g.set_index('date')

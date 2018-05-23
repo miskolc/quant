@@ -5,6 +5,7 @@ from app.test_pack.pairs.hurst import hurst
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import datetime
+from app.common_tools.GBM_verify import gmb_test
 
 def plot_res_series(df, ts1):
     months = mdates.MonthLocator()  # every month
@@ -76,16 +77,18 @@ df = df.dropna()
 #x = reg.coef_[0][0]
 
 
-df["res"] = df["000333"] /df["000651"]
+df["close"] = df["000333"] /df["000651"]
 df.to_csv('result.csv')
-print("平均值",df["res"].mean())
-print("方差",df["res"].std())
-print("区间",df["res"].mean() + df["res"].std(), df["res"].mean() -df["res"].std() )
+print("平均值",df["close"].mean())
+print("方差",df["close"].std())
+print("区间",df["close"].mean() + df["close"].std(), df["close"].mean() -df["close"].std() )
 # H<0.5 The time series is mean revert
-#hres = hurst(df["res"])
-#print(hres)
+hres = hurst(df["close"])
+print("hres:"+hres)
 
-print(df["res"].tail())
+gmb_test(df)
+
+print(df["close"].tail())
 
 plot_price_series(df, "000651", "000333")
-plot_res_series(df, "res")
+plot_res_series(df, "close")

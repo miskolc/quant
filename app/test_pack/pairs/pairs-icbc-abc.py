@@ -5,6 +5,28 @@ from app.test_pack.pairs.hurst import hurst
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import datetime
+from app.common_tools.GBM_verify import gmb_test
+
+
+def plot_res_series_tmp(df, ts1):
+    months = mdates.MonthLocator()  # every month
+    fig, ax = plt.subplots()
+    ax.plot(df['date'], df[ts1], label=ts1)
+    df['up'] = df[ts1].mean() + df[ts1].std()
+    df['down'] = df[ts1].mean() - df[ts1].std()
+    ax.plot(df['date'], df['up'])
+    ax.plot(df['date'], df['down'])
+    #ax.xaxis.set_major_locator(months)
+    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+    #ax.set_xlim(datetime.datetime(2017, 4, 1), datetime.datetime(2018, 4, 1))
+    ax.grid(True)
+    fig.autofmt_xdate()
+
+    plt.xlabel('差值')
+    plt.ylabel('Price ($)')
+    plt.title('601398')
+    plt.legend()
+    plt.show()
 
 def plot_res_series(df, ts1):
     months = mdates.MonthLocator()  # every month
@@ -40,8 +62,8 @@ def plot_price_series(df, ts1, ts2):
     plt.show()
 
 
-df_g = ts.get_k_data("601288",  start='2018-03-01')
-df_m = ts.get_k_data("601398",  start='2018-03-01')
+df_g = ts.get_k_data("601288", start='2018-04-01')
+df_m = ts.get_k_data("601398", start='2018-01-01')
 
 #df_g["date"] = pd.to_datetime(df_g["date"])
 df_g = df_g.set_index('date')
@@ -76,16 +98,25 @@ df = df.dropna()
 #x = reg.coef_[0][0]
 
 
-df["res"] = df["601398"] /df["601288"]
+df["close"] = df["601398"] /df["601288"]
 df.to_csv('result.csv')
-print("平均值",df["res"].mean())
-print("方差",df["res"].std())
-print("区间",df["res"].mean() + df["res"].std(), df["res"].mean() -df["res"].std() )
+print("平均值",df["close"].mean())
+print("方差",df["close"].std())
+print("区间",df["close"].mean() + df["close"].std(), df["close"].mean() -df["close"].std() )
 # H<0.5 The time series is mean revert
 #hres = hurst(df["res"])
 #print(hres)
 
-print(df["res"].tail())
+print(df.tail(20))
 
-plot_price_series(df, "601288", "601398")
-plot_res_series(df, "res")
+#plot_price_series(df, "601288", "601398")
+#plot_res_series(df, "res")
+
+gmb_test(df_m)
+df_m["date"] = pd.to_datetime(df_m.index)
+print(df["601398"].mean())
+print(df["601398"].std())
+plot_res_series_tmp(df_m, "close")
+
+#hres = hurst(df["601398"].values)
+#print(hres)
