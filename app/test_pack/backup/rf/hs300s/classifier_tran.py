@@ -25,7 +25,7 @@ def predict(code):
     lg = LogisticRegression()
     lg_scores = cross_val_score(lg, X, y, cv=10)
     # 弱网格测试
-    param_test_weak = {'n_estimators': range(900, 1000, 100)}
+    param_test_weak = {'n_estimators': range(500, 1000, 100)}
     gsearch_weak = GridSearchCV(estimator=RandomForestClassifier(min_samples_split=100,
                                                                  min_samples_leaf=20, max_depth=8, max_features='sqrt',
                                                                  random_state=None),
@@ -45,7 +45,7 @@ def predict(code):
     lsvc_scores = cross_val_score(lsvc, X, y, cv=10)
 
     #XGBClassifier
-    xgb_model = XGBClassifier(n_estimators=100)
+    xgb_model = XGBClassifier(n_estimators=300)
     parameters = {'learning_rate': [0.01, 0.02, 0.03], 'max_depth': [4, 5, 6]}
     xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
     xgb_search.fit(X, y)

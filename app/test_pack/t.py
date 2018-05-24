@@ -128,7 +128,7 @@ data = quandl.get('WIKI/SPX', start_date="2015-01-01", end_date="2018-05-21")
 print(data.head())
 '''
 
-
+'''
 # https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=1526918400&period2=1526918400&interval=1d&events=history&crumb=puXaPSZI36G
 import requests
 import pandas as pd
@@ -146,7 +146,7 @@ def get_page_data(symbol):
 
 print(get_page_data('%5EGSPC'))
 
-'''
+
 url = 'https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=1526918400&period2=1526918400&interval=1d&events=history&crumb=puXaPSZI36G'
 
 urlData = requests.get(url).content
@@ -154,3 +154,15 @@ print(urlData)
 df = pd.read_csv(io.StringIO(urlData.decode('utf-8')))
 print(df.head())
 '''
+import requests
+from lxml import etree
+#ts.get_realtime_quotes()
+symbol='^HSI'
+url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
+response = requests.get(url)
+
+selector = etree.HTML(response.text)
+
+item = selector.xpath('//div/span[1]/text()')[1]
+
+print(float(item.replace(',', '')))

@@ -1,11 +1,13 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/21
+from datetime import datetime
+
 import tushare as ts
+
 from quant.common_tools.decorators import exc_time
+from quant.crawler.yahoo_finance_api import yahoo_finance_api
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import quant_logging as logging
-from quant.collector.util.yahoo_finance_api import yahoo_finance_api
-from datetime import datetime
 
 '''
     上证综合指数: 000001
@@ -77,31 +79,24 @@ def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
         logging.logger.error(e)
 
 
-# 爬取全量各类指数
+# 每天爬取中国各类指数
 @exc_time
-def collect_sh_index_full():
-    start = '2015-01-01'
-    end = datetime.now().strftime('%Y-%m-%d')
-
-    collect_single_index_from_ts('000001', start, end)
-    collect_single_index_from_ts('399001', start, end)
-    collect_single_index_from_ts('000300', start, end)
-    collect_single_index_from_ts('000905', start, end)
-
-    collect_single_index_from_yahoo("^HSI", start, end)
-    collect_single_index_from_yahoo("^IXIC", start, end)
-    collect_single_index_from_yahoo("^GSPC", start, end)
-    collect_single_index_from_yahoo("^DJI", start, end)
-
-
-# 爬取每日各类指数
-@exc_time
-def collect_index_daily():
+def collect_index_china_daily():
     collect_single_index_daily_from_ts('000001')
     collect_single_index_daily_from_ts('399001')
     collect_single_index_daily_from_ts('000300')
     collect_single_index_daily_from_ts('000905')
 
+
+# 每天爬取香港各类指数
+@exc_time
+def collect_index_hk_daily():
+    collect_single_index_daliy_from_yahoo('^HSI')
+
+
+# 每天爬取USA各类指数
+@exc_time
+def collect_index_usa_daily():
     collect_single_index_daliy_from_yahoo('^HSI')
     collect_single_index_daliy_from_yahoo('^IXIC')
     collect_single_index_daliy_from_yahoo('^GSPC')

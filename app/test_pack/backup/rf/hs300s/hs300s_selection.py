@@ -5,7 +5,7 @@ import warnings
 import tushare as ts
 
 from app.test_pack.backup.rf.hs300s.classifier_runner import predict
-
+from app.custom_feature_calculating.SMA import SMA
 
 def vote8(list):
     count = 0.0
@@ -30,11 +30,27 @@ def filter(codes):
     list = []
     for code in codes:
 
-        df_rel = ts.get_realtime_quotes(code)
+        df_rel = ts.get_k_data(code)
 
         if df_rel is None:
             continue
 
+        df_rel = SMA(df_rel, 5)
+        df_rel = SMA(df_rel, 10)
+        df_rel = SMA(df_rel, 20)
+
+        df_rel = df_rel.tail(1)
+
+        ma5 = df_rel["ma5"].values[0]
+        ma10 = df_rel["ma10"].values[0]
+        ma20 = df_rel["ma20"].values[0]
+
+        price = float(ts.get_realtime_quotes(code)["price"].values[0])
+
+        if price > ma5 and price > ma10 and price > ma20:
+            list.append(code)
+
+        '''
         pre_price = float(df_rel["pre_close"].tail(1).values[0])
         price = float(df_rel["price"].tail(1).values[0])
 
@@ -43,7 +59,7 @@ def filter(codes):
         if p_change < -0.02:
             list.append(code)
             print(p_change)
-
+        '''
     return list
 
 
@@ -79,7 +95,6 @@ if __name__ == "__main__":
     warnings.filterwarnings(action='ignore', category=DeprecationWarning)
 
     rs = classifier_predict100(ts.get_hs300s())
-
     rs = filter(rs)
 
     print(rs)
@@ -88,4 +103,4 @@ if __name__ == "__main__":
 
     #rs = filter(rs)
 
-    print(rs)
+    #print(rs)
