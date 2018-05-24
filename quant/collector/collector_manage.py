@@ -50,10 +50,11 @@ if __name__ == '__main__':
     # index_k_data.collect_sh_index_daily()
 
     # index_k_data.collect_sh_index_full(start='2018-05-21', end='2018-05-24')
-
+    index_k_data.collect_index_hk_daily()
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
+    schedule.every().day.at("15:30").do(index_k_data.collect_index_china_daily)
     schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
-    schedule.every().day.at("5:30").do(index_k_data.collect_index_usa_daily)
+    schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
 
     while True:
         schedule.run_pending()

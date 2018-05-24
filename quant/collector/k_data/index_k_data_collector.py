@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/21
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import tushare as ts
 
@@ -39,11 +39,11 @@ def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
         return
 
     try:
-        delta = datetime.timedelta(days=-30)
-        start = delta.strftime('%Y-%m-%d')
-        end = now
+        start = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+        end = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
 
-        data = yahoo_finance_api.get_k_data(code, start=start, end=end)
+        data = yahoo_finance_api.get_k_data(code, start_date=start, end_date=end)
+        data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
         logging.logger.error(e)

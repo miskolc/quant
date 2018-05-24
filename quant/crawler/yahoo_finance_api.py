@@ -45,7 +45,7 @@ class YahooFinanceApi:
                   "=history&crumb=%s" % (
                       code, start_date, end_date, crumb)
 
-            print(url)
+            logging.logger.debug(url)
             response = requests.get(url, cookies=cookie)
 
             df = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
