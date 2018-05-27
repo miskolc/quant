@@ -83,7 +83,6 @@ def predict(code):
     X, y = prepare_data(code, ktype='D')
 
 
-
     lg = LogisticRegression()
     lg_scores = cross_val_score(lg, X, y, cv=10)
     # 弱网格测试

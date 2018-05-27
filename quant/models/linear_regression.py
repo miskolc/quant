@@ -8,7 +8,7 @@ import numpy as np
 def trained_linear_model(data=None):
     LR_model = linear_model.LinearRegression(normalize=True, n_jobs=-1)
 
-    X_train, X_test, y_train, y_test = train_test_split(data[feature], data['next_direction'], test_size=.3)
+    X_train, X_test, y_train, y_test = train_test_split(data[feature], data['next_direction'], test_size=.3, shuffle=False)
 
     LR_model.fit(X_train, y_train)
 
