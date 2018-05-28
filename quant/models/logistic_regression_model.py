@@ -9,6 +9,10 @@ from datetime import datetime
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
 from quant.feature_utils.feature_collector import get_col_name_list, collect_features
+from sklearn.decomposition import PCA
+from sklearn import preprocessing
+from sklearn.manifold import TSNE
+from sklearn.metrics import accuracy_score
 
 class LogisticRegressionModel(BaseModel):
 
@@ -21,10 +25,18 @@ class LogisticRegressionModel(BaseModel):
         data = k_data_dao.get_k_data(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
         data, features = collect_features(data)
+
+
+
         data.to_csv('result.csv')
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)
+
+        X_train = preprocessing.scale(X_train)
+        X_test = preprocessing.scale(X_test)
+        X_train = TSNE(n_components=2).fit_transform(X_train)
+        X_test = TSNE(n_components=2).fit_transform(X_test)
 
         # 交叉验证查找合适的超参数: penalty, C
         # penalty
@@ -43,10 +55,12 @@ class LogisticRegressionModel(BaseModel):
         logistic_regression.fit(X_train, y_train)
 
         # 使用测试数据对模型进评平分
-        test_score = logistic_regression.score(X_test, y_test)
+        y_test_pred= logistic_regression.predict(X_test)
+
+        #test_score = logistic_regression.score(X_test, y_test)
 
         # 在测试集中的评分
-        logging.logger.debug("Test score: %.2f" % test_score)
+        logging.logger.debug('accuracy score: %.2f' % accuracy_score(y_test, y_test_pred))
 
         # 使用所有数据, 重新训练
         logistic_regression.fit(data[features], data['next_direction'])

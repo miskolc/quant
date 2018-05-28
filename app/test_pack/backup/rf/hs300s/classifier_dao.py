@@ -53,7 +53,7 @@ features = ['close', 'low', 'high', 'volume', 'open', 'ma5', 'ma10', 'ma20', 'ub
 
 
 def prepare_data(code, ktype='D'):
-    df = ts.get_k_data(code, ktype=ktype)
+    df = ts.get_k_data(code, ktype=ktype, start='2015-01-01')
     df = fill_feature(df)
     # df['direction'] = df['p_change'] > 0
     df['pre_close'] = df['close'].shift();
@@ -79,7 +79,7 @@ def predict_data(code, ktype='D'):
 
     print("股票代码:%s, close price:%s" % (code, df[-1:]["close"].values))
 
-    X = df[features].values
+    X = df[features].tail(1).values
 
     X = preprocessing.normalize(X)
     return X

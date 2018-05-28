@@ -4,18 +4,22 @@ import warnings
 import tushare as ts
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
+
 from sklearn.svm import LinearSVC, SVC
 from xgboost import XGBClassifier
-
-
 import app.test_pack.backup.rf.hs300s.classifier_dao as dao
-
+import pandas as pd
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import numpy as np
 
 def predict(code):
     X_pred = dao.predict_data(code)
     X, y = dao.prepare_data(code, ktype='D')
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
+                                                        shuffle=False)
 
     lg = LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, max_iter=100, multi_class='ovr',
@@ -50,6 +54,64 @@ def predict(code):
        random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
        seed=None, silent=True, subsample=1)
 
+    lg.fit(X_train, y_train)
+    rf.fit(X_train, y_train)
+    svc.fit(X_train, y_train)
+    lsvc.fit(X_train, y_train)
+    xgb.fit(X_train, y_train)
+
+
+    lg_y_predict = lg.predict(X_train)
+    rf_y_predict = rf.predict(X_train)
+    svc_y_predict = svc.predict(X_train)
+    lsvc_y_predict = lsvc.predict(X_train)
+    xgb_y_predict = xgb.predict(X_train)
+
+    data = {
+        "lg": lg_y_predict,
+        "rf": rf_y_predict,
+        "svc": svc_y_predict,
+        "lsvc": lsvc_y_predict,
+        #"xgb": xgb_y_predict,
+    }
+
+    X_train = pd.DataFrame(data)
+    #X.to_csv('result.csv')
+
+    ilg = LogisticRegression()
+    ilg.fit(X_train, y_train)
+
+    #print(ilg.coef_)
+
+
+
+    lg_y_test = lg.predict(X_test)
+    rf_y_test = rf.predict(X_test)
+    svc_y_test= svc.predict(X_test)
+    lsvc_y_test = lsvc.predict(X_test)
+    xgb_y_test = xgb.predict(X_test)
+    data = {
+        "lg": lg_y_test,
+        "rf": rf_y_test,
+        "svc": svc_y_test,
+        "lsvc": lsvc_y_test,
+        #"xgb": xgb_y_test,
+    }
+    X_test = pd.DataFrame(data)
+
+    y_test_pred = ilg.predict(X_test)
+
+
+    #score = ilg.score(X_test, y_test_pred)
+    print('accuracy score: %.2f' % accuracy_score(y_test, y_test_pred))
+
+
+
+    #X = pd.DataFrame(data)
+
+
+
+
 
     models = [("LR", lg),
               ("RF", rf),
@@ -58,8 +120,12 @@ def predict(code):
               ("XGB", xgb),
               ]
 
-    #print(xgb_search.best_estimator_.feature_importances_)
 
+
+
+
+    #print(xgb_search.best_estimator_.feature_importances_)
+    '''
     pred_list = []
     # with open('/Users/yw.h/Documents/hs300-selection-result.log', 'a', encoding='utf8') as f:
     for m in models:
@@ -74,6 +140,7 @@ def predict(code):
             print(m[1].feature_importances_)
 
     return pred_list
+    '''
 
 
 if __name__ == "__main__":
