@@ -13,19 +13,16 @@ from sklearn.decomposition import PCA
 
 
 class LogisticRegressionModel(BaseModel):
-
     """
         1. 70% training/grid search 选择超参数
         2. 30% test
     """
+
     def training_model(self, code):
         # 从数据库中获取2015-01-01到今天的所有数据
         data = k_data_dao.get_k_data(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
         data, features = collect_features(data)
-        data.to_csv('result.csv')
-
-
 
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
@@ -55,8 +52,3 @@ class LogisticRegressionModel(BaseModel):
 
         # 使用所有数据, 重新训练
         logistic_regression.fit(data[features], data['next_direction'])
-
-
-
-
-
