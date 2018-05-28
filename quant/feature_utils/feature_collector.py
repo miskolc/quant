@@ -52,7 +52,7 @@ def collect_features(df):
                 for col in col_names_list:
                     col_list.append(col)
     # df.to_csv('/Users/yw.h/Desktop/resultt.csv')
-    print(col_list)
+    df = df.dropna()
     return df, col_list
 
 
