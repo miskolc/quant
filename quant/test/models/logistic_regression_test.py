@@ -1,8 +1,8 @@
 import unittest
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score,train_test_split
+from sklearn.model_selection import cross_val_score, train_test_split
 from quant.test import before_run
-from quant.models import logistic_regression
+from quant.models.logistic_regression_model import LogisticRegressionModel
 
 
 class Logistic_Regression_Test(unittest.TestCase):
@@ -10,4 +10,5 @@ class Logistic_Regression_Test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        logistic_regression.training("600000")
+        model = LogisticRegressionModel()
+        model.training_model("600196")
