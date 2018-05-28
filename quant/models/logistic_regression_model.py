@@ -9,6 +9,8 @@ from datetime import datetime
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
 from quant.feature_utils.feature_collector import get_col_name_list, collect_features
+from sklearn.decomposition import PCA
+
 
 class LogisticRegressionModel(BaseModel):
 
@@ -22,6 +24,9 @@ class LogisticRegressionModel(BaseModel):
 
         data, features = collect_features(data)
         data.to_csv('result.csv')
+
+
+
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)

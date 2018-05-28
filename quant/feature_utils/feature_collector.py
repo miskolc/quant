@@ -56,10 +56,6 @@ def collect_features(df):
     return df, col_list
 
 
-df = ts.get_k_data('600179', ktype='D')
-collect_features(df)
-
-
 
 # big_list = os.listdir(root_path)
 # # # print(big_list)
