@@ -47,14 +47,17 @@ def collect_features(df):
                 col_list.append(col_name)
             else:
                 df = df.join(func_feature)
-                col_list.append(list(func_feature.columns.values))
+                # col_list.append(list(func_feature.columns.values))
+                col_names_list = func_feature.columns.values
+                for col in col_names_list:
+                    col_list.append(col)
     # df.to_csv('/Users/yw.h/Desktop/resultt.csv')
-    # print(col_list)
+    print(col_list)
     return df, col_list
 
 
-# df = ts.get_k_data('600179', ktype='D')
-# collect_features(df)
+df = ts.get_k_data('600179', ktype='D')
+collect_features(df)
 
 
 
