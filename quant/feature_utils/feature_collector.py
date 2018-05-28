@@ -1,9 +1,6 @@
 # ae.h - 2018/5/21
 from inspect import getmembers, isfunction
-
 import os
-
-import quant
 from quant.feature_utils import momentum_indicators, overlaps_studies, volume_indicators, cycle_indicators, \
     price_transform, volatility_indicators, custome_features
 import tushare as ts
@@ -14,7 +11,9 @@ import re
 #
 # mi_ip_modules = __import__('momentum_indicators')
 
-dir_path = '/Users/yw.h/quant-awesome/quant/feature_utils/'
+root_path = os.path.dirname(os.path.abspath(__file__))
+# print(root_path)
+# feature_path = os.path.join(root_path, 'feature_utils/')
 
 
 momentum_list = [m for m in getmembers(momentum_indicators) if isfunction(m[1])]
@@ -46,26 +45,29 @@ def collect_features(df):
                 df[col_name] = func_feature
             else:
                 df = df.join(func_feature)
-    df.to_csv('/Users/yw.h/Desktop/resultt.csv')
+    # df.to_csv('/Users/yw.h/Desktop/resultt.csv')
+    return df
 
 
-# data = ts.get_k_data('600179', ktype='d')
-# collect_features(data)
-big_list = os.listdir('/Users/yw.h/quant-awesome/quant/feature_utils')
-# print(big_list)
-big_list.remove('__init__.py')
-big_list.remove('__pycache__')
-big_list.remove('feature_collector.py')
-# print(big_list)
+# df = ts.get_k_data('600179', ktype='D')
+# collect_features(df)
 
-module_list = []
-for module in big_list:
-    r_module = dir_path+module
-    print(r_module)
-    # print(__import__(r_module))
-    # print([m for m in getmembers(dir_path+module) if isfunction(m[1])])
-    # module_list.append([m for m in getmembers(module) if isfunction(m[1])])
-
-# print(module_list)
+# big_list = os.listdir(root_path)
+# # # print(big_list)
+# big_list.remove('__init__.py')
+# big_list.remove('__pycache__')
+# big_list.remove('feature_collector.py')
+# # print(big_list)
+#
+#
+# module_list = []
+# for module in big_list:
+# #     # print(module)
+#     print(__import__(module))
+#     # print(getmembers(dir_path+module))
+#     # print([m for m in getmembers(dir_path+module) if isfunction(m[1])])
+#     # module_list.append([m for m in getmembers(module) if isfunction(m[1])])
+#
+# # print(module_list)
 
 
