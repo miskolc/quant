@@ -1,16 +1,15 @@
 # ae_h - 2018/5/28
 
+from datetime import datetime
+from sklearn import preprocessing
 from sklearn import svm
 from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
-from quant.models.base_model import BaseModel
 from quant.dao.k_data_dao import k_data_dao
-from datetime import datetime
 from quant.feature_utils.feature_collector import collect_features
 from quant.log.quant_logging import quant_logging as logging
-from sklearn.manifold import TSNE
-from sklearn import preprocessing
-from sklearn.metrics import accuracy_score
+from quant.models.base_model import BaseModel
 
 
 class SupportVectorClassifier(BaseModel):

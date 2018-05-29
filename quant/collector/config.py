@@ -37,4 +37,4 @@ if env is not None and env in config.keys():
     config["default"] = config[env]
     pass
 else:
-    config["default"] = RemoteDevelopmentConfig
+    config["default"] = DevelopmentConfig
