@@ -5,7 +5,6 @@ from quant.log.quant_logging import quant_logging as logging
 
 
 class K_Data_Dao_Test(unittest.TestCase):
-
     def setUp(self):
         before_run()
 
@@ -18,7 +17,7 @@ class K_Data_Dao_Test(unittest.TestCase):
         while i < 100:
 
             next_direction = df.iloc[i]["next_direction"]
-            p_change = df.iloc[i+1]["p_change"]
+            p_change = df.iloc[i + 1]["p_change"]
 
             # 如果next_direction ==0(代表跌), 检查下一日的p_change是否小于0
             # 验证next_direction是否正确
@@ -29,8 +28,7 @@ class K_Data_Dao_Test(unittest.TestCase):
 
             i = i + 1
 
-
-
-
-
-
+    def test_get_k_data_with_feature(self):
+        df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-05-27")
+        df[feature].to_csv("result.csv")
+        logging.logger.debug("features:%s" %feature)
