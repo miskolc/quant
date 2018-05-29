@@ -25,7 +25,7 @@ class LogisticRegressionModel(BaseModel):
         data = k_data_dao.get_k_data(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
         data, features = collect_features(data)
-
+        print(features)
 
 
         data.to_csv('result.csv')
@@ -60,7 +60,7 @@ class LogisticRegressionModel(BaseModel):
         #test_score = logistic_regression.score(X_test, y_test)
 
         # 在测试集中的评分
-        logging.logger.debug('accuracy score: %.2f' % accuracy_score(y_test, y_test_pred))
+        logging.logger.debug('test score: %.2f' % accuracy_score(y_test, y_test_pred))
 
         # 使用所有数据, 重新训练
         logistic_regression.fit(data[features], data['next_direction'])

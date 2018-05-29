@@ -13,6 +13,7 @@ from quant.log.quant_logging import quant_logging as logging
 from quant.collector.config import config
 from sqlalchemy import create_engine
 import quant.collector.k_data.k_data_collector as k_data
+import quant.collector.k_data.technical_feature_collector as feature_collector
 import quant.collector.k_data.index_k_data_collector as index_k_data
 from quant.dao.data_source import dataSource
 import schedule
@@ -42,16 +43,10 @@ if __name__ == '__main__':
     init_logger()
     init_db()
 
-    # index_k_data.collect_gspc_index_full(start='2015-01-01',end='2018-5-22')
-    # index_k_data.collect_sz_index_full(start='2015-01-01',end='2018-5-22')
+    #feature_collector.collect_hs300_full()
 
-    # index_k_data.collect_hs300_index_full(start='2015-01-01',end='2018-5-22')
-    # index_k_data.collect_zz500_index_full(start='2015-01-01',end='2018-5-22')
-    # index_k_data.collect_sh_index_daily()
-
-    # index_k_data.collect_sh_index_full(start='2018-05-21', end='2018-05-24')
-    index_k_data.collect_index_hk_daily()
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
+    schedule.every().day.at("15:35").do(feature_collector.collect_hs300_daily)
     schedule.every().day.at("15:30").do(index_k_data.collect_index_china_daily)
     schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
     schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
