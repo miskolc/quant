@@ -54,7 +54,7 @@ class SupportVectorClassifier(BaseModel):
         y_test_pred = support_vector_classifier.predict(X_test)
 
         # 在测试集中的评分
-        logging.logger.debug('accuracy score: %.2f' % accuracy_score(y_test, y_test_pred))
+        logging.logger.debug('test score: %.2f' % accuracy_score(y_test, y_test_pred))
 
         # 使用所有数据, 重新训练
         support_vector_classifier.fit(data[features], data['next_direction'])

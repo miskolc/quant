@@ -13,13 +13,22 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
 
 def predict(code):
     X_pred = dao.predict_data(code)
     X, y = dao.prepare_data(code, ktype='D')
 
+    pca = PCA(n_components=10)
+    pca.fit(X)
+    X = pca.transform(X)
+    X_pred = pca.transform(X_pred)
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                         shuffle=False)
+
+
 
     lg = LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
           intercept_scaling=1, max_iter=100, multi_class='ovr',
@@ -78,7 +87,12 @@ def predict(code):
     X_train = pd.DataFrame(data)
     #X.to_csv('result.csv')
 
-    ilg = LogisticRegression(C=1.0)
+    ilg = XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+       colsample_bytree=1, cv=5, gamma=0, learning_rate=0.03,
+       max_delta_step=0, max_depth=4, min_child_weight=1, missing=None,
+       n_estimators=1000, n_jobs=-1, nthread=None, objective='binary:logistic',
+       random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
+       seed=None, silent=True, subsample=1)
     ilg.fit(X_train, y_train)
 
     print(ilg.score(X_train, y_train))
@@ -88,6 +102,7 @@ def predict(code):
     lg_y_test = lg.predict(X_test)
     rf_y_test = rf.predict(X_test)
     svc_y_test= svc.predict(X_test)
+    print("scv test score:",svc.score(X_test, y_test))
     lsvc_y_test = lsvc.predict(X_test)
     xgb_y_test = xgb.predict(X_test)
     data = {
