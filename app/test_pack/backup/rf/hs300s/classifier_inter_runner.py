@@ -72,16 +72,16 @@ def predict(code):
         "rf": rf_y_predict,
         "svc": svc_y_predict,
         "lsvc": lsvc_y_predict,
-        #"xgb": xgb_y_predict,
+        "xgb": xgb_y_predict,
     }
 
     X_train = pd.DataFrame(data)
     #X.to_csv('result.csv')
 
-    ilg = LogisticRegression()
+    ilg = LogisticRegression(C=1.0)
     ilg.fit(X_train, y_train)
 
-    #print(ilg.coef_)
+    print(ilg.score(X_train, y_train))
 
 
 
@@ -95,23 +95,60 @@ def predict(code):
         "rf": rf_y_test,
         "svc": svc_y_test,
         "lsvc": lsvc_y_test,
-        #"xgb": xgb_y_test,
+        "xgb": xgb_y_test,
     }
     X_test = pd.DataFrame(data)
-
     y_test_pred = ilg.predict(X_test)
 
 
     #score = ilg.score(X_test, y_test_pred)
     print('accuracy score: %.2f' % accuracy_score(y_test, y_test_pred))
+    print(ilg.score(X_test, y_test))
 
 
+    lg.fit(X, y)
+    rf.fit(X, y)
+    svc.fit(X, y)
+    lsvc.fit(X, y)
+    xgb.fit(X, y)
+
+    lg_y_all = lg.predict(X)
+    rf_y_all = rf.predict(X)
+    svc_y_all= svc.predict(X)
+    lsvc_y_all = lsvc.predict(X)
+    xgb_y_all = xgb.predict(X)
+    data = {
+        "lg": lg_y_all,
+        "rf": rf_y_all,
+        "svc": svc_y_all,
+        "lsvc": lsvc_y_all,
+        "xgb": xgb_y_all,
+    }
+
+    X_all = pd.DataFrame(data)
+    ilg.fit(X_all, y)
+    print(ilg.score(X_all,y))
 
     #X = pd.DataFrame(data)
 
+    lg_y_pred = lg.predict(X_pred)
+    rf_y_pred = rf.predict(X_pred)
+    svc_y_pred= svc.predict(X_pred)
+    lsvc_y_pred = lsvc.predict(X_pred)
+    xgb_y_pred = xgb.predict(X_pred)
+    data = {
+        "lg": lg_y_pred,
+        "rf": rf_y_pred,
+        "svc": svc_y_pred,
+        "lsvc": lsvc_y_pred,
+        "xgb": xgb_y_pred,
+    }
 
+    X_pred = pd.DataFrame(data)
 
+    y_pred = ilg.predict(X_pred)
 
+    print(y_pred)
 
     models = [("LR", lg),
               ("RF", rf),
