@@ -35,19 +35,19 @@ def filter(codes):
         if df_rel is None:
             continue
 
-        df_rel = SMA(df_rel, 5)
+
         df_rel = SMA(df_rel, 10)
         df_rel = SMA(df_rel, 20)
 
         df_rel = df_rel.tail(1)
 
-        ma5 = df_rel["ma5"].values[0]
+
         ma10 = df_rel["ma10"].values[0]
         ma20 = df_rel["ma20"].values[0]
 
         price = float(ts.get_realtime_quotes(code)["price"].values[0])
 
-        if price > ma5 and price > ma10 and price > ma20:
+        if price > ma10 and price > ma20:
             list.append(code)
 
         '''

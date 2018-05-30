@@ -10,7 +10,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
 from quant.log.quant_logging import quant_logging as logging
-from quant.collector.config import config
+from quant.config import config
 from sqlalchemy import create_engine
 from quant.dao.data_source import dataSource
 import schedule
