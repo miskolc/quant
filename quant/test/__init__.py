@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/21
 
-from quant.collector.config import config
 from sqlalchemy import create_engine
+
+from quant.config import config
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import quant_logging as logging
 
