@@ -2,7 +2,7 @@ import unittest
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, train_test_split
 from quant.test import before_run
-from quant.models.logistic_regression_model import LogisticRegressionModel
+from quant.models.logistic_regression_classifier import LogisticRegressionModel
 
 
 class Logistic_Regression_Test(unittest.TestCase):
