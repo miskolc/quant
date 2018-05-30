@@ -28,7 +28,7 @@ class K_Data_Dao_Test(unittest.TestCase):
 
             i = i + 1
 
-    def test_get_k_data_with_feature(self):
-        df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-05-27")
-        df[feature].to_csv("result.csv")
+    def test_get_k_data_wdf_gspcith_feature(self):
+        df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-05-30")
+        df.to_csv("result.csv")
         logging.logger.debug("features:%s" %feature)

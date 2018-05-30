@@ -2,10 +2,9 @@
 
 
 exclude_features = ['date','code', ]
-addition_features = ['open','close','low','high', ]
 
 
-def adjust_features(list):
+def adjust_features(list, addition_features):
 
     # 补充额外的features
     list.extend(addition_features)

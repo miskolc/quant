@@ -14,7 +14,7 @@ class Index_K_Data_Dao:
                "where code=%(code)s and date BETWEEN %(start)s and %(end)s order by date asc")
 
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
-                         , con=dataSource.mysql_quant_engine, index_col=["date"])
+                         , con=dataSource.mysql_quant_engine)
 
         return df
 
