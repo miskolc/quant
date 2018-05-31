@@ -14,7 +14,7 @@ class Random_Forest_Classifier_test(unittest.TestCase):
 
     def test_training(self):
 
-        data, features = k_data_dao.get_k_data_with_features("600196", '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
+        data, features = k_data_dao.get_k_data_with_features("000568", '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
         model = RandomForestClassifierModel()
-        model.training_model("600196", data, features)
+        model.training_model("000568", data, features)
