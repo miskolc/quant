@@ -29,24 +29,24 @@ class SequantialNeural(BaseModel):
 
         sequantial_model = Sequential()
 
-        sequantial_model.add(Dense(128, input_dim=input_dim_len, activation='relu'))
+        sequantial_model.add(Dense(512, input_dim=input_dim_len, activation='relu'))
         sequantial_model.add(Dropout(0.5))
-        sequantial_model.add(Dense(64, activation='relu'))
+        sequantial_model.add(Dense(128, activation='relu'))
         sequantial_model.add(Dropout(0.5))
-        sequantial_model.add(Dense(32, activation='relu'))
-        sequantial_model.add(Dropout(0.5))
-        sequantial_model.add(Dense(16, activation='relu'))
-        sequantial_model.add(Dropout(0.5))
-        sequantial_model.add(Dense(1, activation='sigmoid'))
-        sequantial_model.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
+        # sequantial_model.add(Dense(64, activation='relu'))
+        # sequantial_model.add(Dropout(0.5))
+        # sequantial_model.add(Dense(16, activation='relu'))
+        # sequantial_model.add(Dropout(0.5))
+        sequantial_model.add(Dense(1, activation='tanh'))
+        sequantial_model.compile(optimizer='sgd', loss='binary_crossentropy', metrics=['accuracy'])
 
         # sequantial_model.summary()
 
         # traning performance
-        sequantial_model.fit(X_train, Y_train, epochs=150, batch_size=9182)
+        sequantial_model.fit(X_train, Y_train, epochs=10, batch_size=128)
 
         # test performance
-        test_model_score = sequantial_model.evaluate(x_test, y_test, batch_size=9182)
+        test_model_score = sequantial_model.evaluate(x_test, y_test, batch_size=128)
         print('test model score: %s' % test_model_score)
 
         # whole data performance
