@@ -5,7 +5,7 @@ import requests
 import pandas as pd
 import io
 from quant.log.quant_logging import quant_logging as logging
-
+from lxml import etree
 
 class YahooFinanceApi:
     def get_page_data(self, symbol):
@@ -60,5 +60,18 @@ class YahooFinanceApi:
         except Exception as e:
             raise e
 
+    def get_real_price(self, code):
+        url = "https://finance.yahoo.com/quote/%s/?p=%s" % (code, code)
+        r = requests.get(url)
+        selector = etree.HTML(r.text)
+        price_el = selector.xpath('//div/span/text()')
+        price = float(price_el[1].replace(',',''))
+        pre_close_el = selector.xpath('//*[@id="quote-summary"]/div[1]/table/tbody/tr[1]/td[2]/span/text()')
+        pre_close = float(pre_close_el[0].replace(',',''))
+
+        return price, pre_close
+
 
 yahoo_finance_api = YahooFinanceApi()
+
+yahoo_finance_api.get_real_price('^HSI')

@@ -2,6 +2,7 @@ import unittest
 from quant.test import before_run
 from quant.dao.k_data_dao import k_data_dao
 from quant.log.quant_logging import quant_logging as logging
+from quant.dao.index_k_data_dao import index_k_data_dao
 
 
 class K_Data_Dao_Test(unittest.TestCase):
@@ -31,4 +32,9 @@ class K_Data_Dao_Test(unittest.TestCase):
     def test_get_k_data_wdf_gspcith_feature(self):
         df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-05-30")
         df.to_csv("result.csv")
-        logging.logger.debug("features:%s" %feature)
+        logging.logger.debug("features:%s" % feature)
+
+    def test_get_k_predict_data_with_features(self):
+        # df_index = index_k_data_dao.get_rel_price();
+
+        k_data_dao.get_k_predict_data_with_features('600000', None)
