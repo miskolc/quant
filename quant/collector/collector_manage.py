@@ -32,7 +32,6 @@ def init_db():
 
 
 def init_logger():
-    default_config = config['default']
     # 使用单例模式保存logger
     logging.create_logger(default_config.DEBUG, PROJECT_NAME)
 

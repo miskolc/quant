@@ -71,6 +71,7 @@ class Index_K_Data_Dao:
     def get_gspc_k_data(self, start, end):
         return self.get_k_data('^DJI', start, end)
 
+    @exc_time
     def get_rel_price(self):
         df_index = ts.get_index()
         # 上证指数
@@ -79,16 +80,23 @@ class Index_K_Data_Dao:
         df_hs300 = df_index[df_index["code"] == '000300']
         df_zz500 = df_index[df_index["code"] == '000905']
 
-        df_index['sh_direction'] = cal_direction(float(df_sh["change"].values[0]))
-        df_index['sz_direction'] = cal_direction(float(df_sz["change"].values[0]))
-        df_index['hs300_direction'] = cal_direction(float(df_hs300["change"].values[0]))
-        df_index['zz500_direction'] = cal_direction(float(df_zz500["change"].values[0]))
 
         hsi_price, hsi_pre_close = yahoo_finance_api.get_real_price('^HSI')
-        df_index['hsi_direction'] = cal_direction(hsi_price - hsi_pre_close)
         gspc_price, gspc_pre_close = yahoo_finance_api.get_real_price('^GSPC')
-        df_index['gspc_direction'] = cal_direction(gspc_price - gspc_pre_close)
         ixic_price, ixic_pre_close = yahoo_finance_api.get_real_price('^IXIC')
-        df_index['ixic_direction'] = cal_direction(ixic_price - ixic_pre_close)
+
+        dict =[{
+            'sh_direction' : cal_direction(float(df_sh["change"].values[0])),
+            'sz_direction' : cal_direction(float(df_sz["change"].values[0])),
+            'hs300_direction' : cal_direction(float(df_hs300["change"].values[0])),
+            'zz500_direction' :  cal_direction(float(df_hs300["change"].values[0])),
+            'hsi_direction' : cal_direction(hsi_price - hsi_pre_close),
+            'gspc_direction' : cal_direction(gspc_price - gspc_pre_close),
+            'ixic_direction' : cal_direction(ixic_price - ixic_pre_close)
+        }]
+
+        df = pd.DataFrame(dict)
+
+        return df
 
 index_k_data_dao = Index_K_Data_Dao()

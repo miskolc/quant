@@ -53,6 +53,8 @@ def collect_features(df):
                     col_list.append(col)
     # df.to_csv('/Users/yw.h/Desktop/resultt.csv')
     df = df.dropna()
+
+    col_list = list(set(col_list))
     return df, col_list
 
 

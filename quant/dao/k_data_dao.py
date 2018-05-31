@@ -10,16 +10,23 @@ from quant.dao.index_k_data_dao import index_k_data_dao
 import tushare as ts
 from quant.log.quant_logging import quant_logging as logging
 from quant.dao import cal_direction
-from datetime import datetime,timedelta
-
+from datetime import datetime, timedelta
+from quant.feature_utils.feature_collector import collect_features
 
 
 class K_Data_Dao:
     @staticmethod
-    def get_addition_features():
-        return ['open', 'close', 'low', 'high', 'volume', 'sh_direction'
-            , 'sz_direction', 'hs300_direction', 'zz500_direction',
+    def get_addition_index_features():
+        return ['sh_direction', 'sz_direction', 'hs300_direction', 'zz500_direction',
                 'gspc_direction', 'hsi_direction', 'ixic_direction']
+
+    @staticmethod
+    def get_addition_features():
+        features = ['open', 'close', 'low', 'high', 'volume']
+
+        features.extend(K_Data_Dao.get_addition_index_features())
+
+        return features
 
     @exc_time
     def get_k_data(self, code, start, end):
@@ -35,6 +42,7 @@ class K_Data_Dao:
         df = df.dropna()
         return df
 
+    @exc_time
     def get_k_data_with_features(self, code, start, end):
         df = self.get_k_data(code, start, end)
 
@@ -75,24 +83,34 @@ class K_Data_Dao:
         return df
 
     # 集成今日的预测数据
+    @exc_time
     def get_k_predict_data_with_features(self, code, df_index):
         now = datetime.now().strftime('%Y-%m-%d')
-        print(now)
-        last_60 = (datetime.now() - timedelta(days=60)).strftime('%Y-%m-%d')
+
+        last_60 = (datetime.now() - timedelta(days=120)).strftime('%Y-%m-%d')
 
         df = self.get_k_data(code, start=last_60, end=now)
-        df.to_csv('result.csv')
+        df = df[['open', 'close', 'low', 'high', 'volume']]
+
         df_real = ts.get_realtime_quotes(code)
-        df_real = df_real[['open','price','low', 'high', 'volume']]
+
+        df_real = df_real[['open', 'price', 'low', 'high', 'volume']].astype('float64')
         df_real = df_real.rename(columns={'price': 'close'})
-        df_real['date'] = now
+        df_real['volume'] = df_real['volume'] / 100
+        df = pd.concat([df, df_real], axis=0, ignore_index=True)
 
-        df = df.append(df_real)
+        df, features = collect_features(df)
 
+        # 获取今天要预测的最后一行
+        df = df.tail(1)
+        df = df.reset_index(drop=True)
 
+        # 拼接上指数
+        df = pd.concat([df, df_index], axis=1)
 
+        features = adjust_features(features, self.get_addition_features())
 
-        logging.logger.debug(df.tail())
+        return df, features
 
 
 k_data_dao = K_Data_Dao()

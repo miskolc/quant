@@ -8,6 +8,7 @@ from quant.models.support_vector_classifier import SupportVectorClassifier
 import pandas as pd
 from quant.log.quant_logging import quant_logging as logging
 from quant.dao.k_data_dao import k_data_dao
+from quant.dao.index_k_data_dao import index_k_data_dao
 from datetime import datetime
 
 def f(x):
@@ -31,3 +32,15 @@ class Support_Vector_Classifier_test(unittest.TestCase):
 
         model = SupportVectorClassifier()
         model.training_model("600196", data, features)
+
+    def test_predict(self):
+        df_index = index_k_data_dao.get_rel_price();
+
+        df,features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
+        logging.logger.debug("features:%s, length:%s" % (features, len(features)))
+
+        df.to_csv("result.csv")
+        model = SupportVectorClassifier()
+        y_predict = model.predict("600196", df[features])
+
+        print(y_predict)

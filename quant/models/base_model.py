@@ -13,6 +13,13 @@ class BaseModel:
         """training model"""
         return
 
+    @abc.abstractmethod
+    def predict(self, code, data, features):
+        """training model"""
+        return
+
+
+
     def get_model_path(self, code, model_name):
 
         dir = os.path.join(default_config.MODELS_OUTPUT_DIR,model_name)

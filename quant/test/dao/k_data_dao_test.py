@@ -29,12 +29,15 @@ class K_Data_Dao_Test(unittest.TestCase):
 
             i = i + 1
 
-    def test_get_k_data_wdf_gspcith_feature(self):
-        df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-05-30")
+    def test_get_k_data_with_features(self):
+        df, feature = k_data_dao.get_k_data_with_features("600000", start="2015-01-01", end="2018-06-30")
         df.to_csv("result.csv")
         logging.logger.debug("features:%s" % feature)
 
     def test_get_k_predict_data_with_features(self):
-        # df_index = index_k_data_dao.get_rel_price();
+        df_index = index_k_data_dao.get_rel_price();
 
-        k_data_dao.get_k_predict_data_with_features('600000', None)
+        df, features = k_data_dao.get_k_predict_data_with_features('600000', df_index)
+        print(features)
+        df.to_csv("result.csv")
+        logging.logger.debug(df.tail())
