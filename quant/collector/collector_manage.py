@@ -10,7 +10,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
 from quant.log.quant_logging import quant_logging as logging
-from quant.config import config
+from quant.config import default_config
 from sqlalchemy import create_engine
 import quant.collector.k_data.k_data_collector as k_data
 import quant.collector.k_data.technical_feature_collector as feature_collector
@@ -23,8 +23,6 @@ PROJECT_NAME = "quant-collector"
 
 
 def init_db():
-    default_config = config['default']
-
     # 如果配置DATABASE_QUANT_URI属性, 实例化mysql_quant_engine
     if default_config.DATABASE_QUANT_URI:
         # 使用单例模式保存数据库engine

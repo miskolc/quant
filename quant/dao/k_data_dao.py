@@ -8,6 +8,7 @@ import pandas as pd
 from quant.feature_utils import adjust_features
 from quant.dao.index_k_data_dao import index_k_data_dao
 
+
 def f(x):
     if x > 0:
         return 1
@@ -16,8 +17,8 @@ def f(x):
     else:
         return 0
 
-class K_Data_Dao:
 
+class K_Data_Dao:
     @exc_time
     def get_k_data(self, code, start, end):
         sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data "
@@ -61,7 +62,7 @@ class K_Data_Dao:
         df = pd.merge(df, df_feature, on=['date', 'code'])
 
         addition_features = ['open', 'close', 'low', 'high', 'sh_direction'
-            ,'sz_direction','hs300_direction','zz500_direction','gspc_direction','hsi_direction','ixic_direction']
+            , 'sz_direction', 'hs300_direction', 'zz500_direction', 'gspc_direction', 'hsi_direction', 'ixic_direction']
         features = adjust_features(features, addition_features)
 
         return df, features

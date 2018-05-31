@@ -13,10 +13,7 @@ from quant.models.base_model import BaseModel
 
 
 class SupportVectorClassifier(BaseModel):
-    def training_model(self, code):
-        data = k_data_dao.get_k_data(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
-
-        data, features = collect_features(data)
+    def training_model(self, code, data, features):
 
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)
@@ -40,7 +37,7 @@ class SupportVectorClassifier(BaseModel):
         # X_test = TSNE(n_components=2, learning_rate=100).fit_transform(X_test)
 
         # 网格搜寻最优参数
-        grid = GridSearchCV(svm.SVC(), tuned_parameters)
+        grid = GridSearchCV(svm.SVC(), tuned_parameters, cv=None, n_jobs=-1)
         grid.fit(X_train, y_train)
 
         logging.logger.debug(grid.best_estimator_)  # 训练的结果

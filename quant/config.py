@@ -5,6 +5,8 @@ import os
 
 
 class Config(object):
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    MODELS_OUTPUT_DIR = os.path.join(ROOT_DIR, 'models/output/')
     pass
 
 
@@ -38,3 +40,5 @@ if env is not None and env in config.keys():
     pass
 else:
     config["default"] = DevelopmentConfig
+
+default_config = config['default']

@@ -12,4 +12,4 @@ class Support_Vector_Classifier_test(unittest.TestCase):
 
     def test_training(self):
         model = SequantialNeural()
-        model.training_model("600196")
+        model.training_model("600000")

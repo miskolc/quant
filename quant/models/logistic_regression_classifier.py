@@ -4,29 +4,23 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
-from quant.dao.k_data_dao import k_data_dao
-from datetime import datetime
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
-from quant.feature_utils.feature_collector import get_col_name_list, collect_features
-from sklearn.decomposition import PCA
 from sklearn import preprocessing
 from sklearn.manifold import TSNE
 from sklearn.metrics import accuracy_score
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from sklearn.externals import joblib
 
 
-class LogisticRegressionModel(BaseModel):
+class LogisticRegressionClassifier(BaseModel):
     """
         1. 70% training/grid search 选择超参数
         2. 30% test
     """
 
-    def training_model(self, code):
-        # 从数据库中获取2015-01-01到今天的所有数据
-        data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
-
-        logging.logger.debug("features:%s" % features)
+    def training_model(self, code, data, features):
+        model_name = 'logistic_regression'
 
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
@@ -64,6 +58,8 @@ class LogisticRegressionModel(BaseModel):
         logistic_regression.fit(data[features], data['next_direction'])
 
         # 记录日志
-        k_data_model_log_dao.insert(code=code, name="LogisticRegressionModel"
+        k_data_model_log_dao.insert(code=code, name=model_name
                                     , best_estimator=grid.best_estimator_,
                                     train_score=grid.best_score_, test_score=test_score)
+        # 输出模型
+        joblib.dump(logistic_regression, self.get_model_path(code, model_name))
