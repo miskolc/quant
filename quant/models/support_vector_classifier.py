@@ -1,41 +1,41 @@
 # ae_h - 2018/5/28
 
-from datetime import datetime
+import os
+
 from sklearn import preprocessing
 from sklearn import svm
-from sklearn.decomposition import PCA
+from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
-from quant.dao.k_data_dao import k_data_dao
-from quant.feature_utils.feature_collector import collect_features
+
+from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
-from sklearn.externals import joblib
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-import os
+from quant.models.pac_model import PACModel
+
 
 class SupportVectorClassifier(BaseModel):
     model_name = "support_vector_classifier"
 
     def training_model(self, code, data, features):
 
+        X = data[features]
+        y = data['next_direction']
 
-        X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
+        # normalization
+        X = preprocessing.scale(X)
+
+        # pca缩放
+
+        pac = PACModel().load(code)
+        X = pac.transform(X)
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                             shuffle=False)
 
         tuned_parameters = [
             {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
         ]
-
-        # normalization
-        X_train = preprocessing.scale(X_train)
-        X_test = preprocessing.scale(X_test)
-
-        # pca缩放
-        pca = PCA(n_components=None)
-        pca.fit(X_train)
-        X_train = pca.transform(X_train)
-
 
         # # tsne缩放
         # X_train = TSNE(n_components=2, learning_rate=100).fit_transform(X_train)
@@ -60,7 +60,7 @@ class SupportVectorClassifier(BaseModel):
         logging.logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
-        support_vector_classifier.fit(data[features], data['next_direction'])
+        support_vector_classifier.fit(X, y)
 
         # 记录日志
         k_data_model_log_dao.insert(code=code, name=self.model_name
