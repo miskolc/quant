@@ -20,6 +20,7 @@ from quant.dao.k_data_dao import k_data_dao
 from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.pac_model import PACModel
+from quant.models.support_vector_classifier import SupportVectorClassifier
 
 PROJECT_NAME = "quant-collector"
 
@@ -39,19 +40,18 @@ def init_logger():
 
 
 def training():
-    pac = PACModel()
-    df_index = index_k_data_dao.get_rel_price();
-    df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
-    pac.training_model('600196', df, features)
-    '''
     df = ts.get_hs300s()
     for code in df['code'].values:
         df_index = index_k_data_dao.get_rel_price();
         df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
 
         pac = PACModel()
+        logistic_regression = LogisticRegressionClassifier()
+        svc = SupportVectorClassifier()
+
         pac.training_model(code, df, features)
-    '''
+        logistic_regression.training_model(code, df, features)
+        svc.training_model(code, df, features)
 
 
 if __name__ == '__main__':
