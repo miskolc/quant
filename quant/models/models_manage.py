@@ -21,6 +21,7 @@ from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.pac_model import PACModel
 from quant.models.support_vector_classifier import SupportVectorClassifier
+from datetime import datetime
 
 PROJECT_NAME = "quant-collector"
 
@@ -42,16 +43,17 @@ def init_logger():
 def training():
     df = ts.get_hs300s()
     for code in df['code'].values:
-        df_index = index_k_data_dao.get_rel_price();
-        df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
+        logging.logger.debug('begin training mode, code:%s' % code)
+        data, features = k_data_dao.get_k_data_with_features("600196", '2015-01-01',
+                                                             datetime.now().strftime("%Y-%m-%d"))
 
         pac = PACModel()
         logistic_regression = LogisticRegressionClassifier()
         svc = SupportVectorClassifier()
 
-        pac.training_model(code, df, features)
-        logistic_regression.training_model(code, df, features)
-        svc.training_model(code, df, features)
+        pac.training_model(code, data, features)
+        logistic_regression.training_model(code, data, features)
+        svc.training_model(code, data, features)
 
 
 if __name__ == '__main__':
@@ -61,7 +63,8 @@ if __name__ == '__main__':
     training()
     # schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
 
-
+    '''
     while True:
         schedule.run_pending()
         time.sleep(1)
+    '''
