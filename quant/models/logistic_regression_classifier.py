@@ -27,6 +27,8 @@ class LogisticRegressionClassifier(BaseModel):
         X = data[features]
         y = data['next_direction']
 
+        X = preprocessing.scale(X)
+
         pac = PACModel().load(code)
         X = pac.transform(X)
 
@@ -34,8 +36,6 @@ class LogisticRegressionClassifier(BaseModel):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                             shuffle=False)
 
-        X_train = preprocessing.scale(X_train)
-        X_test = preprocessing.scale(X_test)
 
         # 交叉验证查找合适的超参数: penalty, C
         # penalty

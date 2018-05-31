@@ -44,7 +44,7 @@ def training():
     df = ts.get_hs300s()
     for code in df['code'].values:
         logging.logger.debug('begin training mode, code:%s' % code)
-        data, features = k_data_dao.get_k_data_with_features("600196", '2015-01-01',
+        data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
         pac = PACModel()
