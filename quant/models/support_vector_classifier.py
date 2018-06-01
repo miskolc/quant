@@ -26,8 +26,8 @@ class SupportVectorClassifier(BaseModel):
 
         # pca缩放
 
-        pac = PCAModel().load(code)
-        X = pac.transform(X)
+        pca = PCAModel().load(code)
+        X = pca.transform(X)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                             shuffle=False)

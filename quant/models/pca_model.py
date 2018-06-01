@@ -5,6 +5,7 @@ from sklearn.externals import joblib
 from quant.models.base_model import BaseModel
 from quant.common_tools.decorators import exc_time
 
+
 class PCAModel(BaseModel):
     model_name = 'pac'
 
