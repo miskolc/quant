@@ -14,6 +14,8 @@ class K_Data_Dao_Model_Log_Test(unittest.TestCase):
                                 , best_estimator='logistic_regression_model', train_score=0.55, test_score=0.66)
 
 
+    def test_exists(self):
+        k_data_model_log_dao.exists('600196')
 
 
 

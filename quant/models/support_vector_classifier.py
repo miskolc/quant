@@ -25,7 +25,6 @@ class SupportVectorClassifier(BaseModel):
         X = preprocessing.scale(X)
 
         # pca缩放
-
         pca = PCAModel().load(code)
         X = pca.transform(X)
 
@@ -69,7 +68,7 @@ class SupportVectorClassifier(BaseModel):
         # 输出模型
         joblib.dump(support_vector_classifier, self.get_model_path(code, self.model_name))
 
-    def predict(self, code, data, features):
+    def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):

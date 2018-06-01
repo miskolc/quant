@@ -15,7 +15,7 @@ class BaseModel:
         return
 
     @abc.abstractmethod
-    def predict(self, code, data, features):
+    def predict(self, code, data):
         """training model"""
         return
 

@@ -22,5 +22,5 @@ obj/**
 .vscode/settings.json
 .idea/**
 *.csv
-*.log
-output/**
+*.log**
+**/output/**

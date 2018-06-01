@@ -7,6 +7,7 @@ from quant.log.quant_logging import quant_logging as logging
 from quant.dao.k_data_dao import k_data_dao
 from quant.dao.index_k_data_dao import index_k_data_dao
 from datetime import datetime
+from quant.models.pca_model import PCAModel
 
 
 class Logistic_Regression_Test(unittest.TestCase):
@@ -14,11 +15,15 @@ class Logistic_Regression_Test(unittest.TestCase):
         before_run()
 
     def test_training(self):
+        code = '600196'
         # 从数据库中获取2015-01-01到今天的所有数据
-        data, features = k_data_dao.get_k_data_with_features("600196", '2015-01-01',
+        data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
         logging.logger.debug("features:%s, length:%s" % (features, len(features)))
+
+        pac = PCAModel();
+        pac.training_model(code=code, data=data,features=features)
 
         model = LogisticRegressionClassifier()
         model.training_model("600196", data, features)

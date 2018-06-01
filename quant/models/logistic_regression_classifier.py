@@ -10,7 +10,7 @@ from sklearn import preprocessing
 from sklearn.manifold import TSNE
 from sklearn.metrics import accuracy_score
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.models.pca_model import PACModel
+from quant.models.pca_model import PCAModel
 from sklearn.externals import joblib
 import os
 
@@ -29,7 +29,7 @@ class LogisticRegressionClassifier(BaseModel):
 
         X = preprocessing.scale(X)
 
-        pac = PACModel().load(code)
+        pac = PCAModel().load(code)
         X = pac.transform(X)
 
         # 数据按30%测试数据, 70%训练数据进行拆分
@@ -81,7 +81,7 @@ class LogisticRegressionClassifier(BaseModel):
 
         logistic_regression = joblib.load(model_path)
 
-        pac = PACModel().load(code)
+        pac = PCAModel().load(code)
         X = pac.transform(data)
 
         y_pred = logistic_regression.predict(X)
