@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
-from quant.models.pac_model import PACModel
+from quant.models.pca_model import PCAModel
 
 
 class SupportVectorClassifier(BaseModel):
@@ -27,7 +27,7 @@ class SupportVectorClassifier(BaseModel):
 
         # pca缩放
 
-        pac = PACModel().load(code)
+        pac = PCAModel().load(code)
         X = pac.transform(X)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,

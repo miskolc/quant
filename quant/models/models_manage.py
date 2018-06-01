@@ -19,7 +19,7 @@ import tushare as ts
 from quant.dao.k_data_dao import k_data_dao
 from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
-from quant.models.pac_model import PACModel
+from quant.models.pca_model import PACModel
 from quant.models.support_vector_classifier import SupportVectorClassifier
 from datetime import datetime
 

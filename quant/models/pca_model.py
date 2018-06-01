@@ -5,7 +5,7 @@ from sklearn.externals import joblib
 from quant.models.base_model import BaseModel
 from quant.common_tools.decorators import exc_time
 
-class PACModel(BaseModel):
+class PCAModel(BaseModel):
     model_name = 'pac'
 
     @exc_time
@@ -16,5 +16,5 @@ class PACModel(BaseModel):
         joblib.dump(pca, self.get_model_path(code, self.model_name))
 
     def load(self, code):
-        pac = joblib.load(self.get_model_path(code, self.model_name))
-        return pac
+        pca = joblib.load(self.get_model_path(code, self.model_name))
+        return pca

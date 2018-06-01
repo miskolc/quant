@@ -10,7 +10,7 @@ from sklearn import preprocessing
 from sklearn.manifold import TSNE
 from sklearn.metrics import accuracy_score
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.models.pac_model import PACModel
+from quant.models.pca_model import PACModel
 from sklearn.externals import joblib
 import os
 
