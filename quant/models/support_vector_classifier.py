@@ -18,7 +18,6 @@ class SupportVectorClassifier(BaseModel):
     model_name = "support_vector_classifier"
 
     def training_model(self, code, data, features):
-
         X = data[features]
         y = data['next_direction']
 
@@ -70,11 +69,11 @@ class SupportVectorClassifier(BaseModel):
         # 输出模型
         joblib.dump(support_vector_classifier, self.get_model_path(code, self.model_name))
 
-    def predict(self, code, data):
+    def predict(self, code, data, features):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('mode not found, code is %s:' % code)
+            logging.logger.error('model not found, code is %s:' % code)
             return
 
         support_vector_classifier = joblib.load(model_path)
