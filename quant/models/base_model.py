@@ -5,6 +5,7 @@ import abc
 from quant.config import default_config
 import os
 
+
 class BaseModel:
     __metaclass__ = abc.ABCMeta
 
@@ -18,14 +19,9 @@ class BaseModel:
         """training model"""
         return
 
-
-
     def get_model_path(self, code, model_name):
-
-        dir = os.path.join(default_config.MODELS_OUTPUT_DIR,model_name)
+        dir = os.path.join(default_config.MODELS_OUTPUT_DIR, model_name)
         if not os.path.exists(dir):
             os.makedirs(dir)
 
-        return '%s/%s_%s.pkl' % (dir, model_name,code)
-
-
+        return '%s/%s_%s.pkl' % (dir, model_name, code)
