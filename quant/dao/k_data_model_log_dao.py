@@ -25,20 +25,12 @@ class K_Data_Model_Log_Dao:
 
     @exc_time
     def insert(self, code, name, best_estimator, train_score, test_score, desc=None):
+        sql = text('replace into k_data_model_log (date, code, name, best_estimator, train_score, test_score, `desc`) '
+                   'VALUES(:date,:code,:name,:best_estimator,:train_score,:test_score,:desc)')
 
-        # 连接数据表
-        k_data_model_log_table = Table('k_data_model_log', dataSource.mysql_quant_metadata, autoload=True)
-
-        # 创建 insert 对象
-        ins = k_data_model_log_table.insert()
-        # 绑定要插入的数据
-        ins = ins.values(code=code, date=datetime_utils.get_current_date(), name=name,
-                         best_estimator=best_estimator,
-                         train_score=train_score,
-                         test_score=test_score, desc=desc)
-
-        # 执行语句
-        result = dataSource.mysql_quant_conn.execute(ins)
+        result = dataSource.mysql_quant_conn.execute(sql, date=datetime_utils.get_current_date(),
+                                                     code=code, name=name, best_estimator=best_estimator
+                                                     , train_score=train_score, test_score=test_score, desc=desc)
 
         return result
 

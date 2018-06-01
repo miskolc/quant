@@ -38,14 +38,13 @@ class Support_Vector_Classifier_test(unittest.TestCase):
         model = SupportVectorClassifier()
         model.training_model(code, data, features)
 
-    # def test_predict(self):
-    #     df_index = index_k_data_dao.get_rel_price();
-    #
-    #     df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
-    #     logging.logger.debug("features:%s, length:%s" % (features, len(features)))
-    #
-    #     df.to_csv("result.csv")
-    #     model = SupportVectorClassifier()
-    #     y_predict = model.predict("600196", df[features])
-    #
-    #     print(y_predict)
+    def test_predict(self):
+        df_index = index_k_data_dao.get_rel_price();
+        df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
+        logging.logger.debug("features:%s, length:%s" % (features, len(features)))
+
+        df.to_csv("result.csv")
+        model = SupportVectorClassifier()
+        y_predict = model.predict("600196", df[features])
+
+        print(y_predict)
