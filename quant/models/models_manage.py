@@ -11,7 +11,7 @@ sys.path.append(ROOT_DIR)
 
 from quant.log.quant_logging import quant_logging as logging
 from quant.config import default_config
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from quant.dao.data_source import dataSource
 import schedule
 import time
@@ -19,7 +19,7 @@ import tushare as ts
 from quant.dao.k_data_dao import k_data_dao
 from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
-from quant.models.pca_model import PACModel
+from quant.models.pca_model import PCAModel
 from quant.models.support_vector_classifier import SupportVectorClassifier
 from datetime import datetime
 
@@ -33,6 +33,8 @@ def init_db():
         mysql_quant_engine = create_engine(default_config.DATABASE_QUANT_URI, encoding='utf8',
                                            convert_unicode=True, pool_size=100, pool_recycle=1200)
         dataSource.mysql_quant_engine = mysql_quant_engine
+        dataSource.mysql_quant_conn = mysql_quant_engine.connect()
+        dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
 
 
 def init_logger():
@@ -47,7 +49,7 @@ def training():
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
-        pac = PACModel()
+        pac = PCAModel()
         logistic_regression = LogisticRegressionClassifier()
         svc = SupportVectorClassifier()
 

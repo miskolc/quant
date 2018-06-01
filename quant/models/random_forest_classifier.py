@@ -15,6 +15,7 @@ from sklearn import cross_validation, metrics
 
 
 class RandomForestClassifierModel(BaseModel):
+
     def training_model(self, code, data, features):
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)

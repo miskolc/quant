@@ -15,7 +15,7 @@ class K_Data_Tech_Feature_Dao:
                "where code=%(code)s and date BETWEEN %(start)s and %(end)s order by date asc")
 
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
-                         , con=dataSource.mysql_quant_engine)
+                         , con=dataSource.mysql_quant_conn)
 
         return df
 

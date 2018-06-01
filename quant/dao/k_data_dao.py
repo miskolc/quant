@@ -33,9 +33,8 @@ class K_Data_Dao:
         sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data "
                "where code=%(code)s and date BETWEEN %(start)s and %(end)s order by date asc")
 
-        logging.logger.debug("sql:" + sql)
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
-                         , con=dataSource.mysql_quant_engine)
+                         , con=dataSource.mysql_quant_conn)
 
         df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
         df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
