@@ -14,7 +14,7 @@ from quant.models.base_model import BaseModel
 
 class SequantialNeural(BaseModel):
 
-    def training_model(self, code):
+    def training_model(self, code, data, features):
         data = k_data_dao.get_k_data(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
         data, features = collect_features(data)

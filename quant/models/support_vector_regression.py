@@ -29,6 +29,7 @@ class SupportVectorRegressionModel(BaseModel):
         pac = PCAModel().load(code)
         X = pac.transform(X)
 
+        # split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                             shuffle=False)
 
@@ -36,5 +37,9 @@ class SupportVectorRegressionModel(BaseModel):
             {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
         ]
 
+        # gs
         grid = GridSearchCV(svm.LinearSVR, tuned_parameters, cv=None, n_jobs=-1)
         grid.fit(X_train, y_train)
+
+    def predict(self, code, data, features):
+        pass
