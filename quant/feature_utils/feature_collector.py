@@ -29,19 +29,23 @@ pattern_list = [r for r in getmembers(pattern_recognition) if isfunction(r[1])]
 func_list = momentum_list + overlaps_list + volume_list + volume_list + cycle_list + price_list + volatility_list + custome_list + pattern_list
 
 
-def get_col_name_list():
+def get_col_name_list(func_list):
     col_name_list = []
     for func in func_list:
         col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
         col_name_list.append(col_name)
-
+    print(col_name_list)
     return col_name_list
 
 
 def collect_features(df):
     col_list = []
     for func in func_list:
-        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators, func[0]) or hasattr(cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators, func[0]) or hasattr(custome_features, func[0]) or hasattr(pattern_recognition, func[0]):
+        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators,
+                                                                                                  func[0]) or hasattr(
+                cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators,
+                                                                                           func[0]) or hasattr(
+                custome_features, func[0]) or hasattr(pattern_recognition, func[0]):
             col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
             func_feature = func[1](df)
             if isinstance(func_feature, pd.core.series.Series):
@@ -58,7 +62,6 @@ def collect_features(df):
 
     col_list = list(set(col_list))
     return df, col_list
-
 
 
 # big_list = os.listdir(root_path)
@@ -80,3 +83,5 @@ def collect_features(df):
 # # print(module_list)
 
 
+# if __name__ == '__main__':
+#     get_col_name_list(pattern_list)
