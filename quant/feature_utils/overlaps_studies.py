@@ -1,7 +1,5 @@
 # ae.h - 2018/5/20
 from talib import abstract
-import pandas as pd
-import numpy as np
 
 
 def cal_bbands(data):
