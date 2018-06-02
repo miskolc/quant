@@ -1,12 +1,14 @@
 import unittest
 from datetime import datetime
 
+from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
+
 from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.dao.k_data_dao import k_data_dao
 from quant.log.quant_logging import quant_logging as logging
-from quant.models.pca_model import PCAModel
-from quant.models.support_vector_classifier import SupportVectorClassifier
+from quant.models.k_data.pca_model import PCAModel
 from quant.test import before_run
+
 
 class Support_Vector_Classifier_test(unittest.TestCase):
     def setUp(self):
@@ -34,4 +36,4 @@ class Support_Vector_Classifier_test(unittest.TestCase):
         model = SupportVectorClassifier()
         y_predict = model.predict("600196", df[features])
 
-        print(y_predict)
+        logging.logger.debug("predict:%s" % y_predict)

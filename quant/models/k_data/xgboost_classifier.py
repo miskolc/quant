@@ -1,16 +1,18 @@
 # coding = utf-8
 # ae_h - 2018/6/1
 
+import os
+
 import xgboost as xgb
 from sklearn import preprocessing
-from sklearn.metrics import accuracy_score
-from quant.models.base_model import BaseModel
-from quant.log.quant_logging import quant_logging as logging
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.externals import joblib
-import os
-from quant.models.pca_model import PCAModel
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split, GridSearchCV
+
+from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.log.quant_logging import quant_logging as logging
+from quant.models.base_model import BaseModel
+from quant.models.k_data.pca_model import PCAModel
 
 
 class XGBoostClassier(BaseModel):
@@ -72,7 +74,7 @@ class XGBoostClassier(BaseModel):
 
         y_pred = xgb_classifier.predict(data.as_matrix())
 
-        return y_pred
+        return int(y_pred[0])
 
 
 

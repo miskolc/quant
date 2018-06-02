@@ -1,18 +1,18 @@
 # coding = utf-8
 # ae_h - 2018/5/29
-from datetime import datetime
+
+import os
 
 from keras import Sequential
-from keras.models import load_model
 from keras.layers import Dense, Dropout
+from keras.models import load_model
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-from quant.log.quant_logging import quant_logging as logging
-from quant.models.pca_model import PCAModel
-from quant.models.base_model import BaseModel
+
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from sklearn.externals import joblib
-import os
+from quant.log.quant_logging import quant_logging as logging
+from quant.models.base_model import BaseModel
+from quant.models.k_data.pca_model import PCAModel
 
 
 class SequantialNeural(BaseModel):
@@ -77,4 +77,4 @@ class SequantialNeural(BaseModel):
 
         y_pred = sequantial_model.predict(data)
 
-        return y_pred[0][0]
+        return int(y_pred[0][0])

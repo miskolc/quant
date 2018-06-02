@@ -2,13 +2,16 @@
 # ae_h - 2018/5/29
 
 import unittest
-from quant.models.sequantial_neural import SequantialNeural
-from quant.test import before_run
-from quant.dao.k_data_dao import k_data_dao
-from quant.models.pca_model import PCAModel
+
+from quant.models.k_data.sequantial_neural import SequantialNeural
+
 from quant.common_tools import datetime_utils
 from quant.dao.index_k_data_dao import index_k_data_dao
+from quant.dao.k_data_dao import k_data_dao
 from quant.log.quant_logging import quant_logging as logging
+from quant.models.k_data.pca_model import PCAModel
+from quant.test import before_run
+
 
 class Sequantial_Neural_test(unittest.TestCase):
     def setUp(self):
@@ -34,4 +37,4 @@ class Sequantial_Neural_test(unittest.TestCase):
         model = SequantialNeural()
         y_predict = model.predict("600196", df[features])
 
-        logging.logger.debug("predict:%s"%y_predict)
+        logging.logger.debug("predict:%s" % y_predict)
