@@ -84,6 +84,6 @@ class SequantialNeural(BaseModel):
 
         sequantial_model = load_model(model_path)
 
-        y_pred = sequantial_model.predict(X, batch_size=128)
+        y_pred = sequantial_model.predict(X)
         logger.debug(y_pred)
         return int(y_pred[0][0])
