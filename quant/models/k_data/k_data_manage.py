@@ -16,24 +16,27 @@ from quant.log.quant_logging import logger
 def training_k_data():
     df = ts.get_hs300s()
     for code in df['code'].values:
-        logger.debug('begin training mode, code:%s' % code)
-        data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
-                                                             datetime.now().strftime("%Y-%m-%d"))
+        try:
+            logger.debug('begin training mode, code:%s' % code)
+            data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
+                                                                 datetime.now().strftime("%Y-%m-%d"))
 
-        pac = PCAModel()
-        lr = LogisticRegressionClassifier()
-        svc = SupportVectorClassifier()
-        rf = RandomForestClassifierModel()
-        xgb = XGBoostClassier()
-        ann = SequantialNeural()
+            pac = PCAModel()
+            lr = LogisticRegressionClassifier()
+            svc = SupportVectorClassifier()
+            rf = RandomForestClassifierModel()
+            xgb = XGBoostClassier()
+            ann = SequantialNeural()
 
-        pac.training_model(code, data, features)
-        lr.training_model(code, data, features)
-        svc.training_model(code, data, features)
-        rf.training_model(code, data, features)
-        xgb.training_model(code, data, features)
-        ann.training_model(code, data, features)
-
+            pac.training_model(code, data, features)
+            lr.training_model(code, data, features)
+            svc.training_model(code, data, features)
+            rf.training_model(code, data, features)
+            xgb.training_model(code, data, features)
+            ann.training_model(code, data, features)
+            logger.debug('training mode end, code:%s' % code)
+        except Exception as e:
+            logger.error(e)
 
 # 预测K_data
 def predict_k_data():
@@ -41,27 +44,32 @@ def predict_k_data():
     df_index = index_k_data_dao.get_rel_price();
 
     for code in df['code'].values:
-        logger.debug('begin predict, code:%s' % code)
-        data, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
+        try:
 
-        lr = LogisticRegressionClassifier()
-        svc = SupportVectorClassifier()
-        rf = RandomForestClassifierModel()
-        xgb = XGBoostClassier()
-        ann = SequantialNeural()
+            logger.debug('begin predict, code:%s' % code)
+            data, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
 
-        lr_pred = lr.predict(code, data)
-        svc_pred = svc.predict(code, data)
-        rf_pred = rf.predict(code, data)
-        xgb_pred = xgb.predict(code, data)
-        ann_pred = ann.predict(code, data)
+            lr = LogisticRegressionClassifier()
+            svc = SupportVectorClassifier()
+            rf = RandomForestClassifierModel()
+            xgb = XGBoostClassier()
+            ann = SequantialNeural()
 
-        k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
-                                      support_vector_classifier=svc_pred,
-                                      random_forest_classifier=rf_pred,
-                                      xgb_classifier=xgb_pred,
-                                      sequantial_neural=ann_pred
-                                      )
+            lr_pred = lr.predict(code, data)
+            svc_pred = svc.predict(code, data)
+            rf_pred = rf.predict(code, data)
+            xgb_pred = xgb.predict(code, data)
+            ann_pred = ann.predict(code, data)
+
+            k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
+                                          support_vector_classifier=svc_pred,
+                                          random_forest_classifier=rf_pred,
+                                          xgb_classifier=xgb_pred,
+                                          sequantial_neural=ann_pred
+                                          )
+            logger.debug('predict end, code:%s' % code)
+        except Exception as e:
+            logger.error(e)
 
 
 """

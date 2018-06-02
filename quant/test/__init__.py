@@ -23,12 +23,6 @@ def init_db():
         dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
 
 
-def init_logger():
-    default_config = config['default']
-    # 使用单例模式保存logger
-    logging.create_logger(default_config.DEBUG, PROJECT_NAME)
-
-
 def before_run():
-    init_logger()
+
     init_db()

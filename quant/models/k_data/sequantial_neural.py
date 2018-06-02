@@ -80,4 +80,4 @@ class SequantialNeural(BaseModel):
 
         y_pred = sequantial_model.predict(data)
 
-        return int(y_pred[0][0])
+        return y_pred[0][0]

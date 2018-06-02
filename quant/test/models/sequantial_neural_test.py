@@ -18,7 +18,7 @@ class Sequantial_Neural_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600196'
+        code = '600030'
 
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime_utils.get_current_date())
 
@@ -29,12 +29,14 @@ class Sequantial_Neural_test(unittest.TestCase):
         model.training_model(code, data, features)
 
     def test_predict(self):
+        code='600030'
+
         df_index = index_k_data_dao.get_rel_price();
-        df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
+        df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
         df.to_csv("result.csv")
         model = SequantialNeural()
-        y_predict = model.predict("600196", df[features])
+        y_predict = model.predict(code, df[features])
 
         logger.debug("predict:%s" % y_predict)
