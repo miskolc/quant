@@ -78,6 +78,7 @@ class SequantialNeural(BaseModel):
             return
 
         X = preprocessing.scale(data)
+
         pac = PCAModel().load(code)
         X = pac.transform(X)
 
