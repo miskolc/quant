@@ -36,7 +36,7 @@ def collect_hs300_full():
     df = ts.get_hs300s()
     now = datetime.now().strftime('%Y-%m-%d')
     for code in df['code'].values:
-        collect_single(code=code, start='2015-01-01', end=now, table_name=table_name)
+        collect_single(code=code, start='2015-01-01', end=now)
 
 
 # 计算每天沪深300每天技术特征数据

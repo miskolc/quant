@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from keras import Sequential
+from keras.models import load_model
 from keras.layers import Dense, Dropout
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
@@ -59,11 +60,11 @@ class SequantialNeural(BaseModel):
 
         # 记录日志
         k_data_model_log_dao.insert(code=code, name=self.model_name
-                                    , best_estimator=sequantial_model.to_json(),
-                                    train_score=train_model_score, test_score=test_model_score
-                                    , desc="full_model_score:%s" % full_model_score)
+                                    , best_estimator=None,
+                                    train_score=train_model_score[1], test_score=test_model_score[1]
+                                    , desc="full_model_score:%s" % full_model_score[1])
         # 输出模型
-        joblib.dump(sequantial_model, self.get_model_path(code, self.model_name))
+        sequantial_model.save(self.get_model_path(code, self.model_name))
 
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
@@ -72,8 +73,8 @@ class SequantialNeural(BaseModel):
             logging.logger.error('model not found, code is %s:' % code)
             return
 
-        sequantial_model = joblib.load(model_path)
+        sequantial_model = load_model(model_path)
 
         y_pred = sequantial_model.predict(data)
 
-        return y_pred
+        return y_pred[0][0]

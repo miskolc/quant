@@ -17,10 +17,12 @@ import schedule
 import time
 import tushare as ts
 from quant.dao.k_data_dao import k_data_dao
-from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.pca_model import PCAModel
 from quant.models.support_vector_classifier import SupportVectorClassifier
+from quant.models.random_forest_classifier import RandomForestClassifierModel
+from quant.models.xgboost_classifier import XGBoostClassier
+from quant.models.sequantial_neural import SequantialNeural
 from datetime import datetime
 
 PROJECT_NAME = "quant-collector"
@@ -42,7 +44,7 @@ def init_logger():
     logging.create_logger(default_config.DEBUG, PROJECT_NAME)
 
 
-def training():
+def training_k_data():
     df = ts.get_hs300s()
     for code in df['code'].values:
         logging.logger.debug('begin training mode, code:%s' % code)
@@ -52,17 +54,22 @@ def training():
         pac = PCAModel()
         logistic_regression = LogisticRegressionClassifier()
         svc = SupportVectorClassifier()
+        rf = RandomForestClassifierModel()
+        xgb = XGBoostClassier()
+        ann = SequantialNeural()
 
         pac.training_model(code, data, features)
         logistic_regression.training_model(code, data, features)
         svc.training_model(code, data, features)
-
+        rf.training_model(code, data, features)
+        xgb.training_model(code, data, features)
+        ann.training_model(code, data, features)
 
 if __name__ == '__main__':
     init_logger()
     init_db()
 
-    training()
+    training_k_data()
     # schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
 
     '''

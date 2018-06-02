@@ -8,16 +8,6 @@ from quant.models.pca_model import PCAModel
 from quant.models.support_vector_classifier import SupportVectorClassifier
 from quant.test import before_run
 
-
-def f(x):
-    if x > 0:
-        return 1
-    elif x is None:
-        return None
-    else:
-        return 0
-
-
 class Support_Vector_Classifier_test(unittest.TestCase):
     def setUp(self):
         before_run()
