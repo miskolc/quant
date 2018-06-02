@@ -89,7 +89,7 @@ class RandomForestClassifierModel(BaseModel):
         X = pac.transform(X)
 
         rf1 = joblib.load(model_path)
-        rf1.n_jobs=4
+        rf1.n_jobs=1
 
         y_pred = rf1.predict(X)
 
