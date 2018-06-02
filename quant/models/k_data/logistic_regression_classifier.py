@@ -10,8 +10,9 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
+from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.k_data.pca_model import PCAModel
 
@@ -23,6 +24,7 @@ class LogisticRegressionClassifier(BaseModel):
     """
     model_name = 'logistic_regression'
 
+    @exc_time
     def training_model(self, code, data, features):
 
         X = data[features]
@@ -47,8 +49,8 @@ class LogisticRegressionClassifier(BaseModel):
         # 网格搜索训练
         grid = GridSearchCV(LogisticRegression(), tuned_parameters, cv=None, n_jobs=-1)
         grid.fit(X_train, y_train)
-        logging.logger.debug(grid.best_estimator_)  # 训练的结果
-        logging.logger.debug("logistic regression's best score: %.4f" % grid.best_score_)  # 训练的评分结果
+        logger.debug(grid.best_estimator_)  # 训练的结果
+        logger.debug("logistic regression's best score: %.4f" % grid.best_score_)  # 训练的评分结果
 
         logistic_regression = grid.best_estimator_
         # 使用训练数据, 重新训练
@@ -61,7 +63,7 @@ class LogisticRegressionClassifier(BaseModel):
 
         # 在测试集中的评分
         test_score = accuracy_score(y_test, y_test_pred)
-        logging.logger.debug('test score: %.4f' % test_score)
+        logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
         logistic_regression.fit(X, y)
@@ -73,11 +75,12 @@ class LogisticRegressionClassifier(BaseModel):
         # 输出模型
         joblib.dump(logistic_regression, self.get_model_path(code, self.model_name))
 
+    @exc_time
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('mode not found, code is %s:' % code)
+            logger.error('mode not found, code is %s:' % code)
             return
 
         logistic_regression = joblib.load(model_path)

@@ -9,8 +9,9 @@ from keras.models import load_model
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
+from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.k_data.pca_model import PCAModel
 
@@ -18,6 +19,7 @@ from quant.models.k_data.pca_model import PCAModel
 class SequantialNeural(BaseModel):
     model_name = 'sequantial_neural'
 
+    @exc_time
     def training_model(self, code, data, features):
         X = data[features]
         y = data['next_direction']
@@ -53,10 +55,10 @@ class SequantialNeural(BaseModel):
 
         # test performance
         test_model_score = sequantial_model.evaluate(x_test, y_test, batch_size=128)
-        logging.logger.debug('test model score: %s' % test_model_score)
+        logger.debug('test model score: %s' % test_model_score)
 
         full_model_score = sequantial_model.evaluate(data[features], data['next_direction'])
-        logging.logger.debug('full model score: %s' % full_model_score)
+        logger.debug('full model score: %s' % full_model_score)
 
         # 记录日志
         k_data_model_log_dao.insert(code=code, name=self.model_name
@@ -66,11 +68,12 @@ class SequantialNeural(BaseModel):
         # 输出模型
         sequantial_model.save(self.get_model_path(code, self.model_name))
 
+    @exc_time
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('model not found, code is %s:' % code)
+            logger.error('model not found, code is %s:' % code)
             return
 
         sequantial_model = load_model(model_path)

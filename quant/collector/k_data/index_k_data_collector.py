@@ -7,7 +7,7 @@ import tushare as ts
 from quant.common_tools.decorators import exc_time
 from quant.crawler.yahoo_finance_api import yahoo_finance_api
 from quant.dao.data_source import dataSource
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 
 '''
     上证综合指数: 000001
@@ -27,7 +27,7 @@ def collect_single_index_from_yahoo(code, start, end, table_name='index_k_data')
         data = yahoo_finance_api.get_k_data(code, start_date=start, end_date=end)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 @exc_time
@@ -46,7 +46,7 @@ def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 @exc_time
@@ -58,7 +58,7 @@ def collect_single_index_from_ts(code, start, end, table_name='index_k_data'):
         data = data.dropna()
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 @exc_time
@@ -76,7 +76,7 @@ def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 # 每天爬取中国各类指数

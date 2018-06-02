@@ -3,43 +3,30 @@
 import logging
 import logging.handlers
 import os
+from quant.config import default_config
 
 
-class QuantLogging(object):
+logger_name="quant"
 
-    @property
-    def logger(self):
-        return self._logger
+logger = logging.getLogger(logger_name)
+logger.setLevel(logging.DEBUG)
 
-    @logger.setter
-    def logger(self, value):
-        self._logger = value
+logging_format = logging.Formatter(
+    '%(asctime)s - %(process)d - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
 
-    def create_logger(self, debug, logger_name):
-        logger = logging.getLogger(logger_name)
-        logger.setLevel(logging.DEBUG)
+if default_config.DEBUG:
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging_format)
+    console_handler.setLevel(logging.DEBUG)
+    logger.addHandler(console_handler)
 
-        logging_format = logging.Formatter(
-            '%(asctime)s - %(process)d - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+if not os.path.exists("log"):
+    os.mkdir("log")
 
-        if debug:
-            console_handler = logging.StreamHandler()
-            console_handler.setFormatter(logging_format)
-            console_handler.setLevel(logging.DEBUG)
-            logger.addHandler(console_handler)
-
-        if not os.path.exists("log"):
-            os.mkdir("log")
-
-        file_handler = logging.handlers.TimedRotatingFileHandler('log/%s.log' % logger_name,
-                                                                 encoding='UTF-8', when='D',
-                                                                 interval=1,
-                                                                 backupCount=7)
-        file_handler.setFormatter(logging_format)
-        file_handler.setLevel(logging.ERROR)
-        logger.addHandler(file_handler)
-
-        self.logger = logger
-
-
-quant_logging = QuantLogging()
+file_handler = logging.handlers.TimedRotatingFileHandler('log/%s.log' % logger_name,
+                                                         encoding='UTF-8', when='D',
+                                                         interval=1,
+                                                         backupCount=7)
+file_handler.setFormatter(logging_format)
+file_handler.setLevel(logging.ERROR)
+logger.addHandler(file_handler)

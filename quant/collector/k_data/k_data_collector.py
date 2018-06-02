@@ -5,7 +5,7 @@ from datetime import datetime
 import tushare as ts
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 
 
 # collect k_data from tushare and save into db
@@ -18,7 +18,7 @@ def collect_single(code, start, end, table_name='k_data'):
         data = data.dropna()
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 @exc_time
@@ -30,7 +30,7 @@ def collect_single_daily(code, table_name='k_data'):
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logging.logger.error(e)
+        logger.error(e)
 
 
 # 抓取沪深300所有K_data_daily数据

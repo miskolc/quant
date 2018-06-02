@@ -83,7 +83,7 @@ if __name__ == '__main__':
             stock1_code = code_list[i]
             stock2_code = code_list[j]
 
-            quant_logging.logger.debug('code1 %s | code2 %s' % (stock1_code, stock2_code))
+            quant_logger.debug('code1 %s | code2 %s' % (stock1_code, stock2_code))
             df1 = hs_df[hs_df['code'] == stock1_code]
             df2 = hs_df[hs_df['code'] == stock2_code]
 
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
 
             if hurst_v< 0.5:
-                quant_logging.logger.debug('not paired')
+                quant_logger.debug('not paired')
                 pass
             else:
                 result_df = count_mean_std_plot(df3, result_df, stock1_code, stock2_code, hurst_v)

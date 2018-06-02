@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, MetaData
 
 from quant.config import config
 from quant.dao.data_source import dataSource
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 
 PROJECT_NAME = "quant-test"
 
