@@ -46,7 +46,7 @@ def count_mean_std_plot(data, result_df):
     mean_v = float(data["close"].mean())
     data = {'mean': 1}
     serie = pd.Series(data)
-    
+
     result_df['mean'] = serie
     # ddf['std'] = data["close"].std()
     # ddf['interregional_up'] = data["close"].mean() + data["close"].std()
