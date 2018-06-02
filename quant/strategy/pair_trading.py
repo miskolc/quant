@@ -13,7 +13,7 @@ from quant.log.quant_logging import quant_logging
 import pandas as pd
 import numpy as np
 
-# def pair_stock():
+
 from quant.test import PROJECT_NAME
 
 
@@ -42,33 +42,21 @@ def before_run():
 
 
 def count_mean_std_plot(data, result_df, stock1_code, stock2_code, hurst_v):
-
     dic = {'code1': stock1_code,
-            'code2': stock2_code,
-           'hurst_v':hurst_v,
+           'code2': stock2_code,
+           'hurst_v': hurst_v,
            'interregional_up': data["close"].mean() + data["close"].std(),
-           'interregional_down':data["close"].mean() - data["close"].std(),
-            'mean':  data["close"].mean(),
-            'std': data["close"].std()
+           'interregional_down': data["close"].mean() - data["close"].std(),
+           'mean': data["close"].mean(),
+           'std': data["close"].std()
            }
 
     ddf = pd.DataFrame(dic, index=[0])
-
-    #result_df['mean'] = serie
-    # ddf['std'] = data["close"].std()
-    # ddf['interregional_up'] = data["close"].mean() + data["close"].std()
-    # ddf['interregional_down'] = data["close"].mean() - data["close"].std()
-    # ddf['hurst_v'] = hurst(data['close'])
-    #
     result_df = pd.concat([result_df, ddf], axis=0, ignore_index=True)
-
-
-    # print(ddf[['mean', 'std', 'interregional_up', 'interregional_down', 'hurst_v']])
     return result_df
 
-if __name__ == '__main__':
 
-    before_run()
+if __name__ == '__main__':
     hs_300 = ts.get_hs300s()
 
     code_list = list(hs_300['code'])
@@ -76,14 +64,15 @@ if __name__ == '__main__':
     sql = "select * from k_data where `date`> '2017-01-01'"
     hs_df = pd.read_sql(sql=sql, con=dataSource.mysql_quant_conn, index_col=['date'])
 
-    result_df = pd.DataFrame(columns=['code1', 'code2', 'hurst_v','interregional_up','interregional_down', 'mean', 'std'])
+    result_df = pd.DataFrame(
+        columns=['code1', 'code2', 'hurst_v', 'interregional_up', 'interregional_down', 'mean', 'std'])
 
     for i in range(0, len(code_list)):
         for j in range(1, len(code_list)):
             stock1_code = code_list[i]
             stock2_code = code_list[j]
 
-            quant_logger.debug('code1 %s | code2 %s' % (stock1_code, stock2_code))
+            quant_logging.logger.debug('code1 %s | code2 %s' % (stock1_code, stock2_code))
             df1 = hs_df[hs_df['code'] == stock1_code]
             df2 = hs_df[hs_df['code'] == stock2_code]
 
@@ -96,9 +85,8 @@ if __name__ == '__main__':
             df3.dropna()
             hurst_v = hurst(df3["close"])
 
-
-            if hurst_v< 0.5:
-                quant_logger.debug('not paired')
+            if hurst_v < 0.5:
+                quant_logging.logger.debug('not paired')
                 pass
             else:
                 result_df = count_mean_std_plot(df3, result_df, stock1_code, stock2_code, hurst_v)
