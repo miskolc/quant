@@ -12,7 +12,7 @@ from quant.models.k_data.sequantial_neural import SequantialNeural
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel
-
+import time
 
 # 训练K_data模型
 def training_k_data():
@@ -36,6 +36,9 @@ def training_k_data():
             rf.training_model(code, data, features)
             xgb.training_model(code, data, features)
             ann.training_model(code, data, features)
+
+            time.sleep(1)
+
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
             logger.error(e)
