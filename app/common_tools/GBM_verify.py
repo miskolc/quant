@@ -5,6 +5,7 @@ from statsmodels.tsa.stattools import adfuller
 
 from app.common_tools import decorators
 from quant.dao import data_source
+import json
 
 
 @decorators.exc_time
@@ -25,3 +26,11 @@ def gmb_test(time_close_df):
     print('critical value 1%%: %s' % critical_value_1)
     print('critical value 5%%: %s' % critical_value_5)
     print('critical value 10%%: %s' % critical_value_10)
+
+    result = json.dumps({'test_statics': test_statics, 'p_value': p_value, 'critical_value_1%': critical_value_1, 'critical_value_5%': critical_value_5, 'critical_value_10%': critical_value_10})
+
+    if result['p_value'] < 0.05 and result['test_statics'] < result['critical_value_1'] < result['critical_value_5'] < result['critical_value_10']:
+        return False
+    else:
+        return True
+

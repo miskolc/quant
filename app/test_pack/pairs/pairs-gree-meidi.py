@@ -61,7 +61,7 @@ df_m = df_m.set_index('date')
 #print(window)
 
 
-df = pd.DataFrame( index=df_m.index,columns=['000333', '000651', 'date'])
+df = pd.DataFrame(index=df_m.index,columns=['000333', '000651', 'date'])
 
 
 df["000651"] = df_g["close"]
