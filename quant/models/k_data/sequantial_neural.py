@@ -70,14 +70,19 @@ class SequantialNeural(BaseModel):
 
     @exc_time
     def predict(self, code, data):
+
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)
             return
 
+        pac = PCAModel().load(code)
+        X = pac.transform(data)
+        X = preprocessing.scale(X)
+
         sequantial_model = load_model(model_path)
 
-        y_pred = sequantial_model.predict(data, batch_size=128)
+        y_pred = sequantial_model.predict(X, batch_size=128)
         logger.debug(y_pred)
         return int(y_pred[0][0])

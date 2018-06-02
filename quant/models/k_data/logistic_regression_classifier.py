@@ -83,10 +83,11 @@ class LogisticRegressionClassifier(BaseModel):
             logger.error('mode not found, code is %s:' % code)
             return
 
-        logistic_regression = joblib.load(model_path)
-
         pac = PCAModel().load(code)
         X = pac.transform(data)
+        X = preprocessing.scale(X)
+
+        logistic_regression = joblib.load(model_path)
 
         y_pred = logistic_regression.predict(X)
 

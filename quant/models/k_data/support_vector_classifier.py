@@ -78,8 +78,12 @@ class SupportVectorClassifier(BaseModel):
             logger.error('model not found, code is %s:' % code)
             return
 
+        pac = PCAModel().load(code)
+        X = pac.transform(data)
+        X = preprocessing.scale(X)
+
         support_vector_classifier = joblib.load(model_path)
 
-        y_pred = support_vector_classifier.predict(data)
+        y_pred = support_vector_classifier.predict(X)
 
         return int(y_pred[0])

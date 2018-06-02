@@ -72,9 +72,13 @@ class XGBoostClassier(BaseModel):
             logger.error('model not found, code is %s:' % code)
             return
 
+        pac = PCAModel().load(code)
+        X = pac.transform(data)
+        X = preprocessing.scale(X)
+
         xgb_classifier = joblib.load(model_path)
 
-        y_pred = xgb_classifier.predict(data.as_matrix())
+        y_pred = xgb_classifier.predict(X)
 
         return int(y_pred[0])
 

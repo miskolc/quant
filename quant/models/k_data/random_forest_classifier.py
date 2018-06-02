@@ -84,8 +84,12 @@ class RandomForestClassifierModel(BaseModel):
             logger.error('model not found, code is %s:' % code)
             return
 
+        pac = PCAModel().load(code)
+        X = pac.transform(data)
+        X = preprocessing.scale(X)
+
         rf1 = joblib.load(model_path)
 
-        y_pred = rf1.predict(data)
+        y_pred = rf1.predict(X)
 
         return int(y_pred[0])
