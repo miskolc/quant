@@ -38,7 +38,7 @@ def train_and_predict():
 if __name__ == '__main__':
     init_db()
 
-    train_and_predict()
+    k_data_manage.predict_k_data()
 
     #schedule.every().day.at("17:00").do(train_and_predict)
 

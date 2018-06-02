@@ -17,7 +17,7 @@ class Sequantial_Neural_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600704'
+        code = '600276'
 
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime_utils.get_current_date())
 

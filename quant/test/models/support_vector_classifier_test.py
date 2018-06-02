@@ -14,7 +14,7 @@ class Support_Vector_Classifier_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600196'
+        code = '600276'
         # 从数据库中获取2015-01-01到今天的所有数据
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
