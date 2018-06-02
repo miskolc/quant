@@ -5,7 +5,7 @@ import unittest
 from datetime import datetime
 
 from quant.dao.k_data_dao import k_data_dao
-from quant.models.k_data.pca_model import PCAModel
+from quant.models.pca_model import PCAModel
 from quant.test import before_run
 
 

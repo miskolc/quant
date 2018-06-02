@@ -14,7 +14,7 @@ from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
-from quant.models.k_data.pca_model import PCAModel
+from quant.models.pca_model import PCAModel
 
 
 class LogisticRegressionClassifier(BaseModel):
@@ -83,9 +83,10 @@ class LogisticRegressionClassifier(BaseModel):
             logger.error('mode not found, code is %s:' % code)
             return
 
+        X = preprocessing.scale(data)
         pac = PCAModel().load(code)
-        X = pac.transform(data)
-        X = preprocessing.scale(X)
+        X = pac.transform(X)
+
 
         logistic_regression = joblib.load(model_path)
 

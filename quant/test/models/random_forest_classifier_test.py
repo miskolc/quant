@@ -4,12 +4,11 @@
 import unittest
 from datetime import datetime
 
-from quant.models.k_data.pca_model import PCAModel
-
 from quant.dao.index_k_data_dao import index_k_data_dao
 from quant.dao.k_data_dao import k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
+from quant.models.pca_model import PCAModel
 from quant.test import before_run
 
 
