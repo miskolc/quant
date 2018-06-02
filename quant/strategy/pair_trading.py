@@ -41,22 +41,30 @@ def before_run():
     init_db()
 
 
-def count_mean_std_plot(data, result_df):
+def count_mean_std_plot(data, result_df, stock1_code, stock2_code, hurst_v):
 
-    mean_v = float(data["close"].mean())
-    data = {'mean': 1}
-    serie = pd.Series(data)
+    dic = {'code1': stock1_code,
+            'code2': stock2_code,
+           'hurst_v':hurst_v,
+           'interregional_up': data["close"].mean() + data["close"].std(),
+           'interregional_down':data["close"].mean() - data["close"].std(),
+            'mean':  data["close"].mean(),
+            'std': data["close"].std()
+           }
 
-    result_df['mean'] = serie
+    ddf = pd.DataFrame(dic, index=[0])
+
+    #result_df['mean'] = serie
     # ddf['std'] = data["close"].std()
     # ddf['interregional_up'] = data["close"].mean() + data["close"].std()
     # ddf['interregional_down'] = data["close"].mean() - data["close"].std()
     # ddf['hurst_v'] = hurst(data['close'])
     #
-    # result_df.append(ddf[['mean', 'std', 'interregional_up', 'interregional_down', 'hurst_v']])
+    result_df = pd.concat([result_df, ddf], axis=0, ignore_index=True)
+
 
     # print(ddf[['mean', 'std', 'interregional_up', 'interregional_down', 'hurst_v']])
-    print(result_df)
+    return result_df
 
 if __name__ == '__main__':
 
@@ -68,7 +76,7 @@ if __name__ == '__main__':
     sql = "select * from k_data where `date`> '2017-01-01'"
     hs_df = pd.read_sql(sql=sql, con=dataSource.mysql_quant_conn, index_col=['date'])
 
-    result_df = pd.DataFrame(columns=[''])
+    result_df = pd.DataFrame(columns=['code1', 'code2', 'hurst_v','interregional_up','interregional_down', 'mean', 'std'])
 
     for i in range(0, len(code_list)):
         for j in range(1, len(code_list)):
@@ -86,7 +94,15 @@ if __name__ == '__main__':
 
             df3['close'] = df1['close'] / df2['close']
             df3.dropna()
+            hurst_v = hurst(df3["close"])
 
-            quant_logging.logger.debug('not paired') if hurst(df3["close"]) < 0.5 else count_mean_std_plot(df3, result_df)
+
+            if hurst_v< 0.5:
+                quant_logging.logger.debug('not paired')
+                pass
+            else:
+                result_df = count_mean_std_plot(df3, result_df, stock1_code, stock2_code, hurst_v)
+
+    result_df = result_df.dropna()
 
     result_df.to_csv('result_df.csv')
