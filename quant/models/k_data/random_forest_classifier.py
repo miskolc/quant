@@ -34,7 +34,7 @@ class RandomForestClassifierModel(BaseModel):
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)
 
-        rfc_model = RandomForestClassifier(max_features='sqrt', max_depth=14, oob_score=True, n_jobs=-1)
+        rfc_model = RandomForestClassifier(max_features='sqrt', max_depth=14, oob_score=True)
 
         tuned_parameter = {'n_estimators': [50, ], 'min_samples_leaf': range(10, 60, 10),
                            'min_samples_split': range(20, 100, 20)}
@@ -89,6 +89,7 @@ class RandomForestClassifierModel(BaseModel):
         X = pac.transform(X)
 
         rf1 = joblib.load(model_path)
+        rf1.n_jobs=4
 
         y_pred = rf1.predict(X)
 
