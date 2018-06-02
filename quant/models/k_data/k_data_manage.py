@@ -61,13 +61,13 @@ def predict_k_data():
             svc_pred = svc.predict(code, data)
             rf_pred = rf.predict(code, data)
             xgb_pred = xgb.predict(code, data)
-            ann_pred = ann.predict(code, data)
+            #ann_pred = ann.predict(code, data)
 
             k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
                                           support_vector_classifier=svc_pred,
                                           random_forest_classifier=rf_pred,
                                           xgb_classifier=xgb_pred,
-                                          sequantial_neural=ann_pred
+                                          sequantial_neural=0
                                           )
             logger.debug('predict end, code:%s' % code)
         except Exception as e:
