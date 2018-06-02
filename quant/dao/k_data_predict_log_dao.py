@@ -7,7 +7,7 @@ from quant.dao.data_source import dataSource
 from sqlalchemy import Table
 from quant.common_tools import datetime_utils
 from sqlalchemy.sql import text
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 
 
 class K_Data_Predict_Log_Dao:

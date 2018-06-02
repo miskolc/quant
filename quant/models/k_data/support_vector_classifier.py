@@ -8,15 +8,17 @@ from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
+from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
-from quant.models.k_data.pca_model import PCAModel
+from quant.models.pca_model import PCAModel
 
 
 class SupportVectorClassifier(BaseModel):
     model_name = "support_vector_classifier"
 
+    @exc_time
     def training_model(self, code, data, features):
         X = data[features]
         y = data['next_direction']
@@ -43,8 +45,8 @@ class SupportVectorClassifier(BaseModel):
         grid = GridSearchCV(svm.SVC(), tuned_parameters, cv=None, n_jobs=-1)
         grid.fit(X_train, y_train)
 
-        logging.logger.debug(grid.best_estimator_)  # 训练的结果
-        logging.logger.debug("Support Vector Classifier's best score: %.4f" % grid.best_score_)  # 训练的评分结果
+        logger.debug(grid.best_estimator_)  # 训练的结果
+        logger.debug("Support Vector Classifier's best score: %.4f" % grid.best_score_)  # 训练的评分结果
 
         support_vector_classifier = grid.best_estimator_
         # 使用训练数据, 重新训练
@@ -55,7 +57,7 @@ class SupportVectorClassifier(BaseModel):
 
         # 在测试集中的评分
         test_score = accuracy_score(y_test, y_test_pred)
-        logging.logger.debug('test score: %.4f' % test_score)
+        logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
         support_vector_classifier.fit(X, y)
@@ -68,15 +70,20 @@ class SupportVectorClassifier(BaseModel):
         # 输出模型
         joblib.dump(support_vector_classifier, self.get_model_path(code, self.model_name))
 
+    @exc_time
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('model not found, code is %s:' % code)
+            logger.error('model not found, code is %s:' % code)
             return
+
+        X = preprocessing.scale(data)
+        pac = PCAModel().load(code)
+        X = pac.transform(X)
 
         support_vector_classifier = joblib.load(model_path)
 
-        y_pred = support_vector_classifier.predict(data)
+        y_pred = support_vector_classifier.predict(X)
 
         return int(y_pred[0])

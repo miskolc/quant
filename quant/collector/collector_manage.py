@@ -9,7 +9,7 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.config import default_config
 from sqlalchemy import create_engine, MetaData
 import quant.collector.k_data.k_data_collector as k_data
@@ -33,14 +33,7 @@ def init_db():
         dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
 
 
-
-def init_logger():
-    # 使用单例模式保存logger
-    logging.create_logger(default_config.DEBUG, PROJECT_NAME)
-
-
 if __name__ == '__main__':
-    init_logger()
     init_db()
 
     #feature_collector.collect_hs300_full()

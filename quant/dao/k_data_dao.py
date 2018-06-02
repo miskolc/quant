@@ -8,7 +8,7 @@ import pandas as pd
 from quant.feature_utils import adjust_features
 from quant.dao.index_k_data_dao import index_k_data_dao
 import tushare as ts
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.dao import cal_direction
 from datetime import datetime, timedelta
 from quant.feature_utils.feature_collector import collect_features

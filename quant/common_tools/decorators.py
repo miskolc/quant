@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # ae.h - 2018/4/23
 import functools
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 import time
 
 
@@ -11,7 +11,7 @@ def exc_time(func):
         start_time = time.time()
         tmp = func(*args, **kv)
         end_time = time.time()
-        logging.logger.debug("%s executed, elapsed time: %.2f ms" % (func.__name__, (end_time - start_time) * 1000))
+        logger.debug("%s executed, elapsed time: %.2f ms" % (func.__name__, (end_time - start_time) * 1000))
         return tmp
 
     return fn

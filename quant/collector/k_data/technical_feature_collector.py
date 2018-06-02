@@ -2,7 +2,7 @@ from datetime import datetime
 import tushare as ts
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.feature_utils.feature_collector import collect_features
 
 

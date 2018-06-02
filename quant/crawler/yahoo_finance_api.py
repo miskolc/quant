@@ -4,7 +4,9 @@ import datetime
 import requests
 import pandas as pd
 import io
-from quant.log.quant_logging import quant_logging as logging
+
+from quant.common_tools.decorators import exc_time
+from quant.log.quant_logging import logger
 from lxml import etree
 
 class YahooFinanceApi:
@@ -45,7 +47,7 @@ class YahooFinanceApi:
                   "=history&crumb=%s" % (
                       code, start_date, end_date, crumb)
 
-            logging.logger.debug(url)
+            logger.debug(url)
             response = requests.get(url, cookies=cookie)
 
             df = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
@@ -60,6 +62,7 @@ class YahooFinanceApi:
         except Exception as e:
             raise e
 
+    @exc_time
     def get_real_price(self, code):
         url = "https://finance.yahoo.com/quote/%s/?p=%s" % (code, code)
         r = requests.get(url)

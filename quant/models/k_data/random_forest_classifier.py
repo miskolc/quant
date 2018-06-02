@@ -9,15 +9,17 @@ from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
+from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
-from quant.models.k_data.pca_model import PCAModel
+from quant.models.pca_model import PCAModel
 
 
 class RandomForestClassifierModel(BaseModel):
     model_name = "random_forest_classifier_model"
 
+    @exc_time
     def training_model(self, code, data, features):
         X = data[features]
         y = data['next_direction']
@@ -41,7 +43,7 @@ class RandomForestClassifierModel(BaseModel):
 
         gs_result.fit(X_train, y_train)
 
-        logging.logger.debug('auc: %s' % gs_result.best_score_)
+        logger.debug('auc: %s' % gs_result.best_score_)
 
         min_samples_leaf = gs_result.best_params_['min_samples_leaf']
         min_samples_split = gs_result.best_params_['min_samples_split']
@@ -52,11 +54,11 @@ class RandomForestClassifierModel(BaseModel):
 
         rf1.fit(X_train, y_train)
 
-        logging.logger.debug('oob: %s' % rf1.oob_score_)
+        logger.debug('oob: %s' % rf1.oob_score_)
 
         # 在测试集中的评分
         test_score = rf1.score(X_test, y_test)
-        logging.logger.debug('test score: %.4f' % test_score)
+        logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
         rf1.fit(X, y)
@@ -74,15 +76,20 @@ class RandomForestClassifierModel(BaseModel):
         # 输出模型
         joblib.dump(rf1, self.get_model_path(code, self.model_name))
 
+    @exc_time
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('model not found, code is %s:' % code)
+            logger.error('model not found, code is %s:' % code)
             return
+
+        X = preprocessing.scale(data)
+        pac = PCAModel().load(code)
+        X = pac.transform(X)
 
         rf1 = joblib.load(model_path)
 
-        y_pred = rf1.predict(data)
+        y_pred = rf1.predict(X)
 
         return int(y_pred[0])

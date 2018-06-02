@@ -7,7 +7,7 @@ from quant.dao.data_source import dataSource
 from sqlalchemy import Table
 from quant.common_tools import datetime_utils
 from sqlalchemy.sql import text
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 
 
 class K_Data_Model_Log_Dao:
@@ -20,7 +20,7 @@ class K_Data_Model_Log_Dao:
             .where(and_(table.c.date == datetime_utils.get_current_date(), table.c.code == code))
 
         result = dataSource.mysql_quant_conn.execute(s)
-        logging.logger.debug("row count:%s" % result.rowcount)
+        logger.debug("row count:%s" % result.rowcount)
         return result.rowcount > 0
 
     @exc_time

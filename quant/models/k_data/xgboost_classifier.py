@@ -9,15 +9,17 @@ from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
+from quant.common_tools.decorators import exc_time
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.log.quant_logging import quant_logging as logging
+from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
-from quant.models.k_data.pca_model import PCAModel
+from quant.models.pca_model import PCAModel
 
 
 class XGBoostClassier(BaseModel):
     model_name = "xgb_classifier"
 
+    @exc_time
     def training_model(self, code, data, features):
         X = data[features]
         y = data['next_direction']
@@ -38,8 +40,8 @@ class XGBoostClassier(BaseModel):
 
         gs_result = gs_search.fit(X_train, y_train)
 
-        logging.logger.debug(gs_search.best_params_)
-        logging.logger.debug("XGBoost Classier's best score: %.4f" % gs_result.best_score_)  # 训练的评分结果
+        logger.debug(gs_search.best_params_)
+        logger.debug("XGBoost Classier's best score: %.4f" % gs_result.best_score_)  # 训练的评分结果
 
         xgb_classifier = gs_search.best_estimator_
         # 使用训练数据, 重新训练
@@ -50,7 +52,7 @@ class XGBoostClassier(BaseModel):
 
         # 在测试集中的评分
         test_score = accuracy_score(y_test, y_test_pred)
-        logging.logger.debug('test score: %.4f' % test_score)
+        logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
         xgb_classifier.fit(X, y)
@@ -62,17 +64,21 @@ class XGBoostClassier(BaseModel):
         # 输出模型
         joblib.dump(xgb_classifier, self.get_model_path(code, self.model_name))
 
-
+    @exc_time
     def predict(self, code, data):
         model_path = self.get_model_path(code, self.model_name)
 
         if not os.path.exists(model_path):
-            logging.logger.error('model not found, code is %s:' % code)
+            logger.error('model not found, code is %s:' % code)
             return
+
+        X = preprocessing.scale(data)
+        pac = PCAModel().load(code)
+        X = pac.transform(X)
 
         xgb_classifier = joblib.load(model_path)
 
-        y_pred = xgb_classifier.predict(data.as_matrix())
+        y_pred = xgb_classifier.predict(X)
 
         return int(y_pred[0])
 
