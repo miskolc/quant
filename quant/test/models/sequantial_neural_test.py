@@ -29,7 +29,7 @@ class Sequantial_Neural_test(unittest.TestCase):
         model.training_model(code, data, features)
 
     def test_predict(self):
-        code='600030'
+        code='600010'
 
         df_index = index_k_data_dao.get_rel_price();
         df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
