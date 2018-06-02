@@ -37,7 +37,6 @@ def training_k_data():
             xgb.training_model(code, data, features)
             ann.training_model(code, data, features)
 
-            time.sleep(1)
 
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
@@ -73,6 +72,8 @@ def predict_k_data():
                                           sequantial_neural=ann_pred
                                           )
             logger.debug('predict end, code:%s' % code)
+
+            time.sleep(1)
         except Exception as e:
             logger.error(e)
 
