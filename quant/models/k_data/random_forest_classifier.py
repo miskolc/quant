@@ -1,17 +1,18 @@
 # coding = utf-8
 # ae_h - 2018/5/30
-from datetime import datetime
 
-from quant.models.base_model import BaseModel
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
-from quant.log.quant_logging import quant_logging as logging
-from sklearn import preprocessing
-from quant.models.pca_model import PCAModel
-from sklearn.externals import joblib
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 import os
+
+from sklearn import preprocessing
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.externals import joblib
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split
+
+from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.log.quant_logging import quant_logging as logging
+from quant.models.base_model import BaseModel
+from quant.models.k_data.pca_model import PCAModel
 
 
 class RandomForestClassifierModel(BaseModel):
@@ -84,4 +85,4 @@ class RandomForestClassifierModel(BaseModel):
 
         y_pred = rf1.predict(data)
 
-        return y_pred
+        return int(y_pred[0])

@@ -3,7 +3,6 @@
 import os
 
 from sklearn import preprocessing
-from quant.models.pca_model import PCAModel
 from sklearn import svm
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
@@ -12,7 +11,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
-
+from quant.models.k_data.pca_model import PCAModel
 
 
 class SupportVectorClassifier(BaseModel):
@@ -80,4 +79,4 @@ class SupportVectorClassifier(BaseModel):
 
         y_pred = support_vector_classifier.predict(data)
 
-        return y_pred
+        return int(y_pred[0])

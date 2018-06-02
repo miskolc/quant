@@ -1,13 +1,13 @@
 import unittest
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score, train_test_split
-from quant.test import before_run
-from quant.models.logistic_regression_classifier import LogisticRegressionClassifier
-from quant.log.quant_logging import quant_logging as logging
-from quant.dao.k_data_dao import k_data_dao
-from quant.dao.index_k_data_dao import index_k_data_dao
 from datetime import datetime
-from quant.models.pca_model import PCAModel
+
+from quant.models.k_data.logistic_regression_classifier import LogisticRegressionClassifier
+
+from quant.dao.index_k_data_dao import index_k_data_dao
+from quant.dao.k_data_dao import k_data_dao
+from quant.log.quant_logging import quant_logging as logging
+from quant.models.k_data.pca_model import PCAModel
+from quant.test import before_run
 
 
 class Logistic_Regression_Test(unittest.TestCase):

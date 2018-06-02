@@ -2,13 +2,16 @@
 # ae_h - 2018/5/30
 
 import unittest
-from quant.models.random_forest_classifier import RandomForestClassifierModel
-from quant.test import before_run
-from quant.log.quant_logging import quant_logging as logging
-from quant.dao.k_data_dao import k_data_dao
 from datetime import datetime
-from quant.models.pca_model import PCAModel
+
+from quant.models.k_data.pca_model import PCAModel
+
 from quant.dao.index_k_data_dao import index_k_data_dao
+from quant.dao.k_data_dao import k_data_dao
+from quant.log.quant_logging import quant_logging as logging
+from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
+from quant.test import before_run
+
 
 class Random_Forest_Classifier_test(unittest.TestCase):
     def setUp(self):

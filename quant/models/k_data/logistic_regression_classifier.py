@@ -1,18 +1,19 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/28
 
+import os
+
+from sklearn import preprocessing
+from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
+
+from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import quant_logging as logging
 from quant.models.base_model import BaseModel
-from sklearn import preprocessing
-from sklearn.manifold import TSNE
-from sklearn.metrics import accuracy_score
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
-from quant.models.pca_model import PCAModel
-from sklearn.externals import joblib
-import os
+from quant.models.k_data.pca_model import PCAModel
 
 
 class LogisticRegressionClassifier(BaseModel):
@@ -86,4 +87,4 @@ class LogisticRegressionClassifier(BaseModel):
 
         y_pred = logistic_regression.predict(X)
 
-        return y_pred
+        return int(y_pred[0])
