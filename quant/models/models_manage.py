@@ -99,6 +99,7 @@ if __name__ == '__main__':
     init_logger()
     init_db()
 
+    training_k_data()
     predict_k_data()
     # schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
 
