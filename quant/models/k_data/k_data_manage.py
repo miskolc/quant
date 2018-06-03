@@ -25,17 +25,17 @@ def training_k_data():
 
             pca = PCAModel()
             lr = LogisticRegressionClassifier()
-            svc = SupportVectorClassifier()
-            rf = RandomForestClassifierModel()
-            xgb = XGBoostClassier()
-            ann = SequantialNeural()
+            #svc = SupportVectorClassifier()
+            #rf = RandomForestClassifierModel()
+            #xgb = XGBoostClassier()
+            #ann = SequantialNeural()
 
-            pca.training_model(code, data, features)
-            #lr.training_model(code, data, features)
-            svc.training_model(code, data, features)
-            rf.training_model(code, data, features)
-            xgb.training_model(code, data, features)
-            ann.training_model(code, data, features)
+            #pca.training_model(code, data, features)
+            lr.training_model(code, data, features)
+            #svc.training_model(code, data, features)
+            #rf.training_model(code, data, features)
+            #xgb.training_model(code, data, features)
+            #ann.training_model(code, data, features)
 
 
             logger.debug('training mode end, code:%s' % code)
