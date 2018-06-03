@@ -15,6 +15,7 @@ from sqlalchemy import create_engine, MetaData
 from quant.dao.data_source import dataSource
 from quant.models.k_data import k_data_manage
 import schedule
+import warnings
 
 PROJECT_NAME = "quant-collector"
 
@@ -39,6 +40,8 @@ def predict():
 
 
 if __name__ == '__main__':
+    warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
+
     init_db()
 
     training()
