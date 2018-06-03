@@ -78,10 +78,4 @@ def predict_k_data():
             logger.error(e)
 
 
-"""
-    1. 训练k_data模型
-    2. 预测k_data
-"""
-def launch():
-    training_k_data()
-    predict_k_data()
+

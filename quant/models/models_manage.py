@@ -30,13 +30,21 @@ def init_db():
         dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
 
 
+def training():
+    k_data_manage.training_k_data()
+
+
+def predict():
+    k_data_manage.predict_k_data()
+
 
 if __name__ == '__main__':
     init_db()
 
-    k_data_manage.predict_k_data()
+    training()
+    predict()
 
-    #schedule.every().day.at("17:00").do(k_data_manage.training_k_data())
+    # schedule.every().day.at("17:00").do(k_data_manage.training_k_data())
 
     '''
     while True:
