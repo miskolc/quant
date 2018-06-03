@@ -46,17 +46,17 @@ class LogisticRegressionClassifier(BaseModel):
             'penalty': ['l1', 'l2'],
             'C': [0.001, 0.01, 0.1, 1, 10, 100]
         }
-        logger.debug(1)
+
         # 网格搜索训练
-        grid = GridSearchCV(LogisticRegression(), tuned_parameters, cv=None, n_jobs=-1)
+        grid = GridSearchCV(LogisticRegression(), tuned_parameters, cv=None)
         grid.fit(X_train, y_train)
         logger.debug(grid.best_estimator_)  # 训练的结果
         logger.debug("logistic regression's best score: %.4f" % grid.best_score_)  # 训练的评分结果
-        logger.debug(1)
+
         logistic_regression = grid.best_estimator_
         # 使用训练数据, 重新训练
         logistic_regression.fit(X_train, y_train)
-        logger.debug(1)
+
         # 使用测试数据对模型进评平分
         y_test_pred = logistic_regression.predict(X_test)
 
