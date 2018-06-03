@@ -44,4 +44,4 @@ else:
 default_config = config['default']
 
 # Theano require set MKL_THREADING_LAYER=GNU in environment
-os.environ["MKL_THREADING_LAYER"] = "GNU"
+#os.environ["MKL_THREADING_LAYER"] = "GNU"
