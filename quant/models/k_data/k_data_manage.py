@@ -23,14 +23,14 @@ def training_k_data():
             data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                                  datetime.now().strftime("%Y-%m-%d"))
 
-            pac = PCAModel()
+            pca = PCAModel()
             lr = LogisticRegressionClassifier()
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
             ann = SequantialNeural()
 
-            pac.training_model(code, data, features)
+            pca.training_model(code, data, features)
             lr.training_model(code, data, features)
             svc.training_model(code, data, features)
             rf.training_model(code, data, features)

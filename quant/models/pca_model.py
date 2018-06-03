@@ -7,7 +7,7 @@ from quant.common_tools.decorators import exc_time
 from sklearn import preprocessing
 
 class PCAModel(BaseModel):
-    model_name = 'pac'
+    model_name = 'pca'
 
     @exc_time
     def training_model(self, code, data, features):
