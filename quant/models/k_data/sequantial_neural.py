@@ -65,8 +65,10 @@ class SequantialNeural(BaseModel):
                                     , best_estimator=None,
                                     train_score=train_model_score[1], test_score=test_model_score[1]
                                     , desc="full_model_score:%s" % full_model_score[1])
-        # 输出模型
-        sequantial_model.save(self.get_model_path(code, self.model_name))
+        # 输出模型, 使用h5的格式保存起来
+        sequantial_model.save(self.get_model_path(code, self.model_name, 'h5'))
+
+        del sequantial_model
 
     @exc_time
     def predict(self, code, data):
@@ -85,5 +87,7 @@ class SequantialNeural(BaseModel):
         sequantial_model = load_model(model_path)
 
         y_pred = sequantial_model.predict(X)
-        logger.debug(y_pred)
+
+        del sequantial_model
+
         return int(y_pred[0][0])

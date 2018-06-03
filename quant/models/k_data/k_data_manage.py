@@ -31,10 +31,10 @@ def training_k_data():
             ann = SequantialNeural()
 
             pac.training_model(code, data, features)
-            lr.training_model(code, data, features)
-            svc.training_model(code, data, features)
-            rf.training_model(code, data, features)
-            xgb.training_model(code, data, features)
+            #lr.training_model(code, data, features)
+            #svc.training_model(code, data, features)
+            #rf.training_model(code, data, features)
+            #xgb.training_model(code, data, features)
             ann.training_model(code, data, features)
 
 
@@ -53,27 +53,26 @@ def predict_k_data():
             logger.debug('begin predict, code:%s' % code)
             data, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
 
-            lr = LogisticRegressionClassifier()
-            svc = SupportVectorClassifier()
-            rf = RandomForestClassifierModel()
-            xgb = XGBoostClassier()
+            #lr = LogisticRegressionClassifier()
+            #svc = SupportVectorClassifier()
+            #rf = RandomForestClassifierModel()
+            #xgb = XGBoostClassier()
             ann = SequantialNeural()
 
-            lr_pred = lr.predict(code, data)
-            svc_pred = svc.predict(code, data)
-            rf_pred = rf.predict(code, data)
-            xgb_pred = xgb.predict(code, data)
+            #lr_pred = lr.predict(code, data)
+            #svc_pred = svc.predict(code, data)
+            #rf_pred = rf.predict(code, data)
+            #xgb_pred = xgb.predict(code, data)
             ann_pred = ann.predict(code, data)
 
-            k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
-                                          support_vector_classifier=svc_pred,
-                                          random_forest_classifier=rf_pred,
-                                          xgb_classifier=xgb_pred,
-                                          sequantial_neural=ann_pred
-                                          )
+            # k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
+            #                               support_vector_classifier=svc_pred,
+            #                               random_forest_classifier=rf_pred,
+            #                               xgb_classifier=xgb_pred,
+            #                               sequantial_neural=ann_pred
+            #                               )
             logger.debug('predict end, code:%s' % code)
 
-            time.sleep(1)
         except Exception as e:
             logger.error(e)
 
