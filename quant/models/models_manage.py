@@ -34,7 +34,7 @@ def init_db():
 if __name__ == '__main__':
     init_db()
 
-    k_data_manage.launch()
+    k_data_manage.predict_k_data()
 
     #schedule.every().day.at("17:00").do(k_data_manage.training_k_data())
 
