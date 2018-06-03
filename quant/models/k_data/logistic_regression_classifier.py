@@ -26,14 +26,14 @@ class LogisticRegressionClassifier(BaseModel):
 
     @exc_time
     def training_model(self, code, data, features):
-        
+
         X = data[features]
         y = data['next_direction']
 
         X = preprocessing.scale(X)
 
-        pac = PCAModel().load(code)
-        X = pac.transform(X)
+        pca = PCAModel().load(code)
+        X = pca.transform(X)
 
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
@@ -84,8 +84,8 @@ class LogisticRegressionClassifier(BaseModel):
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel().load(code)
-        X = pac.transform(X)
+        pca = PCAModel().load(code)
+        X = pca.transform(X)
 
 
         logistic_regression = joblib.load(model_path)
