@@ -68,8 +68,6 @@ class SequantialNeural(BaseModel):
         # 输出模型, 使用h5的格式保存起来
         sequantial_model.save(self.get_model_path(code, self.model_name, 'h5'))
 
-        del sequantial_model
-        gc.collect()
 
     @exc_time
     def predict(self, code, data):
@@ -88,8 +86,5 @@ class SequantialNeural(BaseModel):
         sequantial_model = load_model(model_path)
 
         y_pred = sequantial_model.predict(X)
-
-        del sequantial_model
-        gc.collect()
 
         return int(y_pred[0][0])

@@ -31,7 +31,7 @@ def training_k_data():
             ann = SequantialNeural()
 
             pca.training_model(code, data, features)
-            #lr.training_model(code, data, features)
+            lr.training_model(code, data, features)
             svc.training_model(code, data, features)
             rf.training_model(code, data, features)
             xgb.training_model(code, data, features)
