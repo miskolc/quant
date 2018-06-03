@@ -42,6 +42,12 @@ def collect_hs300_full():
 # 计算每天沪深300每天技术特征数据
 @exc_time
 def collect_hs300_daily():
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = ts.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
     df = ts.get_hs300s()
     for code in df['code'].values:
         collect_single_daily(code)

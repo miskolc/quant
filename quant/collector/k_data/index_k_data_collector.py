@@ -82,6 +82,12 @@ def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
 # 每天爬取中国各类指数
 @exc_time
 def collect_index_china_daily():
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = ts.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
     collect_single_index_daily_from_ts('000001')
     collect_single_index_daily_from_ts('399001')
     collect_single_index_daily_from_ts('000300')
