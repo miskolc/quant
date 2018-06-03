@@ -14,7 +14,7 @@ from quant.dao.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
-
+import gc
 
 class SequantialNeural(BaseModel):
     model_name = 'sequantial_neural'
@@ -69,11 +69,12 @@ class SequantialNeural(BaseModel):
         sequantial_model.save(self.get_model_path(code, self.model_name, 'h5'))
 
         del sequantial_model
+        gc.collect()
 
     @exc_time
     def predict(self, code, data):
 
-        model_path = self.get_model_path(code, self.model_name)
+        model_path = self.get_model_path(code, self.model_name, 'h5')
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)
@@ -89,5 +90,6 @@ class SequantialNeural(BaseModel):
         y_pred = sequantial_model.predict(X)
 
         del sequantial_model
+        gc.collect()
 
         return int(y_pred[0][0])

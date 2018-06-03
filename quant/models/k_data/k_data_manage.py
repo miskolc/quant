@@ -73,6 +73,9 @@ def predict_k_data():
             #                               )
             logger.debug('predict end, code:%s' % code)
 
+            del data
+
+
         except Exception as e:
             logger.error(e)
 
