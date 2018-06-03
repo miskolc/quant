@@ -89,7 +89,7 @@ for code in codes:
     ma20 = df_sh["ma20"].head(1).values[0]
     if close > ma5 and close > ma10 and close > ma20:
         list.append(code)
-'''
+
 
 p_change_list=[]
 for code in codes:
@@ -106,3 +106,19 @@ print(len(codes))
 
 
 print("%.4f" % (sum(p_change_list)/len(codes)))
+'''
+
+
+df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='60min', start_date='2018-06-01')
+df_sh['date'] = df_sh.index
+print(df_sh.columns.values)
+print(df_sh[["vol",'open','close']])
+
+df = ts.get_k_data(code='000001', ktype='60')
+print(df)
+
+'''
+
+df = ts.bar('^GSPC', conn=ts.get_apis(), asset='X', start_date='2016-01-01')
+print(df)
+'''
