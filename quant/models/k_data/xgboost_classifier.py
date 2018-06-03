@@ -36,7 +36,7 @@ class XGBoostClassier(BaseModel):
 
         parameters_grid = [{'learning_rate': [0.05, 0.1, 0.3], 'max_depth': range(2, 8, 2), 'subsample': [0.7, ], 'min_child_weight': range(1, 6, 2)}]
 
-        gs_search = GridSearchCV(estimator=xgb.XGBClassifier(n_estimators=100, random_state=10, n_jobs=-1), param_grid=parameters_grid, n_jobs=-1)
+        gs_search = GridSearchCV(estimator=xgb.XGBClassifier(n_estimators=100, random_state=10, n_jobs=-1), param_grid=parameters_grid)
 
         gs_result = gs_search.fit(X_train, y_train)
 
