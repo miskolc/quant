@@ -26,7 +26,7 @@ class LogisticRegressionClassifier(BaseModel):
 
     @exc_time
     def training_model(self, code, data, features):
-
+        
         X = data[features]
         y = data['next_direction']
 
