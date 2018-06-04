@@ -1,7 +1,8 @@
 import unittest
-from quant.test import before_run
-from quant.dao.index_k_data_dao import index_k_data_dao
+
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
+from quant.test import before_run
 
 
 class Index_K_Data_Dao_Test(unittest.TestCase):

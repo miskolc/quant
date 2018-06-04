@@ -50,4 +50,7 @@ def collect_hs300_daily():
 
     df = ts.get_hs300s()
     for code in df['code'].values:
-        collect_single_daily(code)
+        try:
+            collect_single_daily(code)
+        except Exception as e:
+            logger.error("collect technical features failed code:%s, exception:%s" % (code, repr(e)))

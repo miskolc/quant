@@ -1,19 +1,13 @@
 # coding=utf-8
 # ae_h - 2018/6/1
+import pandas as pd
 import tushare as ts
 from sqlalchemy import create_engine, MetaData
 
-from app.common_tools.GBM_verify import gmb_test
 from app.test_pack.pairs.hurst import hurst
 from quant.config import config
 from quant.dao import dataSource
-from quant.dao.k_data_dao import k_data_dao
-from quant.common_tools.datetime_utils import get_current_date
 from quant.log.quant_logging import quant_logging
-import pandas as pd
-import numpy as np
-
-
 from quant.test import PROJECT_NAME
 
 

@@ -3,9 +3,10 @@
 
 import unittest
 
+from quant.dao.k_data.k_data_dao import k_data_dao
+
 from quant.common_tools import datetime_utils
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.sequantial_neural import SequantialNeural
 from quant.models.pca_model import PCAModel

@@ -9,7 +9,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel

@@ -1,16 +1,17 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
 
-from quant.common_tools.decorators import exc_time
-from quant.dao.data_source import dataSource
-from quant.dao.k_data_tech_feature_dao import k_data_tech_feature_dao
-import pandas as pd
-from quant.feature_utils import adjust_features
-from quant.dao.index_k_data_dao import index_k_data_dao
-import tushare as ts
-from quant.log.quant_logging import logger
-from quant.dao import cal_direction
 from datetime import datetime, timedelta
+
+import pandas as pd
+import tushare as ts
+from quant.dao.k_data.k_data_tech_feature_dao import k_data_tech_feature_dao
+
+from quant.common_tools.decorators import exc_time
+from quant.dao import cal_direction
+from quant.dao.data_source import dataSource
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
+from quant.feature_utils import adjust_features
 from quant.feature_utils.feature_collector import collect_features
 
 

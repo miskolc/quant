@@ -23,7 +23,7 @@ def collect_single(code, table_name='k_data_60m', conn=None):
         data = data.dropna()
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error("collect failed code:%s, exception:"% (code, repr(e)))
+        logger.error("collect failed code:%s, exception:%s"% (code, repr(e)))
 
 
 
@@ -43,7 +43,7 @@ def collect_single_daily(code, table_name='k_data_60m', conn=None):
         data = data.head(4)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error("collect failed code:%s, exception:" % (code, repr(e)))
+        logger.error("collect failed code:%s, exception:%s" % (code, repr(e)))
 
 
 # 抓取沪深300所有K_data_60m数据

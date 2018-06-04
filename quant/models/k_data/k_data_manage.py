@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import tushare as ts
+from quant.dao.k_data.k_data_dao import k_data_dao
+from quant.dao.k_data.k_data_predict_log_dao import k_data_predict_log_dao
 
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
-from quant.dao.k_data_predict_log_dao import k_data_predict_log_dao
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
@@ -12,7 +12,7 @@ from quant.models.k_data.sequantial_neural import SequantialNeural
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel
-import time
+
 
 # 训练K_data模型
 def training_k_data():
