@@ -7,6 +7,7 @@ import os
 class Config(object):
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
     MODELS_OUTPUT_DIR = os.path.join(ROOT_DIR, 'models/output/')
+    TEMPLATE_DIR = os.path.join(ROOT_DIR, 'notification_tools/templates/')
     pass
 
 
