@@ -7,7 +7,6 @@ import numpy as np
 import tushare as ts
 
 
-
 def cal_mavol5(data):
     mavol5 = pd.Series.rolling(data['volume'], 5).sum() / 5
     return mavol5
@@ -21,3 +20,8 @@ def cal_mavol10(data):
 def cal_mavol20(data):
     mavol20 = pd.Series.rolling(data['volume'], 20).sum() / 20
     return mavol20
+
+
+def cal_turnover(vol, share_outstanding):
+    turn_over = vol['volume'] / (share_outstanding['share_oustanding'] / 100)
+    return turn_over
