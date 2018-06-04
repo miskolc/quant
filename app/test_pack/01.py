@@ -108,14 +108,20 @@ print(len(codes))
 print("%.4f" % (sum(p_change_list)/len(codes)))
 '''
 
-
-df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='60min', start_date='2018-06-01')
+'''
+df_sh=ts.bar(conn=ts.get_apis(), code='000001',freq='60min', start_date='2015-06-01')
 df_sh['date'] = df_sh.index
+print(df_sh)
 print(df_sh.columns.values)
 print(df_sh[["vol",'open','close']])
+'''
 
-df = ts.get_k_data(code='000001', ktype='60')
-print(df)
+df_sh = ts.bar(conn=ts.get_apis(), code='000001',freq='60min', asset='INDEX', start_date='2018-06-01')
+print(df_sh)
+
+
+
+
 
 '''
 

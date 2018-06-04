@@ -9,11 +9,11 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
-from quant.log.quant_logging import logger
 from quant.config import default_config
 from sqlalchemy import create_engine, MetaData
 import quant.collector.k_data.k_data_collector as k_data
 import quant.collector.k_data_60m.k_data_60m_collector as k_data_60m
+import quant.collector.k_data_60m.index_k_data_60m_collector as index_k_data_60m
 import quant.collector.k_data.technical_feature_collector as feature_collector
 import quant.collector.k_data.index_k_data_collector as index_k_data
 from quant.dao.data_source import dataSource
@@ -39,11 +39,14 @@ if __name__ == '__main__':
 
     #feature_collector.collect_hs300_full()
     #k_data_60m.collect_hs300_full()
+    #index_k_data_60m.collect_index_china_daily()
 
     schedule.every().day.at("15:30").do(k_data_60m.collect_hs300_daily)
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
+    schedule.every().day.at("15:32").do(index_k_data.collect_index_china_daily)
+    schedule.every().day.at("15:32").do(index_k_data_60m.collect_index_china_daily)
+
     schedule.every().day.at("15:35").do(feature_collector.collect_hs300_daily)
-    schedule.every().day.at("15:30").do(index_k_data.collect_index_china_daily)
     schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
     schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
 

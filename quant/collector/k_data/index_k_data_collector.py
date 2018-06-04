@@ -32,11 +32,6 @@ def collect_single_index_from_yahoo(code, start, end, table_name='index_k_data')
 
 @exc_time
 def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
-    now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
-    # 如果是假日, 跳过
-    if is_holiday:
-        return
 
     try:
         start = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
@@ -63,12 +58,6 @@ def collect_single_index_from_ts(code, start, end, table_name='index_k_data'):
 
 @exc_time
 def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
-    now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
-    # 如果是假日, 跳过
-    if is_holiday:
-        return
-
     try:
         data = ts.get_k_data(code, index=True)
         data['code'] = code
