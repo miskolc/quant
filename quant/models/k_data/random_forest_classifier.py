@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
@@ -34,7 +34,7 @@ class RandomForestClassifierModel(BaseModel):
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
                                                             shuffle=False)
 
-        rfc_model = RandomForestClassifier(max_features='sqrt', max_depth=14, oob_score=True, n_jobs=-1)
+        rfc_model = RandomForestClassifier(max_features='sqrt', max_depth=14, oob_score=True)
 
         tuned_parameter = {'n_estimators': [50, ], 'min_samples_leaf': range(10, 60, 10),
                            'min_samples_split': range(20, 100, 20)}

@@ -10,7 +10,7 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
@@ -65,13 +65,14 @@ class SequantialNeural(BaseModel):
                                     , best_estimator=None,
                                     train_score=train_model_score[1], test_score=test_model_score[1]
                                     , desc="full_model_score:%s" % full_model_score[1])
-        # 输出模型
-        sequantial_model.save(self.get_model_path(code, self.model_name))
+        # 输出模型, 使用h5的格式保存起来
+        sequantial_model.save(self.get_model_path(code, self.model_name, 'h5'))
+
 
     @exc_time
     def predict(self, code, data):
 
-        model_path = self.get_model_path(code, self.model_name)
+        model_path = self.get_model_path(code, self.model_name, 'h5')
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)
@@ -84,6 +85,6 @@ class SequantialNeural(BaseModel):
 
         sequantial_model = load_model(model_path)
 
-        y_pred = sequantial_model.predict(X, batch_size=128)
-        logger.debug(y_pred)
+        y_pred = sequantial_model.predict(X)
+
         return int(y_pred[0][0])

@@ -19,9 +19,9 @@ class BaseModel:
         """training model"""
         return
 
-    def get_model_path(self, code, model_name):
+    def get_model_path(self, code, model_name, suffix='pkl'):
         dir = os.path.join(default_config.MODELS_OUTPUT_DIR, model_name)
         if not os.path.exists(dir):
             os.makedirs(dir)
 
-        return '%s/%s_%s.pkl' % (dir, model_name, code)
+        return '%s/%s_%s.%s' % (dir, model_name, code, suffix)

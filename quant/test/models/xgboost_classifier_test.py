@@ -2,8 +2,9 @@
 import unittest
 from datetime import datetime
 
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
+from quant.dao.k_data.k_data_dao import k_data_dao
+
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel
@@ -15,7 +16,7 @@ class XGBoost_Classifier_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600196'
+        code = '600276'
         # 从数据库中获取2015-01-01到今天的所有数据
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
@@ -28,7 +29,7 @@ class XGBoost_Classifier_test(unittest.TestCase):
         model.training_model(code, data, features)
 
     def test_predict(self):
-        code = '600196'
+        code = '600276'
         df_index = index_k_data_dao.get_rel_price()
         df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
         logger.debug("features:%s, length:%s" % (features, len(features)))

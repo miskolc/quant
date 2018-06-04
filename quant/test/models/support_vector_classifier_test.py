@@ -1,8 +1,9 @@
 import unittest
 from datetime import datetime
 
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
+from quant.dao.k_data.k_data_dao import k_data_dao
+
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.pca_model import PCAModel
@@ -14,7 +15,7 @@ class Support_Vector_Classifier_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600196'
+        code = '600276'
         # 从数据库中获取2015-01-01到今天的所有数据
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 

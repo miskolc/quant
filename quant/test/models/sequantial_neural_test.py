@@ -3,9 +3,10 @@
 
 import unittest
 
+from quant.dao.k_data.k_data_dao import k_data_dao
+
 from quant.common_tools import datetime_utils
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.sequantial_neural import SequantialNeural
 from quant.models.pca_model import PCAModel
@@ -17,7 +18,7 @@ class Sequantial_Neural_test(unittest.TestCase):
         before_run()
 
     def test_training(self):
-        code = '600704'
+        code = '600276'
 
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime_utils.get_current_date())
 

@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import tushare as ts
+from quant.dao.k_data.k_data_dao import k_data_dao
+from quant.dao.k_data.k_data_predict_log_dao import k_data_predict_log_dao
 
-from quant.dao.index_k_data_dao import index_k_data_dao
-from quant.dao.k_data_dao import k_data_dao
-from quant.dao.k_data_predict_log_dao import k_data_predict_log_dao
+from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
@@ -23,19 +23,21 @@ def training_k_data():
             data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                                  datetime.now().strftime("%Y-%m-%d"))
 
-            pac = PCAModel()
+            pca = PCAModel()
             lr = LogisticRegressionClassifier()
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
             ann = SequantialNeural()
 
-            pac.training_model(code, data, features)
+            pca.training_model(code, data, features)
             lr.training_model(code, data, features)
             svc.training_model(code, data, features)
             rf.training_model(code, data, features)
             xgb.training_model(code, data, features)
             ann.training_model(code, data, features)
+
+
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
             logger.error(e)
@@ -64,20 +66,16 @@ def predict_k_data():
             ann_pred = ann.predict(code, data)
 
             k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
-                                          support_vector_classifier=svc_pred,
-                                          random_forest_classifier=rf_pred,
-                                          xgb_classifier=xgb_pred,
-                                          sequantial_neural=ann_pred
-                                          )
+                                           support_vector_classifier=svc_pred,
+                                           random_forest_classifier=rf_pred,
+                                           xgb_classifier=xgb_pred,
+                                           sequantial_neural=ann_pred
+                                           )
             logger.debug('predict end, code:%s' % code)
+
+
         except Exception as e:
             logger.error(e)
 
 
-"""
-    1. 训练k_data模型
-    2. 预测k_data
-"""
-def launch():
-    training_k_data()
-    predict_k_data()
+

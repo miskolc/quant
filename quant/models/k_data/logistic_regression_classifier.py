@@ -11,7 +11,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
@@ -32,8 +32,8 @@ class LogisticRegressionClassifier(BaseModel):
 
         X = preprocessing.scale(X)
 
-        pac = PCAModel().load(code)
-        X = pac.transform(X)
+        pca = PCAModel().load(code)
+        X = pca.transform(X)
 
         # 数据按30%测试数据, 70%训练数据进行拆分
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
@@ -46,8 +46,9 @@ class LogisticRegressionClassifier(BaseModel):
             'penalty': ['l1', 'l2'],
             'C': [0.001, 0.01, 0.1, 1, 10, 100]
         }
+
         # 网格搜索训练
-        grid = GridSearchCV(LogisticRegression(), tuned_parameters, cv=None, n_jobs=-1)
+        grid = GridSearchCV(LogisticRegression(), tuned_parameters, cv=None)
         grid.fit(X_train, y_train)
         logger.debug(grid.best_estimator_)  # 训练的结果
         logger.debug("logistic regression's best score: %.4f" % grid.best_score_)  # 训练的评分结果
@@ -84,8 +85,8 @@ class LogisticRegressionClassifier(BaseModel):
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel().load(code)
-        X = pac.transform(X)
+        pca = PCAModel().load(code)
+        X = pca.transform(X)
 
 
         logistic_regression = joblib.load(model_path)

@@ -1,7 +1,7 @@
 import unittest
+
+from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao as k_data_model_log_dao
 from quant.test import before_run
-from quant.dao.k_data_model_log_dao import k_data_model_log_dao as k_data_model_log_dao
-from quant.log.quant_logging import logger
 
 
 class K_Data_Dao_Model_Log_Test(unittest.TestCase):

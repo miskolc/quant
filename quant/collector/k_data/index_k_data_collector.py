@@ -27,16 +27,11 @@ def collect_single_index_from_yahoo(code, start, end, table_name='index_k_data')
         data = yahoo_finance_api.get_k_data(code, start_date=start, end_date=end)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error(e)
+        logger.error("collect single index from yahoo:%s, exception:%s" % (code, repr(e)))
 
 
 @exc_time
 def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
-    now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
-    # 如果是假日, 跳过
-    if is_holiday:
-        return
 
     try:
         start = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
@@ -46,7 +41,7 @@ def collect_single_index_daliy_from_yahoo(code, table_name='index_k_data'):
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error(e)
+        logger.error("collect single index from yahoo:%s, exception:%s" % (code, repr(e)))
 
 
 @exc_time
@@ -58,17 +53,11 @@ def collect_single_index_from_ts(code, start, end, table_name='index_k_data'):
         data = data.dropna()
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error(e)
+        logger.error("collect single index from ts:%s, exception:%s" % (code, repr(e)))
 
 
 @exc_time
 def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
-    now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
-    # 如果是假日, 跳过
-    if is_holiday:
-        return
-
     try:
         data = ts.get_k_data(code, index=True)
         data['code'] = code
@@ -76,12 +65,18 @@ def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
-        logger.error(e)
+        logger.error("collect single index daily from ts:%s, exception:%s" % (code, repr(e)))
 
 
 # 每天爬取中国各类指数
 @exc_time
 def collect_index_china_daily():
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = ts.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
     collect_single_index_daily_from_ts('000001')
     collect_single_index_daily_from_ts('399001')
     collect_single_index_daily_from_ts('000300')
