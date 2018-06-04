@@ -59,9 +59,7 @@ if __name__ == '__main__':
 
     init_db()
 
-    # training()
-    # predict()
-    training()
+    #training()
     #schedule.every().day.at("14:40").do(predict)
     schedule.every().day.at("17:00").do(training)
 
