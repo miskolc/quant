@@ -17,7 +17,7 @@ class K_Data_Tech_Feature_Dao:
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df.drop(columns=['createTime'])
+        df = df.drop(columns=['createTime'])
 
         return df
 
