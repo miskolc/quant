@@ -23,7 +23,7 @@ def training_k_data():
             data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                                  datetime.now().strftime("%Y-%m-%d"))
 
-            pca = PCAModel()
+            pca = PCAModel('k_data')
             lr = LogisticRegressionClassifier()
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
@@ -37,10 +37,10 @@ def training_k_data():
             xgb.training_model(code, data, features)
             ann.training_model(code, data, features)
 
-
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
-            logger.error(e)
+            logger.error("training k data error, code:%s, error:"(code, repr(e)))
+
 
 # 预测K_data
 def predict_k_data():
@@ -66,16 +66,13 @@ def predict_k_data():
             ann_pred = ann.predict(code, data)
 
             k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
-                                           support_vector_classifier=svc_pred,
-                                           random_forest_classifier=rf_pred,
-                                           xgb_classifier=xgb_pred,
-                                           sequantial_neural=ann_pred
-                                           )
+                                          support_vector_classifier=svc_pred,
+                                          random_forest_classifier=rf_pred,
+                                          xgb_classifier=xgb_pred,
+                                          sequantial_neural=ann_pred
+                                          )
             logger.debug('predict end, code:%s' % code)
 
 
         except Exception as e:
-            logger.error(e)
-
-
-
+            logger.error("predict k data error, code:%s, error:"(code, repr(e)))

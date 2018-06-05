@@ -18,8 +18,6 @@ import warnings
 from datetime import datetime
 import tushare as ts
 
-PROJECT_NAME = "quant-collector"
-
 
 def init_db():
     # 如果配置DATABASE_QUANT_URI属性, 实例化mysql_quant_engine
@@ -44,4 +42,6 @@ def predict():
 
 if __name__ == '__main__':
     warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
+
+    init_db()
     predict()

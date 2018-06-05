@@ -9,6 +9,9 @@ from sklearn import preprocessing
 class PCAModel(BaseModel):
     model_name = 'pca'
 
+    def __init__(self, module_name):
+        self.module_name = module_name
+
     @exc_time
     def training_model(self, code, data, features):
         X = data[features]
@@ -17,8 +20,8 @@ class PCAModel(BaseModel):
         pca = PCA(n_components=None)
         pca.fit(X)
         # 输出模型
-        joblib.dump(pca, self.get_model_path(code, self.model_name))
+        joblib.dump(pca, self.get_model_path(code, self.module_name,self.model_name))
 
     def load(self, code):
-        pca = joblib.load(self.get_model_path(code, self.model_name))
+        pca = joblib.load(self.get_model_path(code, self.module_name, self.model_name))
         return pca

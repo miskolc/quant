@@ -22,7 +22,7 @@ class Logistic_Regression_Test(unittest.TestCase):
 
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
-        pac = PCAModel();
+        pac = PCAModel('k_data');
         pac.training_model(code=code, data=data,features=features)
 
         model = LogisticRegressionClassifier()
