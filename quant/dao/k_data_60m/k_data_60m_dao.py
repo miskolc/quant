@@ -10,7 +10,7 @@ from quant.dao import cal_direction
 class K_Data_60m_Dao:
 
     @exc_time
-    def get_k_data(self, code, start, end):
+    def get_k_data(self, code, start, end, cal_next_direction=True):
         sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data_60m "
                "where code=%(code)s and date BETWEEN %(start)s and %(end)s order by date asc")
 
@@ -18,8 +18,10 @@ class K_Data_60m_Dao:
                          , con=dataSource.mysql_quant_conn)
 
         df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
-        df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
-        df = df.dropna()
+
+        if cal_next_direction:
+            df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
+            df = df.dropna()
         return df
 
 

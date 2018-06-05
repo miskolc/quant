@@ -9,7 +9,7 @@ from quant.common_tools.datetime_utils import get_next_date
 
 @exc_time
 def collect_single(code, start, end, table_name='k_data_60m_tech_feature'):
-    data = k_data_60m_dao.get_k_data(code, start=start, end=end)
+    data = k_data_60m_dao.get_k_data(code, start=start, end=end, cal_next_direction=False)
 
     data, features = collect_features(data)
 
@@ -22,7 +22,7 @@ def collect_single(code, start, end, table_name='k_data_60m_tech_feature'):
 def collect_single_daily(code, table_name='k_data_60m_tech_feature'):
     start = get_next_date(-30)
     end = get_next_date(1)
-    data = k_data_60m_dao.get_k_data(code, start=start, end=end)
+    data = k_data_60m_dao.get_k_data(code, start=start, end=end, cal_next_direction=False)
 
     data = data.tail(100)
     data, features = collect_features(data)
