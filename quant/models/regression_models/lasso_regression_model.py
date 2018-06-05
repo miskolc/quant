@@ -12,7 +12,7 @@ from quant.models.pca_model import PCAModel
 
 class LassoRegressionModel(BaseModel):
     module_name = MODULE_NAME
-    model_name = "linear_regression_model"
+    model_name = "lasso_regression_model"
 
     def training_model(self, code, data, features, *args):
         X = data[features]
