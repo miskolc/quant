@@ -34,10 +34,6 @@ class SequantialNeuralClassifier(BaseModel):
 
         X_train, x_test, y_train, y_test = train_test_split(X, y, test_size=.3)
 
-        # normalization
-        X_train = preprocessing.scale(X_train)
-        x_test = preprocessing.scale(x_test)
-
         input_dim_len = len(features)
 
         sequantial_model = Sequential()

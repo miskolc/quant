@@ -21,14 +21,14 @@ class Support_Vector_Classifier_test(unittest.TestCase):
 
         logger.debug("features:%s" % features)
 
-        pac = PCAModel('k_data');
+        pac = PCAModel('k_data')
         pac.training_model(code=code, data=data,features=features)
 
         model = SupportVectorClassifier()
         model.training_model(code, data, features)
 
     def test_predict(self):
-        df_index = index_k_data_dao.get_rel_price();
+        df_index = index_k_data_dao.get_rel_price()
         df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
