@@ -8,6 +8,9 @@ class Config(object):
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
     MODELS_OUTPUT_DIR = os.path.join(ROOT_DIR, 'models/output/')
     TEMPLATE_DIR = os.path.join(ROOT_DIR, 'notification_tools/templates/')
+    MAIL_FROM_ADDR = 'Q_catcher@sohu.com'
+    MAIL_FROM_PWD = 'aedotpy000'
+    MAIL_SMTP = 'smtp.sohu.com'
     pass
 
 

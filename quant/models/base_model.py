@@ -7,8 +7,6 @@ import os
 
 
 class BaseModel:
-    __metaclass__ = abc.ABCMeta
-
     @abc.abstractmethod
     def training_model(self, code, data, features):
         """training model"""
