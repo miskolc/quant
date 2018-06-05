@@ -81,7 +81,7 @@ class SequantialNeuralClassifier(BaseModel):
 
         X = preprocessing.scale(data)
 
-        pac = PCAModel().load(code)
+        pac = PCAModel(self.module_name).load(code)
         X = pac.transform(X)
 
         sequantial_model = load_model(model_path)

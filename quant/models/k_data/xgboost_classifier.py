@@ -74,7 +74,7 @@ class XGBoostClassier(BaseModel):
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel('k_data').load(code)
+        pac = PCAModel(self.module_name).load(code)
         X = pac.transform(X)
 
         xgb_classifier = joblib.load(model_path)

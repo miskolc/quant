@@ -8,7 +8,9 @@ from quant.dao import cal_direction
 from quant.dao.k_data_60m.index_k_data_60m_dao import index_k_data_60m_dao
 from quant.dao.k_data_60m.k_data_60m_tech_feature_dao import k_data_60m_tech_feature_dao
 from quant.feature_utils import adjust_features
-
+from quant.common_tools.datetime_utils import get_next_date,get_current_date
+import tushare as ts
+from quant.feature_utils.feature_collector import collect_features
 
 class K_Data_60m_Dao:
     @exc_time
@@ -68,5 +70,34 @@ class K_Data_60m_Dao:
 
         return df, features
 
+    # 集成今日的预测数据
+    @exc_time
+    def get_k_predict_data_with_features(self, code, df_index):
+        now = get_current_date()
+
+        last_30 =get_next_date(-30)
+
+        df = self.get_k_data(code, start=last_30, end=now)
+        df = df[['open', 'close', 'low', 'high', 'volume']]
+
+        df_real = ts.get_realtime_quotes(code)
+
+        df_real = df_real[['open', 'price', 'low', 'high', 'volume']].astype('float64')
+        df_real = df_real.rename(columns={'price': 'close'})
+        df_real['volume'] = df_real['volume'] / 100
+        df = pd.concat([df, df_real], axis=0, ignore_index=True)
+
+        df, features = collect_features(df)
+
+        # 获取今天要预测的最后一行
+        df = df.tail(1)
+        df = df.reset_index(drop=True)
+
+        # 拼接上指数
+        df = pd.concat([df, df_index], axis=1)
+
+        features = adjust_features(features, self.get_addition_features())
+
+        return df, features
 
 k_data_60m_dao = K_Data_60m_Dao()

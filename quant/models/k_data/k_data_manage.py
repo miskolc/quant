@@ -39,7 +39,7 @@ def training_k_data():
 
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
-            logger.error("training k data error, code:%s, error:"(code, repr(e)))
+            logger.error("training k data error, code:%s, error:%s" % (code, repr(e)))
 
 
 # 预测K_data
@@ -75,4 +75,4 @@ def predict_k_data():
 
 
         except Exception as e:
-            logger.error("predict k data error, code:%s, error:"(code, repr(e)))
+            logger.error("predict k data error, code:%s, error:%s" % (code, repr(e)))

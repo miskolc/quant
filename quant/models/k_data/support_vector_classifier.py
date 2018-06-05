@@ -81,7 +81,7 @@ class SupportVectorClassifier(BaseModel):
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel('k_data').load(code)
+        pac = PCAModel(self.module_name).load(code)
         X = pac.transform(X)
 
         support_vector_classifier = joblib.load(model_path)
