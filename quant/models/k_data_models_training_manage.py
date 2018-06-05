@@ -18,9 +18,7 @@ import schedule
 import warnings
 from datetime import datetime
 import tushare as ts
-import time
 
-PROJECT_NAME = "quant-collector"
 
 
 def init_db():
@@ -44,25 +42,16 @@ def training():
     k_data_manage.training_k_data()
 
 
-def predict():
-    now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
-    # 如果是假日, 跳过
-    if is_holiday:
-        return
-
-    k_data_manage.predict_k_data()
-
 
 if __name__ == '__main__':
     warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
 
     init_db()
 
-    #training()
+    training()
     #schedule.every().day.at("14:40").do(predict)
-    schedule.every().day.at("17:00").do(training)
+    #schedule.every().day.at("17:00").do(training)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    #while True:
+        #schedule.run_pending()
+        #time.sleep(1)
