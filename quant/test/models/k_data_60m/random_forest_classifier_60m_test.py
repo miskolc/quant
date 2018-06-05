@@ -13,24 +13,25 @@ from quant.models.pca_model import PCAModel
 from quant.test import before_run
 
 
-class Random_Forest_Classifier_test(unittest.TestCase):
+class Random_Forest_Classifier_60m_test(unittest.TestCase):
     def setUp(self):
         before_run()
 
     def test_training(self):
-        code = '600196'
+        code = '600276'
 
         data, features = k_data_60m_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
-        pac = PCAModel('k_data');
+        pac = PCAModel('k_data_60m');
         pac.training_model(code=code, data=data, features=features)
 
         model = RandomForestClassifierModel()
         model.training_model(code, data, features)
 
     def test_predict(self):
+        code="600276"
         df_index = index_k_data_60m_dao.get_rel_price();
-        df, features = k_data_60m_dao.get_k_predict_data_with_features("600196", df_index)
+        df, features = k_data_60m_dao.get_k_predict_data_with_features(code, df_index)
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
         df.to_csv("result.csv")
