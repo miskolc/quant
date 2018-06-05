@@ -8,7 +8,7 @@ from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
-from quant.models.k_data.sequantial_neural import SequantialNeural
+from quant.models.k_data.sequantial_neural_classifier import SequantialNeuralClassifier
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel
@@ -28,7 +28,7 @@ def training_k_data():
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
-            ann = SequantialNeural()
+            ann = SequantialNeuralClassifier()
 
             pca.training_model(code, data, features)
             lr.training_model(code, data, features)
@@ -57,7 +57,7 @@ def predict_k_data():
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
-            ann = SequantialNeural()
+            ann = SequantialNeuralClassifier()
 
             lr_pred = lr.predict(code, data)
             svc_pred = svc.predict(code, data)

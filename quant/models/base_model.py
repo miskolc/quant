@@ -21,7 +21,7 @@ class BaseModel:
 
     # 输出路径类似: /k_data/logistic_regression_classifier/logistic_regression_classifier_60000.pkl
     def get_model_path(self, code, module_name, model_name, suffix='pkl'):
-        dir = os.path.join(os.path.join(default_config.MODELS_OUTPUT_DIR, model_name), module_name)
+        dir = os.path.join(os.path.join(default_config.MODELS_OUTPUT_DIR, module_name), model_name)
         if not os.path.exists(dir):
             os.makedirs(dir)
 

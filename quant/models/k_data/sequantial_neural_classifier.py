@@ -16,7 +16,7 @@ from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
 from quant.models.k_data import MODULE_NAME
 
-class SequantialNeural(BaseModel):
+class SequantialNeuralClassifier(BaseModel):
     module_name = MODULE_NAME
     model_name = 'sequantial_neural'
 
