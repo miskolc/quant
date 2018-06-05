@@ -13,10 +13,11 @@ from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
+from quant.models.k_data import MODULE_NAME
 
 
 class SupportVectorClassifier(BaseModel):
-    module_name = 'k_data'
+    module_name = MODULE_NAME
     model_name = "support_vector_classifier"
 
     @exc_time
@@ -69,7 +70,7 @@ class SupportVectorClassifier(BaseModel):
                                     train_score=grid.best_score_, test_score=test_score)
 
         # 输出模型
-        joblib.dump(support_vector_classifier, self.get_model_path(code,self.module_name,self.model_name))
+        joblib.dump(support_vector_classifier, self.get_model_path(code, self.module_name, self.model_name))
 
     @exc_time
     def predict(self, code, data):

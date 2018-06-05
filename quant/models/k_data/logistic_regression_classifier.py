@@ -15,14 +15,14 @@ from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
-
+from quant.models.k_data import MODULE_NAME
 
 class LogisticRegressionClassifier(BaseModel):
     """
         1. 70% training/grid search 选择超参数
         2. 30% test
     """
-    module_name = 'k_data'
+    module_name = MODULE_NAME
     model_name = 'logistic_regression'
 
 

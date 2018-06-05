@@ -14,10 +14,10 @@ from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
-
+from quant.models.k_data import MODULE_NAME
 
 class RandomForestClassifierModel(BaseModel):
-    module_name = 'k_data'
+    module_name = MODULE_NAME
     model_name = "random_forest_classifier_model"
 
 
