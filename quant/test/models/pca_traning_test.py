@@ -17,6 +17,6 @@ class PcaTrainingTest(unittest.TestCase):
         data, features = k_data_dao.get_k_data_with_features('600196', '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
-        pca_model = PCAModel()
+        pca_model = PCAModel('k_data')
 
         pca_model.training_model(code='600196', data=data, features=features)

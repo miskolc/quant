@@ -17,7 +17,9 @@ from quant.models.pca_model import PCAModel
 
 
 class RandomForestClassifierModel(BaseModel):
+    module_name = 'k_data'
     model_name = "random_forest_classifier_model"
+
 
     @exc_time
     def training_model(self, code, data, features):
@@ -28,7 +30,7 @@ class RandomForestClassifierModel(BaseModel):
         X = preprocessing.scale(X)
 
         # pca缩放
-        pca = PCAModel().load(code)
+        pca = PCAModel(self.module_name).load(code)
         X = pca.transform(X)
 
         X_train, X_test, y_train, y_test = train_test_split(data[features], data['next_direction'], test_size=.3,
@@ -74,11 +76,11 @@ class RandomForestClassifierModel(BaseModel):
                                     , desc="oob_score_:%s" % rf1.oob_score_)
 
         # 输出模型
-        joblib.dump(rf1, self.get_model_path(code, self.model_name))
+        joblib.dump(rf1, self.get_model_path(code, self.module_name,self.model_name))
 
     @exc_time
     def predict(self, code, data):
-        model_path = self.get_model_path(code, self.model_name)
+        model_path = self.get_model_path(code, self.module_name,self.model_name)
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)

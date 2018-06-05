@@ -23,7 +23,7 @@ def training_k_data():
             data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                                  datetime.now().strftime("%Y-%m-%d"))
 
-            pca = PCAModel()
+            pca = PCAModel('k_data')
             lr = LogisticRegressionClassifier()
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()

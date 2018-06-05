@@ -4,8 +4,8 @@ import quant.collector.k_data_60m.k_data_60m_technical_feature_collector as kdtf
 import tushare as ts
 from quant.log.quant_logging import logger
 
-class K_Data_60m_Technical_Collector_Test(unittest.TestCase):
 
+class K_Data_60m_Technical_Collector_Test(unittest.TestCase):
     def setUp(self):
         before_run()
 
@@ -17,4 +17,3 @@ class K_Data_60m_Technical_Collector_Test(unittest.TestCase):
                 kdtfc.collect_single(code, start='2018-05-04', end='2018-06-05')
             except Exception as e:
                 logger.error("collect technical features failed code:%s, exception:%s" % (code, repr(e)))
-

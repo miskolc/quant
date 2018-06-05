@@ -22,7 +22,7 @@ class XGBoost_Classifier_test(unittest.TestCase):
 
         logger.debug("features:%s" % features)
 
-        pac = PCAModel()
+        pac = PCAModel('k_data')
         pac.training_model(code=code, data=data,features=features)
 
         model = XGBoostClassier()

@@ -22,7 +22,7 @@ class Sequantial_Neural_test(unittest.TestCase):
 
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime_utils.get_current_date())
 
-        pac = PCAModel();
+        pac = PCAModel('k_data');
         pac.training_model(code=code, data=data, features=features)
 
         model = SequantialNeural()

@@ -17,6 +17,7 @@ from quant.models.pca_model import PCAModel
 
 
 class SequantialNeural(BaseModel):
+    module_name = 'k_data'
     model_name = 'sequantial_neural'
 
     @exc_time
@@ -28,7 +29,7 @@ class SequantialNeural(BaseModel):
         X = preprocessing.scale(X)
 
         # pca缩放
-        pca = PCAModel().load(code)
+        pca = PCAModel(self.module_name).load(code)
         X = pca.transform(X)
 
         X_train, x_test, y_train, y_test = train_test_split(X, y, test_size=.3)
@@ -66,13 +67,13 @@ class SequantialNeural(BaseModel):
                                     train_score=train_model_score[1], test_score=test_model_score[1]
                                     , desc="full_model_score:%s" % full_model_score[1])
         # 输出模型, 使用h5的格式保存起来
-        sequantial_model.save(self.get_model_path(code, self.model_name, 'h5'))
+        sequantial_model.save(self.get_model_path(code, self.module_name,self.model_name, 'h5'))
 
 
     @exc_time
     def predict(self, code, data):
 
-        model_path = self.get_model_path(code, self.model_name, 'h5')
+        model_path = self.get_model_path(code, self.module_name,self.model_name, 'h5')
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)

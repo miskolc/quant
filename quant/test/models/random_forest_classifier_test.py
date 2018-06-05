@@ -22,7 +22,7 @@ class Random_Forest_Classifier_test(unittest.TestCase):
 
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01', datetime.now().strftime("%Y-%m-%d"))
 
-        pac = PCAModel();
+        pac = PCAModel('k_data');
         pac.training_model(code=code, data=data, features=features)
 
         model = RandomForestClassifierModel()

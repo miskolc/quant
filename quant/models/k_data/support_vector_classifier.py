@@ -16,6 +16,7 @@ from quant.models.pca_model import PCAModel
 
 
 class SupportVectorClassifier(BaseModel):
+    module_name = 'k_data'
     model_name = "support_vector_classifier"
 
     @exc_time
@@ -27,7 +28,7 @@ class SupportVectorClassifier(BaseModel):
         X = preprocessing.scale(X)
 
         # pca缩放
-        pca = PCAModel().load(code)
+        pca = PCAModel(self.module_name).load(code)
         X = pca.transform(X)
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
@@ -68,18 +69,18 @@ class SupportVectorClassifier(BaseModel):
                                     train_score=grid.best_score_, test_score=test_score)
 
         # 输出模型
-        joblib.dump(support_vector_classifier, self.get_model_path(code, self.model_name))
+        joblib.dump(support_vector_classifier, self.get_model_path(code,self.module_name,self.model_name))
 
     @exc_time
     def predict(self, code, data):
-        model_path = self.get_model_path(code, self.model_name)
+        model_path = self.get_model_path(code, self.module_name, self.model_name)
 
         if not os.path.exists(model_path):
             logger.error('model not found, code is %s:' % code)
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel().load(code)
+        pac = PCAModel('k_data').load(code)
         X = pac.transform(X)
 
         support_vector_classifier = joblib.load(model_path)
