@@ -27,7 +27,9 @@ class LassoRegressionModel(BaseModel):
 
         X_train, x_test, y_train, y_test = train_test_split(X, y, test_size=.3, shuffle=False)
 
-        lasson_model = linear_model.LassoCV(n_jobs=-1, random_state=10)
+        lasson_model = linear_model.LassoCV(n_jobs=-1, random_state=10, normalize=True)
+
+        logger.debug(lasson_model)
 
         lasson_model.fit(X_train, y_train)
 
