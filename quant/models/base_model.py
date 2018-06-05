@@ -7,8 +7,9 @@ import os
 
 
 class BaseModel:
+
     @abc.abstractmethod
-    def training_model(self, code, data, features):
+    def training_model(self, code, data, features, *args):
         """training model"""
         return
 
