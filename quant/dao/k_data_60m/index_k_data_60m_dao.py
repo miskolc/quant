@@ -51,6 +51,25 @@ class Index_K_Data_60m_Dao:
     def get_zz500_k_data(self, start, end):
         return self.get_k_data('000905', start, end)
 
+    @exc_time
+    def get_rel_price(self):
+        df_index = ts.get_index()
+        # 上证指数
+        df_sh = df_index[df_index["code"] == '000001']
+        df_sz = df_index[df_index["code"] == '399001']
+        df_hs300 = df_index[df_index["code"] == '000300']
+        df_zz500 = df_index[df_index["code"] == '000905']
+
+        dict = [{
+            'sh_direction': cal_direction(float(df_sh["change"].values[0])),
+            'sz_direction': cal_direction(float(df_sz["change"].values[0])),
+            'hs300_direction': cal_direction(float(df_hs300["change"].values[0])),
+            'zz500_direction': cal_direction(float(df_zz500["change"].values[0]))
+        }]
+
+        df = pd.DataFrame(dict)
+
+        return df
 
 
 index_k_data_60m_dao = Index_K_Data_60m_Dao()

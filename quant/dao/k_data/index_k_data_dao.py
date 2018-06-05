@@ -89,7 +89,7 @@ class Index_K_Data_Dao:
             'sh_direction' : cal_direction(float(df_sh["change"].values[0])),
             'sz_direction' : cal_direction(float(df_sz["change"].values[0])),
             'hs300_direction' : cal_direction(float(df_hs300["change"].values[0])),
-            'zz500_direction' :  cal_direction(float(df_hs300["change"].values[0])),
+            'zz500_direction' :  cal_direction(float(df_zz500["change"].values[0])),
             'hsi_direction' : cal_direction(hsi_price - hsi_pre_close),
             'gspc_direction' : cal_direction(gspc_price - gspc_pre_close),
             'ixic_direction' : cal_direction(ixic_price - ixic_pre_close)
