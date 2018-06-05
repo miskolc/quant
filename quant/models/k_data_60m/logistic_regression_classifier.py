@@ -11,7 +11,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data_60m.k_data_60m_model_log_dao import k_data_60m_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
@@ -70,7 +70,7 @@ class LogisticRegressionClassifier(BaseModel):
         logistic_regression.fit(X, y)
 
         # 记录日志
-        k_data_model_log_dao.insert(code=code, name=self.model_name
+        k_data_60m_model_log_dao.insert(code=code, name=self.model_name
                                     , best_estimator=grid.best_estimator_,
                                     train_score=grid.best_score_, test_score=test_score)
         # 输出模型

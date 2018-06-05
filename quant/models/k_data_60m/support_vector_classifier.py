@@ -1,24 +1,24 @@
-# coding = utf-8
-# ae_h - 2018/6/1
+# ae_h - 2018/5/28
 
 import os
 
-import xgboost as xgb
 from sklearn import preprocessing
+from sklearn import svm
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data_60m.k_data_60m_model_log_dao import k_data_60m_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
-from quant.models.k_data import MODULE_NAME
+from quant.models.k_data_60m import MODULE_NAME
 
-class XGBoostClassier(BaseModel):
+
+class SupportVectorClassifier(BaseModel):
     module_name = MODULE_NAME
-    model_name = "xgb_classifier"
+    model_name = "support_vector_classifier"
 
     @exc_time
     def training_model(self, code, data, features):
@@ -35,35 +35,42 @@ class XGBoostClassier(BaseModel):
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3,
                                                             shuffle=False)
 
-        parameters_grid = [{'learning_rate': [0.05, 0.1, 0.3], 'max_depth': range(2, 8, 2), 'subsample': [0.7, ], 'min_child_weight': range(1, 6, 2)}]
+        tuned_parameters = [
+            {'kernel': ['rbf'], 'gamma': [1e-3, 1e-4], 'C': [1, 10, 100, 1000]}
+        ]
 
-        gs_search = GridSearchCV(estimator=xgb.XGBClassifier(n_estimators=100, random_state=10), param_grid=parameters_grid, n_jobs=-1)
+        # # tsne缩放
+        # X_train = TSNE(n_components=2, learning_rate=100).fit_transform(X_train)
+        # X_test = TSNE(n_components=2, learning_rate=100).fit_transform(X_test)
 
-        gs_result = gs_search.fit(X_train, y_train)
+        # 网格搜寻最优参数
+        grid = GridSearchCV(svm.SVC(), tuned_parameters, cv=None, n_jobs=-1)
+        grid.fit(X_train, y_train)
 
-        logger.debug(gs_search.best_params_)
-        logger.debug("XGBoost Classier's best score: %.4f" % gs_result.best_score_)  # 训练的评分结果
+        logger.debug(grid.best_estimator_)  # 训练的结果
+        logger.debug("Support Vector Classifier's best score: %.4f" % grid.best_score_)  # 训练的评分结果
 
-        xgb_classifier = gs_search.best_estimator_
+        support_vector_classifier = grid.best_estimator_
         # 使用训练数据, 重新训练
-        xgb_classifier.fit(X_train, y_train)
+        support_vector_classifier.fit(X_train, y_train)
 
         # 使用测试数据对模型进评平分
-        y_test_pred = xgb_classifier.predict(X_test)
+        y_test_pred = support_vector_classifier.predict(X_test)
 
         # 在测试集中的评分
         test_score = accuracy_score(y_test, y_test_pred)
         logger.debug('test score: %.4f' % test_score)
 
         # 使用所有数据, 重新训练
-        xgb_classifier.fit(X, y)
+        support_vector_classifier.fit(X, y)
 
         # 记录日志
-        k_data_model_log_dao.insert(code=code, name=self.model_name
-                                    , best_estimator=gs_search.best_estimator_,
-                                    train_score=gs_search.best_score_, test_score=test_score)
+        k_data_60m_model_log_dao.insert(code=code, name=self.model_name
+                                    , best_estimator=grid.best_estimator_,
+                                    train_score=grid.best_score_, test_score=test_score)
+
         # 输出模型
-        joblib.dump(xgb_classifier, self.get_model_path(code, self.module_name, self.model_name))
+        joblib.dump(support_vector_classifier, self.get_model_path(code, self.module_name, self.model_name))
 
     @exc_time
     def predict(self, code, data):
@@ -77,13 +84,8 @@ class XGBoostClassier(BaseModel):
         pac = PCAModel(self.module_name).load(code)
         X = pac.transform(X)
 
-        xgb_classifier = joblib.load(model_path)
+        support_vector_classifier = joblib.load(model_path)
 
-        y_pred = xgb_classifier.predict(X)
+        y_pred = support_vector_classifier.predict(X)
 
         return int(y_pred[0])
-
-
-
-# xgb_search = GridSearchCV(xgb_model, parameters, scoring='roc_auc')
-# xgb_search.fit(X, y)

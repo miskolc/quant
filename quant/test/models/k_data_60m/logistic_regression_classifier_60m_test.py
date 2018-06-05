@@ -10,7 +10,7 @@ from quant.models.pca_model import PCAModel
 from quant.test import before_run
 from quant.models.k_data_60m import MODULE_NAME
 
-class Logistic_Regression_60m_Test(unittest.TestCase):
+class Logistic_Regression_Classifier_60m_Test(unittest.TestCase):
     def setUp(self):
         before_run()
 

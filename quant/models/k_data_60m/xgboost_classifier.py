@@ -10,11 +10,11 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data_60m.k_data_60m_model_log_dao import k_data_60m_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
-from quant.models.k_data import MODULE_NAME
+from quant.models.k_data_60m import MODULE_NAME
 
 class XGBoostClassier(BaseModel):
     module_name = MODULE_NAME
@@ -59,7 +59,7 @@ class XGBoostClassier(BaseModel):
         xgb_classifier.fit(X, y)
 
         # 记录日志
-        k_data_model_log_dao.insert(code=code, name=self.model_name
+        k_data_60m_model_log_dao.insert(code=code, name=self.model_name
                                     , best_estimator=gs_search.best_estimator_,
                                     train_score=gs_search.best_score_, test_score=test_score)
         # 输出模型

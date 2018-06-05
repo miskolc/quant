@@ -10,7 +10,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
 from quant.common_tools.decorators import exc_time
-from quant.dao.k_data.k_data_model_log_dao import k_data_model_log_dao
+from quant.dao.k_data_60m.k_data_60m_model_log_dao import k_data_60m_model_log_dao
 from quant.log.quant_logging import logger
 from quant.models.base_model import BaseModel
 from quant.models.pca_model import PCAModel
@@ -70,7 +70,7 @@ class RandomForestClassifierModel(BaseModel):
                   "oob_score=True, n_jobs=-1, random_state=10)" % (min_samples_leaf, min_samples_split)
 
         # 记录日志
-        k_data_model_log_dao.insert(code=code, name=self.model_name
+        k_data_60m_model_log_dao.insert(code=code, name=self.model_name
                                     , best_estimator=rf1_str,
                                     train_score=gs_result.best_score_, test_score=test_score
                                     , desc="oob_score_:%s" % rf1.oob_score_)
