@@ -22,7 +22,7 @@ class K_Data_60m_Predict_Log_Dao:
                    'sequantial_neural) '
                    'values(:date,:code,:logistic_regression,:random_forest_classifier,:support_vector_classifier,:xgb_classifier,:sequantial_neural)')
 
-        result = dataSource.mysql_quant_conn.execute(sql, date=datetime_utils.get_current_date(),
+        result = dataSource.mysql_quant_conn.execute(sql, date=datetime_utils.get_current_date_hour(),
                                                      code=code,
                                                      logistic_regression=logistic_regression,
                                                      random_forest_classifier=random_forest_classifier,
