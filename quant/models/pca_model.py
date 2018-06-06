@@ -6,6 +6,7 @@ from quant.models.base_model import BaseModel
 from quant.common_tools.decorators import exc_time
 from sklearn import preprocessing
 
+
 class PCAModel(BaseModel):
     model_name = 'pca'
 
@@ -20,8 +21,8 @@ class PCAModel(BaseModel):
         pca = PCA(n_components=None)
         pca.fit(X)
         # 输出模型
-        joblib.dump(pca, self.get_model_path(code, self.module_name,self.model_name))
+        joblib.dump(pca, self.get_model_path(code, self.module_name, self.model_name))
 
-    def load(self, code):
+    def load(self, code: object) -> object:
         pca = joblib.load(self.get_model_path(code, self.module_name, self.model_name))
         return pca
