@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 
-from quant.dao.k_data.k_data_dao import k_data_dao
+from quant.dao.k_data_60m.k_data_60m_dao import k_data_60m_dao
 from quant.models.regression_models.linear_regression_model import LinearRegressionModel
 from quant.log.quant_logging import logger
 from quant.models.pca_model import PCAModel
@@ -15,13 +15,13 @@ class Linear_Regression_Test(unittest.TestCase):
 
     def test_training(self):
         code = '600196'
-        data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
+        data, features = k_data_60m_dao.get_k_data_with_features(code, '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
         pac = PCAModel('k_data')
-        pac.training_model(code=code, data=data,features=features)
+        pac.training_model(code=code, data=data, features=features)
 
         model = LinearRegressionModel()
         model.training_model(code, data, features)
