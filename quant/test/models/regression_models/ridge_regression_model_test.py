@@ -1,9 +1,9 @@
-# ae_h - 2018/6/5
+# ae_h - 2018/6/6
 import unittest
 from datetime import datetime
 
 from quant.dao.k_data_60m.k_data_60m_dao import k_data_60m_dao
-from quant.models.regression_models.linear_regression_model import LinearRegressionModel
+from quant.models.regression_models.ridge_regression_model import RidgeRegressionModel
 from quant.log.quant_logging import logger
 from quant.models.pca_model import PCAModel
 from quant.test import before_run
@@ -23,5 +23,5 @@ class Linear_Regression_Test(unittest.TestCase):
         pac = PCAModel('k_data')
         pac.training_model(code=code, data=data, features=features)
 
-        model = LinearRegressionModel()
+        model = RidgeRegressionModel()
         model.training_model(code, data, features)
