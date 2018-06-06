@@ -21,7 +21,7 @@ from quant.common_tools import datetime_utils
 def collect_single_index_from_ts(code, table_name='index_k_data_60m', conn=None):
     try:
         data = ts.bar(conn=conn, code=code, freq='60min', asset="INDEX",
-                      start_date='2016-01-01', retry_count=10)
+                      start_date='2015-01-01', retry_count=10)
 
         data.rename(columns={'vol': 'volume'}, inplace=True)
         data = data.drop(columns=['amount'])

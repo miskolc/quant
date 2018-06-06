@@ -65,7 +65,7 @@ class K_Data_60m_Dao:
         features = list(df_feature.columns.values)
 
         df = pd.merge(df, df_feature, on=['date', 'code'])
-
+        df = df.dropna()
         features = adjust_features(features, self.get_addition_features())
 
         return df, features

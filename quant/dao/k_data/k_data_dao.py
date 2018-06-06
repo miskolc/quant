@@ -72,6 +72,8 @@ class K_Data_Dao:
 
         df = pd.merge(df, df_feature, on=['date', 'code'])
 
+        df = df.dropna()
+
         features = adjust_features(features, self.get_addition_features())
 
         return df, features

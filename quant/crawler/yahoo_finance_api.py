@@ -9,6 +9,7 @@ from quant.common_tools.decorators import exc_time
 from quant.log.quant_logging import logger
 from lxml import etree
 
+
 class YahooFinanceApi:
     def get_page_data(self, symbol):
         url = "https://finance.yahoo.com/quote/%s/?p=%s" % (symbol, symbol)
@@ -60,6 +61,7 @@ class YahooFinanceApi:
             df = df.dropna()
             return df
         except Exception as e:
+            logger.error(repr(e))
             raise e
 
     @exc_time
@@ -77,4 +79,3 @@ class YahooFinanceApi:
 
 yahoo_finance_api = YahooFinanceApi()
 
-yahoo_finance_api.get_real_price('^HSI')
