@@ -20,6 +20,7 @@ class Logistic_Regression_Test(unittest.TestCase):
         data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
                                                              datetime.now().strftime("%Y-%m-%d"))
 
+        data.to_csv("result.csv")
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
         pac = PCAModel('k_data');

@@ -21,8 +21,8 @@ def cal_mavol20(data):
     mavol20 = pd.Series.rolling(data['volume'], 20).sum() / 20
     return mavol20
 
-'''
-def cal_turnover(vol, share_outstanding):
-    turn_over = vol['volume'] / (share_outstanding['share_oustanding'] / 100)
+
+def cal_turnover(data):
+    turn_over = data['volume'] / 100 / data['share_oustanding']
     return turn_over
-'''
+

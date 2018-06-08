@@ -14,7 +14,10 @@ import time
 def collect_all():
     df_stock = stock_industry_dao.get_list()
     for index, row in df_stock.iterrows():
-        data = sina_finance_api.get_stock_structure_by_code(row["code"])
-        time.sleep(1)
-        if data is not None:
-            data.to_sql('stock_structure', dataSource.mysql_quant_engine, if_exists='append', index=False)
+        try:
+            data = sina_finance_api.get_stock_structure_by_code(row["code"])
+            time.sleep(1)
+            if data is not None:
+                data.to_sql('stock_structure', dataSource.mysql_quant_engine, if_exists='append', index=False)
+        except Exception:
+            pass

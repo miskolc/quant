@@ -9,14 +9,14 @@ from quant.crawler.yahoo_finance_api import yahoo_finance_api
 import tushare as ts
 
 
-class StockIndustryDao:
+class StockStructureDao:
     @exc_time
     def get_list(self):
-        sql = ("select `bk_code`, bk_name, code name from stock_industry ")
+        sql = ("select `code`, name, share_oustanding from stock_structure ")
 
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)
 
         return df
 
-stock_industry_dao = StockIndustryDao()
+stock_structure_dao = StockStructureDao()

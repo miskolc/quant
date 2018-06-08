@@ -4,12 +4,12 @@ from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
 from quant.feature_utils.feature_collector import collect_features
-
+from quant.dao.k_data.k_data_dao import k_data_dao
 
 @exc_time
 def collect_single(code, start, end, table_name='k_data_tech_feature'):
-    data = ts.get_k_data(code, start=start, end=end)
-    data['code'] = code
+    data = k_data_dao.get_k_data(code, start=start, end=end, cal_next_direction=False)
+
     data, features = collect_features(data)
 
     features.append('code')
@@ -36,8 +36,10 @@ def collect_hs300_full():
     df = ts.get_hs300s()
     now = datetime.now().strftime('%Y-%m-%d')
     for code in df['code'].values:
-        collect_single(code=code, start='2015-01-01', end=now)
-
+        try:
+            collect_single(code=code, start='2015-01-01', end=now)
+        except Exception as e:
+            logger.error("collect technical features failed code:%s, exception:%s" % (code, repr(e)))
 
 # 计算每天沪深300每天技术特征数据
 @exc_time
