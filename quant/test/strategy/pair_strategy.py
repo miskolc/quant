@@ -3,7 +3,8 @@
 import unittest
 
 from quant.test import before_run
-from quant.strategy import pair_selection
+from quant.strategy.pair_selection import code_muning, cal_pair_stocks
+import tushare as ts
 
 
 class PairStrategyTest(unittest.TestCase):
@@ -12,5 +13,6 @@ class PairStrategyTest(unittest.TestCase):
         before_run()
 
     def test_strategy(self):
-
-        pai
+        data = ts.get_hs300s()
+        code_set = code_muning(data)
+        cal_pair_stocks(code_set)
