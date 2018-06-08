@@ -26,3 +26,4 @@ def init_db():
 def before_run():
 
     init_db()
+
