@@ -18,7 +18,7 @@ def plot_res_series(df, ts1):
 
     plt.xlabel('差值')
     plt.ylabel('Price ($)')
-    plt.title('600009 / 600004')
+    plt.title('603993 / 002460')
     plt.legend()
     plt.show()
 
@@ -40,8 +40,8 @@ def plot_price_series(df, ts1, ts2):
     plt.show()
 
 
-df_g = ts.get_k_data("600004", start="2018-01-01", end="2018-05-11")
-df_m = ts.get_k_data("600009", start="2018-01-01", end="2018-05-11")
+df_g = ts.get_k_data("603993")
+df_m = ts.get_k_data("002460")
 
 #df_g["date"] = pd.to_datetime(df_g["date"])
 df_g = df_g.set_index('date')
@@ -60,11 +60,11 @@ df_m = df_m.set_index('date')
 #print(window)
 
 
-df = pd.DataFrame( index=df_m.index,columns=['600009', '600004', 'date'])
+df = pd.DataFrame( index=df_m.index,columns=['603993', '002460', 'date'])
 
 
-df["600004"] = df_g["close"]
-df["600009"] = df_m["close"]
+df["603993"] = df_g["close"]
+df["002460"] = df_m["close"]
 
 df["date"] = pd.to_datetime(df.index)
 df = df.dropna()
@@ -76,7 +76,7 @@ df = df.dropna()
 #x = reg.coef_[0][0]
 
 
-df["res"] = df["600009"] /df["600004"]
+df["res"] = df["603993"] /df["002460"]
 df.to_csv('result.csv')
 print("平均值",df["res"].mean())
 print("方差",df["res"].std())
@@ -86,5 +86,5 @@ hres = hurst(df["res"])
 print(hres)
 print(df.tail(30))
 
-plot_price_series(df, "600004", "600009")
+plot_price_series(df, "603993", "002460")
 plot_res_series(df, "res")
