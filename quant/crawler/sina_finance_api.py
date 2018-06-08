@@ -17,19 +17,19 @@ class SinaFinanceApi:
         except Exception:
             return None
 
-        df = pd.DataFrame(columns=['code', 'name', 'date', 'stock'])
+        df = pd.DataFrame(columns=['code', 'name', 'date', 'share_oustanding'])
 
         for i in range(2, 7):
             try:
                 name = selector.xpath('//*[@id="toolbar"]/div[1]/h1/a/text()')[0]
                 date = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[1]/td[%s]/text()' % i)[0]
-                stock = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[7]/td[%s]/text()' % i)[0]
-                stock = stock.split(' ')[0]
+                share_oustanding = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[7]/td[%s]/text()' % i)[0]
+                share_oustanding = share_oustanding.split(' ')[0]
 
-                if stock == '--':
+                if share_oustanding == '--':
                     continue
 
-                df = df.append({'code': code, 'name': name, 'date': date, 'stock': stock}, ignore_index=True)
+                df = df.append({'code': code, 'name': name, 'date': date, 'share_oustanding': share_oustanding}, ignore_index=True)
             except Exception:
                 pass
 

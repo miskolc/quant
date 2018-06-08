@@ -2,8 +2,55 @@
 <html lang="en">
 <head>
     <title>{{ name }}</title>
+    <style type="text/css">
+         table {
+             font-family: verdana,arial,sans-serif;
+             font-size:11px;
+             color:#333333;
+             border-width: 1px;
+             border-color: #666666;
+             border-collapse: collapse;
+        }
+        table th {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+        table td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <table>
+        <tbody>
+            <tr>
+                <th>时间</th>
+                <th>板块</th>
+                <th>股票名称</th>
+                <th>股票代码</th>
+                <th>Vote Score</th>
+                <th>Max Test Score</th>
+            </tr>
+            {% for key,value in df_predict.iterrows() %}
+            <tr>
+                <td>{{ value['date'] }}</td>
+                <td>{{ value['bk_name'] }}</td>
+                <td>{{ value['name'] }}</td>
+                <td>{{ value['code'] }}</td>
+                <td>{{ value['vote_score'] }}</td>
+                <td>{{ value['max_test_score'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 </body>
 </html>

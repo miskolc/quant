@@ -30,16 +30,21 @@ class K_Data_Dao:
         return features
 
     @exc_time
-    def get_k_data(self, code, start, end):
-        sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data "
-               "where code=%(code)s and date BETWEEN %(start)s and %(end)s order by date asc")
+    def get_k_data(self, code, start, end, cal_next_direction=True):
+        sql = ("select  k.`date`,  k.code,  k.open,  k.close,  k.high,  k.low,  k.volume,  k.pre_close, ss.share_oustanding "
+               "from k_data k "
+               "LEFT JOIN stock_structure ss on k.code = ss.code and k.date = ss.date "
+               "where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc")
 
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
-        df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
-        df = df.dropna()
+        df["share_oustanding"] = df["share_oustanding"].fillna(method="ffill")
+
+        if cal_next_direction:
+            df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
+            df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
+            df = df.dropna()
         return df
 
     @exc_time
@@ -99,8 +104,8 @@ class K_Data_Dao:
 
         last_60 = (datetime.now() - timedelta(days=120)).strftime('%Y-%m-%d')
 
-        df = self.get_k_data(code, start=last_60, end=now)
-        df = df[['open', 'close', 'low', 'high', 'volume']]
+        df = self.get_k_data(code, start=last_60, end=now, cal_next_direction=False)
+        df = df[['open', 'close', 'low', 'high', 'volume', 'share_oustanding']]
 
         df_real = ts.get_realtime_quotes(code)
 
