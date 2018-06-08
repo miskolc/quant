@@ -1,0 +1,39 @@
+import requests
+from lxml import etree
+import pandas as pd
+
+from quant.common_tools.decorators import exc_time
+
+
+class SinaFinanceApi:
+    @exc_time
+    def get_stock_structure_by_code(self, code):
+        headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'}
+        url = "http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_StockStructure/stockid/%s.phtml" % (code)
+        r = requests.get(url, headers=headers)
+
+        try:
+            selector = etree.HTML(r.content.decode('gb2312'))
+        except Exception:
+            return None
+
+        df = pd.DataFrame(columns=['code', 'name', 'date', 'stock'])
+
+        for i in range(2, 7):
+            try:
+                name = selector.xpath('//*[@id="toolbar"]/div[1]/h1/a/text()')[0]
+                date = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[1]/td[%s]/text()' % i)[0]
+                stock = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[7]/td[%s]/text()' % i)[0]
+                stock = stock.split(' ')[0]
+
+                if stock == '--':
+                    continue
+
+                df = df.append({'code': code, 'name': name, 'date': date, 'stock': stock}, ignore_index=True)
+            except Exception:
+                pass
+
+        return df
+
+sina_finance_api = SinaFinanceApi()
+

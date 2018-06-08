@@ -1,6 +1,6 @@
 import unittest
 from quant.test import before_run
-from quant.collector.basic import stock_industry_collector
+from quant.collector.basic import stock_structure_collector
 
 
 class Stock_Industry_Classified_Test(unittest.TestCase):
@@ -8,4 +8,4 @@ class Stock_Industry_Classified_Test(unittest.TestCase):
         before_run()
 
     def test_collect_industry(self):
-        stock_industry_collector.collect_all();
+        stock_structure_collector.collect_all();
