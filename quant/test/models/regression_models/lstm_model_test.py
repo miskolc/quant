@@ -3,13 +3,13 @@ import unittest
 from datetime import datetime
 
 from quant.dao.k_data_60m.k_data_60m_dao import k_data_60m_dao
-from quant.models.regression_models.lasso_regression_model import LassoRegressionModel
+from quant.models.regression_models.lstm_model import LSTMModel
 from quant.log.quant_logging import logger
 from quant.models.pca_model import PCAModel
 from quant.test import before_run
 
 
-class Lasso_Regression_Test(unittest.TestCase):
+class LSTM_Regression_Test(unittest.TestCase):
     def setUp(self):
         before_run()
 
@@ -23,5 +23,5 @@ class Lasso_Regression_Test(unittest.TestCase):
         pac = PCAModel('k_data')
         pac.training_model(code=code, data=data, features=features)
 
-        model = LassoRegressionModel()
+        model = LSTMModel()
         model.training_model(code, data, features)

@@ -9,7 +9,7 @@ from quant.models.pca_model import PCAModel
 from quant.test import before_run
 
 
-class Linear_Regression_Test(unittest.TestCase):
+class Support_Vector_Regression_Test(unittest.TestCase):
     def setUp(self):
         before_run()
 
