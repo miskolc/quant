@@ -24,9 +24,9 @@ cycle_list = [c for c in getmembers(cycle_indicators) if isfunction(c[1])]
 price_list = [p for p in getmembers(price_transform) if isfunction(p[1])]
 volatility_list = [l for l in getmembers(volatility_indicators) if isfunction(l[1])]
 custome_list = [u for u in getmembers(custome_features) if isfunction(u[1])]
-pattern_list = [r for r in getmembers(pattern_recognition) if isfunction(r[1])]
+#pattern_list = [r for r in getmembers(pattern_recognition) if isfunction(r[1])]
 
-func_list = momentum_list + overlaps_list + volume_list + volume_list + cycle_list + price_list + volatility_list + custome_list + pattern_list
+func_list = momentum_list + overlaps_list + volume_list + volume_list + cycle_list + price_list + volatility_list + custome_list
 
 
 def get_col_name_list(func_list):
@@ -45,7 +45,7 @@ def collect_features(df):
                                                                                                   func[0]) or hasattr(
                 cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators,
                                                                                            func[0]) or hasattr(
-                custome_features, func[0]) or hasattr(pattern_recognition, func[0]):
+                custome_features, func[0]):
             col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
             func_feature = func[1](df)
 

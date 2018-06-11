@@ -59,11 +59,11 @@ def predict_k_data():
             xgb = XGBoostClassier()
             ann = SequantialNeuralClassifier()
 
-            lr_pred = lr.predict(code, data)
-            svc_pred = svc.predict(code, data)
-            rf_pred = rf.predict(code, data)
-            xgb_pred = xgb.predict(code, data)
-            ann_pred = ann.predict(code, data)
+            lr_pred = lr.predict(code, data[features])
+            svc_pred = svc.predict(code, data[features])
+            rf_pred = rf.predict(code, data[features])
+            xgb_pred = xgb.predict(code, data[features])
+            ann_pred = ann.predict(code, data[features])
 
             k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
                                           support_vector_classifier=svc_pred,
