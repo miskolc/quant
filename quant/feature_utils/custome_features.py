@@ -26,3 +26,24 @@ def cal_turnover(data):
     turn_over = data['volume'] / 100 / data['share_oustanding']
     return turn_over
 
+
+def cal_PHLambdaT(data):
+    t_price_open = data['open']
+    t_minue_one_open = data['open'].shift(1)
+    max_21_price_high = pd.Series.rolling(data['high'], 21).max()
+    max_21_price_low = pd.Series.rolling(data['low'], 21).min()
+
+    PHLambdaT = (t_price_open - t_minue_one_open) / (max_21_price_high - max_21_price_low)
+
+    return PHLambdaT
+
+
+def cal_VHLambdaT(data):
+    t_vol = data['volume']
+    t_minus_one = data['volume'].shift(1)
+    max_21_vol_high = pd.Series.rolling(data['volume'], 21).max()
+    max_21_vol_low = pd.Series.rolling(data['volume'], 21).min()
+
+    VHLambdaT = (t_vol - t_minus_one) / (max_21_vol_high - max_21_vol_low)
+
+    return VHLambdaT
