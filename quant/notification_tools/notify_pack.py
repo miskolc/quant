@@ -17,13 +17,13 @@ def _format_addr(args):
 def mail_notify_sender(mail_to, mail_subject, mail_body):
     msg = MIMEText(mail_body, 'html', 'utf-8')
     msg['From'] = _format_addr(u'Q_catcher<%s>' % default_config.MAIL_FROM_ADDR)
-    msg['To'] = _format_addr(u'Trader <%s>' % mail_to)
+    msg['To'] = ", ".join(mail_to)
     msg['Subject'] = Header(mail_subject, 'utf-8').encode()
 
     server = smtplib.SMTP(default_config.MAIL_SMTP, 25)
     server.set_debuglevel(1)
     server.login(default_config.MAIL_FROM_ADDR, default_config.MAIL_FROM_PWD)
-    server.sendmail(default_config.MAIL_FROM_ADDR, [mail_to], msg.as_string())
+    server.sendmail(default_config.MAIL_FROM_ADDR, mail_to, msg.as_string())
     server.quit()
 
 

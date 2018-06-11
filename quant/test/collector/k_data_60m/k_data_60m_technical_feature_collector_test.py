@@ -21,3 +21,6 @@ class K_Data_60m_Technical_Collector_Test(unittest.TestCase):
 
     def test_collect_hs300_daily(self):
         kdtfc.collect_hs300_daily()
+
+    def test_collect_hs300_full(self):
+        kdtfc.collect_hs300_full()

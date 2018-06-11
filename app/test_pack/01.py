@@ -116,7 +116,7 @@ print(df_sh.columns.values)
 print(df_sh[["vol",'open','close']])
 '''
 
-df_sh = ts.bar(conn=ts.get_apis(), code='000001',freq='60min', asset='INDEX', start_date='2018-06-01')
+df_sh = ts.bar(conn=ts.get_apis(), code='000001',freq='D', start_date='2018-06-08', factors=[ 'tor'])
 print(df_sh)
 
 

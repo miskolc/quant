@@ -17,7 +17,9 @@ from quant.models.k_data import k_data_manage
 import warnings
 from datetime import datetime
 import tushare as ts
-
+from quant.notification_tools.notify_pack import mail_content_render, mail_notify_sender
+from quant.dao.k_data.k_data_predict_log_dao import k_data_predict_log_dao
+from quant.common_tools.datetime_utils import get_current_date
 
 def init_db():
     # 如果配置DATABASE_QUANT_URI属性, 实例化mysql_quant_engine
@@ -45,3 +47,7 @@ if __name__ == '__main__':
 
     init_db()
     predict()
+
+    df_predict = k_data_predict_log_dao.get_predict_log_list(get_current_date())
+    html = mail_content_render('mail_predict_daily_report_template.html', {'df_predict': df_predict})
+    mail_notify_sender(default_config.MAIL_TO, 'Predict Daily Report', html)

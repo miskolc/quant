@@ -48,6 +48,10 @@ def collect_features(df):
                 custome_features, func[0]) or hasattr(pattern_recognition, func[0]):
             col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
             func_feature = func[1](df)
+
+            if func_feature is None:
+                continue
+
             if isinstance(func_feature, pd.core.series.Series):
                 df[col_name] = func_feature
                 col_list.append(col_name)

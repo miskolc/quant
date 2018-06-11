@@ -15,14 +15,13 @@ class Notify_Pack_Test(unittest.TestCase):
     def test_mail_content_render(self):
         df_predict = k_data_predict_log_dao.get_predict_log_list(get_current_date())
 
-        html = mail_content_render('mail_template.html', {'name': 'Greg', 'df_predict': df_predict})
+        html = mail_content_render('mail_predict_daily_report_template.html', { 'df_predict': df_predict})
 
         print(html)
 
     def test_mail_notify_sender(self):
         df_predict = k_data_predict_log_dao.get_predict_log_list(get_current_date())
-
-        html = mail_content_render('mail_template.html', {'name': 'Greg', 'df_predict': df_predict})
-        mail_notify_sender('aemaeth@foxmail.com', 'Daily Predict Report', html)
+        html = mail_content_render('mail_predict_daily_report_template.html', {'df_predict': df_predict})
+        mail_notify_sender(default_config.MAIL_TO, 'Predict Daily Report', html)
         #greg.ch@fowtech.com
 
