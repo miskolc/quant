@@ -4,6 +4,8 @@
 import nltk
 import tushare as ts
 import jieba.posseg as pseg
+import jieba
+import re
 import pandas as pd
 from nltk.corpus import stopwords
 
@@ -50,6 +52,7 @@ def word_analysis(args):
     # stops_words = set(stopwords.words("english"))
 
     stops_words = []
+    jieba.load_userdict('/Users/yw.h/quant-awesome/quant/collector/news_nlp/custome_word.txt')
 
     with open('/Users/yw.h/quant-awesome/quant/collector/news_nlp/stop_word.txt', 'rb') as f:
         for line in f:
