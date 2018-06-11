@@ -47,6 +47,14 @@ class K_Data_Dao:
         return df
 
     @exc_time
+    def get_k_data_all(self):
+        sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data ")
+
+        df = pd.read_sql(sql=sql, con=dataSource.mysql_quant_conn)
+        df = df.dropna()
+        return df
+
+    @exc_time
     def get_k_data_with_features(self, code, start, end):
         df = self.get_k_data(code, start, end)
 
