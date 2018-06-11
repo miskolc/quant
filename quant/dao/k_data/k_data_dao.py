@@ -13,7 +13,7 @@ from quant.dao.data_source import dataSource
 from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.feature_utils import adjust_features
 from quant.feature_utils.feature_collector import collect_features
-
+from quant.dao.basic.stock_structure_dao import stock_structure_dao
 
 class K_Data_Dao:
     @staticmethod
@@ -31,15 +31,14 @@ class K_Data_Dao:
 
     @exc_time
     def get_k_data(self, code, start, end, cal_next_direction=True):
-        sql = ("select  k.`date`,  k.code,  k.open,  k.close,  k.high,  k.low,  k.volume,  k.pre_close, ss.share_oustanding "
-               "from k_data k "
-               "LEFT JOIN stock_structure ss on k.code = ss.code and k.date = ss.date "
-               "where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc")
+        sql = ('''select  k.`date`,  k.code,  k.open,  k.close,  k.high,  k.low,  k.volume,  k.pre_close
+               from k_data k 
+               where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc ''')
 
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df["share_oustanding"] = df["share_oustanding"].fillna(method="ffill")
+        df = stock_structure_dao.fill_stock_structure(code, df)
 
         if cal_next_direction:
             df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])

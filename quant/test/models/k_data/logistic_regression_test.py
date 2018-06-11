@@ -33,7 +33,7 @@ class Logistic_Regression_Test(unittest.TestCase):
         code = '600276'
         df_index = index_k_data_dao.get_rel_price();
 
-        df, features = k_data_dao.get_k_predict_data_with_features("600196", df_index)
+        df, features = k_data_dao.get_k_predict_data_with_features(code, df_index)
         logger.debug("features:%s, length:%s" % (features, len(features)))
 
         df.to_csv("result.csv")

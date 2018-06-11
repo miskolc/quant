@@ -10,6 +10,7 @@ class Config(object):
     TEMPLATE_DIR = os.path.join(ROOT_DIR, 'notification_tools/templates/')
     MAIL_FROM_ADDR = 'Q_catcher@sohu.com'
     MAIL_FROM_PWD = 'aedotpy000'
+    MAIL_TO = ['aemaeth@foxmail.com', 'greg.ch@fowtech.com']
     MAIL_SMTP = 'smtp.sohu.com'
     pass
 
@@ -43,7 +44,7 @@ if env is not None and env in config.keys():
     config["default"] = config[env]
     pass
 else:
-    config["default"] = RemoteDevelopmentConfig
+    config["default"] = DevelopmentConfig
 
 default_config = config['default']
 

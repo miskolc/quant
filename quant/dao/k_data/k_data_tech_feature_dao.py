@@ -4,11 +4,10 @@
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
 import pandas as pd
-
+from sqlalchemy.sql import text
 
 
 class K_Data_Tech_Feature_Dao:
-
     @exc_time
     def get_k_data(self, code, start, end):
         sql = ("select * from k_data_tech_feature "
@@ -21,7 +20,10 @@ class K_Data_Tech_Feature_Dao:
 
         return df
 
+    def update_single_column(self, code, column, value):
+        sql = text('update k_data_tech_feature set :column=:value where code=:code')
 
+        dataSource.mysql_quant_conn.execute(sql, code=code, column=column, value=value)
 
 
 k_data_tech_feature_dao = K_Data_Tech_Feature_Dao()

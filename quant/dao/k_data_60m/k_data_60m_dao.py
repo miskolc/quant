@@ -11,6 +11,7 @@ from quant.feature_utils import adjust_features
 from quant.common_tools.datetime_utils import get_next_date,get_current_date
 import tushare as ts
 from quant.feature_utils.feature_collector import collect_features
+from quant.dao.basic.stock_structure_dao import stock_structure_dao
 
 class K_Data_60m_Dao:
     @exc_time
@@ -21,9 +22,10 @@ class K_Data_60m_Dao:
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
+        df = stock_structure_dao.fill_stock_structure(code, df)
 
         if cal_next_direction:
+            df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
             df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
             df = df.dropna()
         return df

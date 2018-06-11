@@ -19,5 +19,5 @@ def collect_all():
             time.sleep(1)
             if data is not None:
                 data.to_sql('stock_structure', dataSource.mysql_quant_engine, if_exists='append', index=False)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(repr(e))

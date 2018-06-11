@@ -12,7 +12,7 @@ import tushare as ts
 class StockIndustryDao:
     @exc_time
     def get_list(self):
-        sql = ("select `bk_code`, bk_name, code name from stock_industry ")
+        sql = ("select `bk_code`, bk_name, code, name from stock_industry ")
 
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)

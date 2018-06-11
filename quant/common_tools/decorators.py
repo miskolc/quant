@@ -11,7 +11,7 @@ def exc_time(func):
         start_time = time.time()
         tmp = func(*args, **kv)
         end_time = time.time()
-        logger.debug("%s executed, args: %s, kv: %s, elapsed time: %.2f ms" % (func.__name__, args, kv, (end_time - start_time) * 1000))
+        logger.debug("%s executed,  elapsed time: %.2f ms" % (func.__name__, (end_time - start_time) * 1000))
         return tmp
 
     return fn

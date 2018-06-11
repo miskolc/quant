@@ -1,5 +1,7 @@
 from datetime import datetime
 import tushare as ts
+
+from quant.common_tools.datetime_utils import get_next_date
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
@@ -19,9 +21,10 @@ def collect_single(code, start, end, table_name='k_data_tech_feature'):
 
 @exc_time
 def collect_single_daily(code, table_name='k_data_tech_feature'):
-    data = ts.get_k_data(code)
-    data['code'] = code
-    data = data.tail(100)
+    start = get_next_date(-100)
+    end = get_next_date(1)
+
+    data = k_data_dao.get_k_data(code, start=start, end=end, cal_next_direction=False)
     data, features = collect_features(data)
 
     features.append('code')

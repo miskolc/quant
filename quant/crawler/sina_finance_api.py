@@ -18,20 +18,27 @@ class SinaFinanceApi:
             return None
 
         df = pd.DataFrame(columns=['code', 'name', 'date', 'share_oustanding'])
+        #// *[ @ id = "StockStructureNewTable1"] / tbody / tr[1] / td[2]
 
-        for i in range(2, 7):
-            try:
-                name = selector.xpath('//*[@id="toolbar"]/div[1]/h1/a/text()')[0]
-                date = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[1]/td[%s]/text()' % i)[0]
-                share_oustanding = selector.xpath('//*[@id="StockStructureNewTable0"]/tbody/tr[7]/td[%s]/text()' % i)[0]
-                share_oustanding = share_oustanding.split(' ')[0]
+        for j in range(0, 4):
 
-                if share_oustanding == '--':
-                    continue
+            for i in range(2, 7):
+                try:
+                    name = selector.xpath('//*[@id="toolbar"]/div[1]/h1/a/text()')[0]
+                    date = selector.xpath('//*[@id="StockStructureNewTable%s"]/tbody/tr[1]/td[%s]/text()' % (j,i))[0]
 
-                df = df.append({'code': code, 'name': name, 'date': date, 'share_oustanding': share_oustanding}, ignore_index=True)
-            except Exception:
-                pass
+                    if date is None:
+                        continue
+
+                    share_oustanding = selector.xpath('//*[@id="StockStructureNewTable%s"]/tbody/tr[7]/td[%s]/text()' % (j,i))[0]
+                    share_oustanding = share_oustanding.split(' ')[0]
+
+                    if share_oustanding == '--':
+                        continue
+
+                    df = df.append({'code': code, 'name': name, 'date': date, 'share_oustanding': share_oustanding}, ignore_index=True)
+                except Exception:
+                    pass
 
         return df
 

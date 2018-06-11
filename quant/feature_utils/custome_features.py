@@ -21,8 +21,13 @@ def cal_mavol20(data):
     mavol20 = pd.Series.rolling(data['volume'], 20).sum() / 20
     return mavol20
 
+def cal_mavol30(data):
+    mavol30 = pd.Series.rolling(data['volume'], 30).sum() / 30
+    return mavol30
 
 def cal_turnover(data):
-    turn_over = data['volume'] / 100 / data['share_oustanding']
-    return turn_over
-
+    try:
+        turn_over = data['volume'] / 100 / data['share_oustanding']
+        return turn_over
+    except Exception:
+        pass

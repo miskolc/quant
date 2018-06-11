@@ -13,7 +13,7 @@ class K_Data_Dao_Test(unittest.TestCase):
 
     def test_get_k_data(self):
 
-        df = k_data_dao.get_k_data("600000", start="2015-01-01", end="2018-05-27")
+        df = k_data_dao.get_k_data("600196", start="2015-01-01", end="2018-05-27")
         self.assertIsNotNone(df)
         df.to_csv("result.csv")
         i = 1
