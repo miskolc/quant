@@ -22,7 +22,7 @@ class K_Data_60m_Dao:
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df = stock_structure_dao.fill_stock_structure(code, df)
+        #df = stock_structure_dao.fill_stock_structure(code, df)
 
         if cal_next_direction:
             df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
