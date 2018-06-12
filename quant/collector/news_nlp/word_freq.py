@@ -8,6 +8,7 @@ import jieba
 import re
 import pandas as pd
 from nltk.corpus import stopwords
+from collections import OrderedDict
 
 
 def muning_tushare_new():
@@ -56,20 +57,27 @@ def word_analysis(args):
 
     with open('/Users/yw.h/quant-awesome/quant/collector/news_nlp/stop_word.txt', 'rb') as f:
         for line in f:
-
             line = line.decode('utf-8').strip('\n')
             stops_words.append(line)
 
-    w_list = []
+    w_list = jieba.cut(args)
 
-    words = pseg.cut(args)
+    # w_list = []
 
-    for keys in words:
-        w_list.append(keys.word)
+    # words = pseg.cut(args)
 
-    print(stops_words)
+    # print(words)
+    #
+    # print(type(words))
+    #
+    # for keys in words:
+    #     w_list.append(keys.word)
+    #
+    # print(w_list)
 
-    print(w_list)
+    # print(stops_words)
+    #
+    # print(w_list)
     filtered_words = []
 
     for word in w_list:
@@ -77,17 +85,19 @@ def word_analysis(args):
             filtered_words.append(word)
         else:
             pass
-    print(filtered_words)
 
-    # freq_result = nltk.FreqDist(filtered_words)
-    #
-    # freq_dict = {}
-    # for i in freq_result:
-    #     freq_dict[i] = freq_result[i]
-    #
-    # sorted_list = sorted(freq_dict.items(), key=lambda item: item[1], reverse=True)
-    #
-    # print(sorted_list)
+    freq_result = nltk.FreqDist(filtered_words)
+
+    freq_dict = {}
+
+    for i in freq_result:
+        if i in [' ', '\n', 'c', '\t', 'px', '%', '{', '}', '\xa0', '_'] or re.match(r'^\d{n}$', i) or re.match(r'^(-?\d+)(\.\d+)?$', i) or re.match(r'[\d.]+%', i):
+            pass
+        else:
+            freq_dict[i] = freq_result[i]
+
+    freq_dict = sorted(freq_dict.items(), key=lambda t: t[1], reverse=True)
+    print(freq_dict)
 
 
 if __name__ == '__main__':
