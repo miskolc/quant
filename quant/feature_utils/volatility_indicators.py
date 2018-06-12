@@ -2,8 +2,7 @@
 # ae.h - 2018/5/28
 
 from talib import abstract
-import pandas as pd
-import numpy as np
+
 
 def cal_atr(data):
     atr_func = abstract.Function('atr')
