@@ -34,9 +34,13 @@ class StockStructureDao:
 
         for index, row in data.iterrows():
             df_sso = df_ss[df_ss['date'] < row['date']].tail(1)
-            so_arr.append(df_sso['share_oustanding'].values[0])
+            if len(df_sso['share_oustanding'].values) > 0:
+                so_arr.append(df_sso['share_oustanding'].values[0])
+            else:
+                so_arr.append(None)
 
         data["share_oustanding"] = so_arr
+        data = data.fillna(method='bfill')
 
         return data
 
