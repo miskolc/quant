@@ -24,10 +24,10 @@ cycle_list = [c for c in getmembers(cycle_indicators) if isfunction(c[1])]
 price_list = [p for p in getmembers(price_transform) if isfunction(p[1])]
 volatility_list = [l for l in getmembers(volatility_indicators) if isfunction(l[1])]
 custome_list = [u for u in getmembers(custome_features) if isfunction(u[1])]
-stistic_list = [s for s in getmembers(statistic_functions) if isfunction(s[1])]
+stastic_list = [s for s in getmembers(statistic_functions) if isfunction(s[1])]
 # pattern_list = [r for r in getmembers(pattern_recognition) if isfunction(r[1])]
 
-func_list = momentum_list + overlaps_list + volume_list + volume_list + cycle_list + price_list + volatility_list + custome_list + stistic_list
+func_list = momentum_list + overlaps_list + volume_list + volume_list + cycle_list + price_list + volatility_list + custome_list + stastic_list
 
 
 def get_col_name_list(func_list):
