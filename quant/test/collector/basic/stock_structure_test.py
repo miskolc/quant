@@ -16,3 +16,6 @@ class Stock_Structure_Test(unittest.TestCase):
         data = k_data_dao.get_k_data(code, start='2015-01-01', end='2018-06-01')
         data = stock_structure_dao.fill_stock_structure(code, data)
         data.to_csv('result.csv')
+
+    def test_collect_single(self):
+        stock_structure_collector.collect_single('600074')

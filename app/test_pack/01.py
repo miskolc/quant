@@ -116,12 +116,17 @@ print(df_sh.columns.values)
 print(df_sh[["vol",'open','close']])
 '''
 
-df_sh = ts.bar(conn=ts.get_apis(), code='000001',freq='D', start_date='2018-06-08', factors=[ 'tor'])
+'''
+df_sh = ts.bar(conn=ts.get_apis(), code='XAUUSD',freq='X', start_date='2018-01-08', factors=[ 'tor'])
 print(df_sh)
 
+'''
+
+df = ts.get_report_data(2018,2)
+df['report_date'] = '2018-'+ df['report_date']
 
 
-
+print(df[['code','name','eps','eps_yoy','bvps','roe','epcf','net_profits','profits_yoy','report_date']])
 
 '''
 

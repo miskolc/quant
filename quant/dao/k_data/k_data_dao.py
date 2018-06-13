@@ -14,6 +14,7 @@ from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.feature_utils import adjust_features
 from quant.feature_utils.feature_collector import collect_features
 from quant.dao.basic.stock_structure_dao import stock_structure_dao
+from quant.dao.basic.stock_performance_dao import stock_performance_dao
 
 class K_Data_Dao:
     @staticmethod
@@ -39,6 +40,12 @@ class K_Data_Dao:
                          , con=dataSource.mysql_quant_conn)
 
         df = stock_structure_dao.fill_stock_structure(code, df)
+
+        #df_performance = stock_performance_dao.get_by_code(code, start, end)
+
+
+
+
 
         if cal_next_direction:
             df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
