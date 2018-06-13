@@ -42,11 +42,9 @@ def get_col_name_list(func_list):
 def collect_features(df):
     col_list = []
     for func in func_list:
-        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators,
-                                                                                                  func[0]) or hasattr(
-            cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators,
-                                                                                       func[0]) or hasattr(
-            custome_features, func[0]) or hasattr(statistic_functions, func[0]):
+        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators, func[0])\
+                or hasattr(cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators, func[0])\
+                or hasattr(custome_features, func[0]) or hasattr(statistic_functions, func[0]):
             col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
             func_feature = func[1](df)
 
@@ -66,4 +64,3 @@ def collect_features(df):
 
     col_list = list(set(col_list))
     return df, col_list
-
