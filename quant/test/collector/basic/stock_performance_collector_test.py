@@ -1,6 +1,6 @@
 import unittest
 
-from quant.collector.basic.stock_performance_collector import collect_quarter_all,cal_quarter_by_date, collect_single
+from quant.collector.basic.stock_performance_collector import collect_quarter_all,cal_quarter_by_date, collect_single, collect_single_quarter
 from quant.test import before_run
 import tushare as ts
 
@@ -53,3 +53,6 @@ class Stock_Performance_Classified_Test(unittest.TestCase):
 
     def test_cal_quarter_by_date(self):
         print(cal_quarter_by_date('2018-06-13'))
+
+    def test_collect_single_quarter(self):
+        collect_single_quarter(2018, 1)

@@ -24,13 +24,12 @@ from quant.common_tools.datetime_utils import get_current_date
 '''
 
 @exc_time
-def collect_single_quarter(year, quarter, start, end):
+def collect_single_quarter(year, quarter):
     data = ts.get_report_data(year, quarter)
     data['year'] = year
     data['quarter'] = quarter
     data['report_date'] = str(year) + '-' + data['report_date']
     data.to_sql('stock_performance', dataSource.mysql_quant_engine, if_exists='append', index=False)
-
 
 
 
