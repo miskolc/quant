@@ -1,3 +1,6 @@
+# -*- coding: UTF-8 -*-
+# greg.chen - 2018/5/19
+
 import requests
 from lxml import etree
 import pandas as pd
