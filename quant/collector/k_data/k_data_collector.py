@@ -42,6 +42,7 @@ def collect_hs300_full(table_name='k_data'):
         collect_single(code=code, start='2015-01-01', end=now, table_name=table_name)
 
 
+
 # 抓取沪深300每天K_data_daily数据
 @exc_time
 def collect_hs300_daily(table_name='k_data'):
