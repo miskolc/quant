@@ -11,11 +11,11 @@ import tushare as ts
 
 class StockPerformanceDao:
     @exc_time
-    def get_by_code(self, code, start, end):
-        sql = ("select `code`, eps, eps_yoy, bvps, roe, epcf, net_profits, profits_yoy, report_date as date from stock_performance "
-               "where code=%(code)s and report_date BETWEEN %(start)s and %(end)s order by date asc")
+    def get_by_code(self, code, year, quarter):
+        sql = ("select `code`, eps, eps_yoy, bvps, roe, epcf, net_profits, profits_yoy from stock_performance "
+               "where code=%(code)s and year=%(year)s and quarter=%(quarter)s")
 
-        df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
+        df = pd.read_sql(sql=sql, params={"code": code, "year": year, "quarter": quarter}
                          , con=dataSource.mysql_quant_conn)
 
         df = df.fillna(0)

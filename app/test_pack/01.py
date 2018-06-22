@@ -122,11 +122,10 @@ print(df_sh)
 
 '''
 
-df = ts.get_report_data(2018,2)
-df['report_date'] = '2018-'+ df['report_date']
+df = ts.get_hs300s()
 
+print(df)
 
-print(df[['code','name','eps','eps_yoy','bvps','roe','epcf','net_profits','profits_yoy','report_date']])
 
 '''
 
