@@ -61,7 +61,6 @@ class JQKAApi:
             df['code'] = code
             df['name'] = name
 
-            print(df.head(13))
 
             return df
 
