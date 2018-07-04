@@ -9,6 +9,8 @@ import tushare as ts
 from app.test_pack.pairs.hurst import hurst
 from statsmodels.tsa.stattools import adfuller
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 @exc_time
@@ -30,9 +32,10 @@ def cal_pair_stocks(pair_set):
     df = k_data_dao.get_k_data_all()
     df = df.set_index(['date'])
     pair_stock = pd.DataFrame(
-        columns=['stock1', 'stock2', 'ispaired', 'res', 'mean', 'std', 'intervalup', 'intervaldown'])
+        columns=['stock1', 'stock2', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1'])
 
     for item in pair_set:
+        i = 1
         try:
             code1 = item[0]
             code2 = item[1]
@@ -45,17 +48,29 @@ def cal_pair_stocks(pair_set):
             adf_result = list(adfuller(res))
             adf_score = adf_result[0]
             percent_1 = adf_result[4]['1%']
+            # sm_pvalue = sm.tsa.stattools.coint(close1, close2)
 
             if hurst_v < 0.45 and adf_score < percent_1:
-                pair_stock.loc['stock1'] = code1
-                pair_stock.loc['stock2'] = code2
-                pair_stock.loc['res'] = res
-                pair_stock.loc['mean'] = res.mean()
-                pair_stock.loc['std'] = res.std()
-                pair_stock.loc['intervalup'] = res.mean() + res.std()
-                pair_stock.loc['intervaldown'] = res.mean() - res.std()
-                pair_stock.loc['adfscore'] = adf_score
-                pair_stock.loc['percent_1'] = percent_1
+
+                mean_v = res.mean()
+                std_v = res.std()
+                intervalTop = mean_v + std_v
+                intervalBottom = mean_v - std_v
+                temp_dict = {}
+
+                temp_dict['stock1'] = code1
+                temp_dict['stock2'] = code2
+                # temp_dict['res'] = res
+                temp_dict['mean'] = mean_v
+                temp_dict['std'] = std_v
+                temp_dict['intervalTop'] = intervalTop
+                temp_dict['intervalBottom'] = intervalBottom
+                temp_dict['adfscore'] = adf_score
+                temp_dict['percent_1'] = percent_1
+
+                pair_stock.loc[i] = temp_dict
+
+                i += 1
 
                 pair_stock.dropna()
 
@@ -63,5 +78,6 @@ def cal_pair_stocks(pair_set):
                 pass
         except:
             pass
+    pair_stock.to_csv('pair_result.csv')
 
-    pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
+    # pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)

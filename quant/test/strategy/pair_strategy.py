@@ -13,6 +13,6 @@ class PairStrategyTest(unittest.TestCase):
         before_run()
 
     def test_strategy(self):
-        data = ts.get_hs300s()
+        data = ts.get_sz50s()
         code_set = code_muning(data)
         cal_pair_stocks(code_set)
