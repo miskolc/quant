@@ -27,7 +27,7 @@ def predict(code):
             max_depth=3, max_features='sqrt', max_leaf_nodes=None,
             min_impurity_decrease=0.0, min_impurity_split=None,
             min_samples_leaf=20, min_samples_split=120,
-            min_weight_fraction_leaf=0.0, n_estimators=1000, n_jobs=-1,
+            min_weight_fraction_leaf=0.0, n_estimators=100, n_jobs=-1,
             oob_score=True, random_state=10, verbose=0, warm_start=False)
 
     # SVC

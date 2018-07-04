@@ -43,6 +43,7 @@ if __name__ == '__main__':
     #index_k_data_60m.collect_index_china_daily()
     #k_data_60m_technical_feature_collector.collect_hs300_daily()
 
+
     schedule.every().day.at("15:30").do(k_data_60m.collect_hs300_daily)
     schedule.every().day.at("15:30").do(k_data.collect_hs300_daily)
 

@@ -1,3 +1,6 @@
+# -*- coding: UTF-8 -*-
+# greg.chen - 2018/5/19
+
 import requests
 import json
 import pandas as pd
@@ -75,7 +78,6 @@ class EastMoneyApi:
             name = arr[2]
             df = df.append({'bk_code': bk_code, 'bk_name':bk_name, 'code':code, 'name': name}, ignore_index=True)
 
-        print(df)
         return df
 
 

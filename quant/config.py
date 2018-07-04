@@ -18,12 +18,12 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
 
-    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.1.131:3306/quant?charset=utf8"
+    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.200.127:3306/quant?charset=utf8"
 
 
 class TestingConfig(Config):
     DEBUG = False
-    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.1.131:3306/quant?charset=utf8"
+    DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.200.127:3306/quant?charset=utf8"
 
 
 class RemoteDevelopmentConfig(Config):
