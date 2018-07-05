@@ -5,6 +5,7 @@ import unittest
 from quant.test import before_run
 from quant.strategy.pair_selection import code_muning, cal_p_value, cal_pair_stocks
 import tushare as ts
+from quant.dao.k_data.k_data_dao import K_Data_Dao
 
 
 class PairStrategyTest(unittest.TestCase):
