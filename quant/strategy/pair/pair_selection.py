@@ -68,7 +68,8 @@ def cal_pair_stocks(pair_set):
     df = k_data_dao.get_k_data_all()
     df = df.set_index(['date'])
     pair_stock = pd.DataFrame(
-        columns=['stock1', 'stock2', 'res', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1', 'percent_5'])
+        columns=['stock1', 'stock2', 'res', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1',
+                 'percent_5'])
     i = 1
     for item in pair_set:
 
@@ -142,9 +143,10 @@ def industry_filter(code1, code2):
     else:
         return False
 
+
 # pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
-# if __name__ == '__main__':
-#     data = ts.get_hs300s()
-#     code_set = code_muning(data)
-#     cal_pair_stocks(code_set)
+if __name__ == '__main__':
+    data = ts.get_sz50s()
+    code_set = code_muning(data)
+    cal_pair_stocks(code_set)
