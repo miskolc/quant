@@ -56,7 +56,8 @@ def cal_p_value(pair_set):
                 pair_stock.loc[i] = temp_dict
 
                 i += 1
-        except:
+        except Exception as e:
+            print(repr(e))
             pass
     pair_stock.dropna()
     pair_stock.to_csv('pair_result.csv')
@@ -79,6 +80,7 @@ def cal_pair_stocks(pair_set):
             close2 = df[df['code'] == code2]['close']
 
             res = close1 / close2
+            res = res.dropna()
             hurst_v = hurst(res)
             adf_result = list(adfuller(res))
             adf_score = adf_result[0]
@@ -106,8 +108,9 @@ def cal_pair_stocks(pair_set):
 
                     pair_stock.loc[i] = temp_dict
                     i += 1
-        except:
-            pass
+        except Exception as e:
+            print(repr(e))
+
     pair_stock.to_csv('pair_result.csv')
 
 
