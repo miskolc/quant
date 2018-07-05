@@ -14,6 +14,6 @@ class PairStrategyTest(unittest.TestCase):
         before_run()
 
     def test_strategy(self):
-        data = k_data_dao.get_k_data_all()
+        data = ts.get_hs300s()
         code_set = code_muning(data)
         cal_pair_stocks(code_set)
