@@ -121,7 +121,7 @@ def cal_pair_stocks(pair_set):
                     pair_stock.loc[i] = temp_dict
                     i += 1
         except Exception as e:
-            print(repr(e))
+            pass
 
     pair_stock.to_csv('pair_result.csv')
 
@@ -147,6 +147,6 @@ def industry_filter(code1, code2):
 # pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
 if __name__ == '__main__':
-    data = ts.get_sz50s()
+    data = ts.get_hs300s()
     code_set = code_muning(data)
     cal_pair_stocks(code_set)
