@@ -4,7 +4,7 @@ import os
 import sys
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 sys.path.append(ROOT_DIR)
 
 from quant.dao.basic.stock_industry_dao import stock_industry_dao
