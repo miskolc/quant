@@ -10,7 +10,7 @@ sys.path.append(ROOT_DIR)
 import unittest
 
 from quant.test import before_run
-from quant.strategy.pair_selection import code_muning, cal_p_value, cal_pair_stocks
+from quant.strategy.pair.pair_selection import code_muning, cal_pair_stocks
 import tushare as ts
 
 
@@ -19,6 +19,6 @@ class PairStrategyTest(unittest.TestCase):
         before_run()
 
     def test_strategy(self):
-        data = ts.get_hs300s()
+        data = ts.get_sz50s()
         code_set = code_muning(data)
         cal_pair_stocks(code_set)

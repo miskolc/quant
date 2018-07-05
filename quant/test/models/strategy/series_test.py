@@ -1,12 +1,9 @@
 # ae_h - 2018/6/8
 
 
-from quant.dao.basic.stock_industry_dao import StockIndustryDao
-import unittest
-from quant.strategy.pair_selection import cal_pair_stocks, code_muning
 import tushare as ts
-from quant.test import before_run
 from statsmodels.tsa.stattools import adfuller
+
 from app.test_pack.pairs.hurst import hurst
 
 df_s = ts.get_k_data('600179', start='2017-01-01')['close']

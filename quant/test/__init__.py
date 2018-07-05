@@ -24,6 +24,7 @@ def init_db():
 
 
 def before_run():
+    pass
 
-    init_db()
+    # init_db()
 
