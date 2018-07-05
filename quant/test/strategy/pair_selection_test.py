@@ -14,10 +14,7 @@ from quant.strategy.pair_selection import code_muning, cal_p_value, cal_pair_sto
 import tushare as ts
 
 
-
-
 class PairStrategyTest(unittest.TestCase):
-
     def setUp(self):
         before_run()
 
