@@ -78,7 +78,11 @@ def cal_pair_stocks(pair_set):
             close1 = df[df['code'] == code1]['close']
             close2 = df[df['code'] == code2]['close']
 
-            res = close1 / close2
+            close_vect = pd.concat([close1, close2], axis=1)
+
+            close_vect = close_vect.fillna(method='ffill')
+
+            res = close_vect.icol(0)/close_vect.icol(1)
             hurst_v = hurst(res)
             adf_result = list(adfuller(res))
             adf_score = adf_result[0]
