@@ -23,7 +23,7 @@ class PairStrategyTest(unittest.TestCase):
         code_set = code_muning(data)
         cal_pair_stocks(code_set)
 
-    def test_cal_p_value(self):
-        pair_set = set()
-        pair_set.add(('600519', '000858'))
-        cal_pair_stocks(pair_set)
+    # def test_cal_p_value(self):
+    #     pair_set = set()
+    #     pair_set.add(('600519', '000858'))
+    #     cal_pair_stocks(pair_set)

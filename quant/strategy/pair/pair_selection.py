@@ -68,7 +68,7 @@ def cal_pair_stocks(pair_set):
     df = k_data_dao.get_k_data_all()
     df = df.set_index(['date'])
     pair_stock = pd.DataFrame(
-        columns=['stock1', 'stock2', 'res', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1'])
+        columns=['stock1', 'stock2', 'res', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1', 'percent_5'])
     i = 1
     for item in pair_set:
 
@@ -79,20 +79,25 @@ def cal_pair_stocks(pair_set):
             close1 = df[df['code'] == code1]['close']
             close2 = df[df['code'] == code2]['close']
 
+            # close1 = close1.rename({'close':'close1'})
+            # close2 = close2.rename({'close':'close2'})
 
             close_vect = pd.concat([close1, close2], axis=1)
 
+            close_vect.columns = ['close1', 'close2']
+
             close_vect = close_vect.fillna(method='ffill')
 
-            res = close_vect.icol(0)/close_vect.icol(1)
+            res = close_vect['close1'] / close_vect['close2']
 
             hurst_v = hurst(res)
             adf_result = list(adfuller(res))
             adf_score = adf_result[0]
             percent_1 = adf_result[4]['1%']
+            percent_5 = adf_result[4]['5%']
             # sm_pvalue = sm.tsa.stattools.coint(close1, close2)
 
-            if hurst_v < 0.45 and adf_score < percent_1:
+            if hurst_v < 0.45 and adf_score < percent_5:
                 if industry_filter(code1, code2):
                     bk1, bk2 = industry_filter(code1, code2)
                     mean_v = res.mean()
@@ -101,8 +106,8 @@ def cal_pair_stocks(pair_set):
                     intervalBottom = mean_v - std_v
                     temp_dict = {}
 
-                    temp_dict['stock1'] = code1+bk1
-                    temp_dict['stock2'] = code2+bk2
+                    temp_dict['stock1'] = code1 + bk1
+                    temp_dict['stock2'] = code2 + bk2
                     temp_dict['res'] = res[-1]
                     temp_dict['mean'] = mean_v
                     temp_dict['std'] = std_v
@@ -110,6 +115,7 @@ def cal_pair_stocks(pair_set):
                     temp_dict['intervalBottom'] = intervalBottom
                     temp_dict['adfscore'] = adf_score
                     temp_dict['percent_1'] = percent_1
+                    temp_dict['percent_5'] = percent_5
 
                     pair_stock.loc[i] = temp_dict
                     i += 1
@@ -136,10 +142,9 @@ def industry_filter(code1, code2):
     else:
         return False
 
-
 # pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
-if __name__ == '__main__':
-    data = ts.get_hs300s()
-    code_set = code_muning(data)
-    cal_pair_stocks(code_set)
+# if __name__ == '__main__':
+#     data = ts.get_hs300s()
+#     code_set = code_muning(data)
+#     cal_pair_stocks(code_set)
