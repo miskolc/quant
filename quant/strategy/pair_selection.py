@@ -2,15 +2,16 @@
 # ae_h - 2018/6/2
 import os
 import sys
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+sys.path.append(ROOT_DIR)
+
 
 from sqlalchemy import create_engine, MetaData
 
 from quant.config import default_config
 from quant.dao import dataSource
 
-CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
-sys.path.append(ROOT_DIR)
 
 import pandas as pd
 import statsmodels.api as sm
