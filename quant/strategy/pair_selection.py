@@ -10,6 +10,7 @@ from app.test_pack.pairs.hurst import hurst
 from statsmodels.tsa.stattools import adfuller
 import pandas as pd
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 import numpy as np
 
 
@@ -27,15 +28,46 @@ def code_muning(data):
 
 
 @exc_time
-def cal_pair_stocks(pair_set):
-    # hs_300_code = ts.get_hs300s()['code']
+def cal_p_value(pair_set):
     df = k_data_dao.get_k_data_all()
     df = df.set_index(['date'])
-    pair_stock = pd.DataFrame(
-        columns=['stock1', 'stock2', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1'])
+
+    pair_stock = pd.DataFrame(columns=['stock1', 'stock2', 'p_value'])
 
     for item in pair_set:
         i = 1
+
+        try:
+            code1 = item[0]
+            code2 = item[1]
+
+            stock1_close = df[df['code'] == code1]['close']
+            stock2_close = df[df['code'] == code2]['close']
+
+            coint_result = sm.tsa.stattools.coint(stock1_close, stock2_close)
+
+            p_value = coint_result[1]
+
+            if p_value < 0.05:
+                temp_dict = {'stock1': code1, 'stock2': code2, 'p_value': p_value}
+                pair_stock.loc[i] = temp_dict
+
+                i += 1
+        except:
+            pass
+    pair_stock.dropna()
+    pair_stock.to_csv('pair_result.csv')
+
+
+@exc_time
+def cal_pair_stocks(pair_set):
+    df = k_data_dao.get_k_data_all()
+    df = df.set_index(['date'])
+    pair_stock = pd.DataFrame(
+        columns=['stock1', 'stock2', 'res', 'mean', 'std', 'intervalTop', 'intervalBottom', 'adfscore', 'percent_1'])
+    i = 1
+    for item in pair_set:
+
         try:
             code1 = item[0]
             code2 = item[1]
@@ -60,7 +92,7 @@ def cal_pair_stocks(pair_set):
 
                 temp_dict['stock1'] = code1
                 temp_dict['stock2'] = code2
-                # temp_dict['res'] = res
+                temp_dict['res'] = res[-1]
                 temp_dict['mean'] = mean_v
                 temp_dict['std'] = std_v
                 temp_dict['intervalTop'] = intervalTop
@@ -69,15 +101,9 @@ def cal_pair_stocks(pair_set):
                 temp_dict['percent_1'] = percent_1
 
                 pair_stock.loc[i] = temp_dict
-
                 i += 1
-
-                pair_stock.dropna()
-
-            else:
-                pass
         except:
             pass
     pair_stock.to_csv('pair_result.csv')
 
-    # pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
+# pair_stock.to_sql('pair_stock', dataSource.mysql_quant_engine, if_exists='append', index=False)
