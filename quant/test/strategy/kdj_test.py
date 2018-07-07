@@ -11,15 +11,19 @@ from quant.feature_utils.momentum_indicators import acc_kdj
 import pandas as pd
 from quant.common_tools.decorators import exc_time
 
+
 @exc_time
 def cal_kdj():
-
     df = k_data_dao.get_k_data_all()
 
     k_d_j = acc_kdj(df)
 
     df_with_kdj = pd.concat([df, k_d_j], axis=1)
 
-    print(df_with_kdj)
+    return df_with_kdj
 
+
+if __name__ == '__main__':
+    df = cal_kdj()
+    print(df[df['code'] == 601939])
 
