@@ -1,5 +1,10 @@
 # ae_h - 2018/7/7
+import os
+import sys
 
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+sys.path.append(ROOT_DIR)
 import numpy as np
 from quant.dao.k_data.k_data_dao import k_data_dao
 from quant.feature_utils.momentum_indicators import acc_kdj
