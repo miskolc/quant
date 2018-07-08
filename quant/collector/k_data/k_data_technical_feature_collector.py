@@ -3,10 +3,12 @@ import tushare as ts
 
 from quant.common_tools.datetime_utils import get_next_date
 from quant.common_tools.decorators import exc_time
+from quant.dao.basic.stock_industry_dao import stock_industry_dao
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
 from quant.feature_utils.feature_collector import collect_features
 from quant.dao.k_data.k_data_dao import k_data_dao
+
 
 @exc_time
 def collect_single(code, start, end, table_name='k_data_tech_feature'):
@@ -33,10 +35,10 @@ def collect_single_daily(code, table_name='k_data_tech_feature'):
     data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
 
 
-# 计算全量沪深300技术特征数据
+# 计算全量沪技术特征数据
 @exc_time
-def collect_hs300_full():
-    df = ts.get_hs300s()
+def collect_full():
+    df = stock_industry_dao.get_list()
     now = datetime.now().strftime('%Y-%m-%d')
     for code in df['code'].values:
         try:
@@ -44,16 +46,16 @@ def collect_hs300_full():
         except Exception as e:
             logger.error("collect technical features failed code:%s, exception:%s" % (code, repr(e)))
 
-# 计算每天沪深300每天技术特征数据
+# 计算每天技术特征数据
 @exc_time
-def collect_hs300_daily():
+def collect_full_daily():
     now = datetime.now().strftime('%Y-%m-%d')
     is_holiday = ts.is_holiday(now)
     # 如果是假日, 跳过
     if is_holiday:
         return
 
-    df = ts.get_hs300s()
+    df = stock_industry_dao.get_list()
     for code in df['code'].values:
         try:
             collect_single_daily(code)

@@ -97,7 +97,7 @@ class EastMoneyApi:
         buf = io.StringIO(content)
         line = buf.readline()
 
-        df = pd.DataFrame(columns=['pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy'])
+        df = pd.DataFrame(columns=['pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy', 'total_market', 'total_assets', 'total_liabilities', 'retained_profits'])
         dict = {"code": code}
         while line is not None and len(line) > 0:
             line = buf.readline()
@@ -109,8 +109,13 @@ class EastMoneyApi:
                 data = json.loads(line)
                 dict['pe'] = data["Data"][0]["PERation"]
                 dict['pb'] = data["Data"][0]["PBRation"]
-                if dict['pe'] == '-' or dict['pb'] == '-':
-                    continue;
+                dict['total_market'] = data["Data"][0]["TotalMarketValue"]
+
+                if dict['pe'] == '-':
+                    dict['pe'] = None
+
+                if dict['pb'] == '-':
+                    dict['pb'] = None
 
             if line.find("var cwzyData") > -1:
                 line = line.replace("var cwzyData =", '')
@@ -122,13 +127,23 @@ class EastMoneyApi:
                 dict['roe'] = data[0]["WeightedYieldOnNetAssets"]
                 # 净利润同比(%)
                 dict['profits_yoy'] = data[0]["ProfitsYOYRate"]
+                if dict['profits_yoy'] == "\\" or dict['profits_yoy']  == '':
+                    dict['profits_yoy'] = None
+
                 # 营收同比率(%)
                 dict['income_yoy'] = data[0]["IncomeYOYRate"]
+                # 总资产
+                dict['total_assets'] = data[0]["totalAssets"]
+                # 总负债
+                dict['total_liabilities'] = data[0]["totalLiabilities"]
+                # 净利润
+                dict['retained_profits'] = data[0]["retainedProfits"]
 
             if dict.get("pe") is not None and dict.get("esp") is not None:
                 break
 
         df = df.append(dict, ignore_index=True)
+
         return df;
 
 

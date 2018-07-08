@@ -25,9 +25,11 @@ def collect_stock_basic():
 
     df_industry = stock_industry_dao.get_list()
     for index, row in df_industry.iterrows():
+        code = row['code']
+        df = east_money_api.get_stock_basic(code)
         try:
-            code = row['code']
-            df = east_money_api.get_stock_basic(code)
+
             df.to_sql('stock_basic', dataSource.mysql_quant_engine, if_exists='append', index=False)
         except Exception as e:
-            logger.error(repr(e))
+
+            logger.error("code:%s, error:%s" %(code, repr(e)))

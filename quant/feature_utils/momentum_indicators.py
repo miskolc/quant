@@ -152,8 +152,8 @@ def cal_willr_28(data):
 
 
 def acc_kdj(data, N1=9, N2=3, N3=3):
-    low1 = pd.rolling_min(data.low, N1)
-    high1 = pd.rolling_max(data.high, N1)
+    low1 = pd.Series.rolling(data.low, N1).min()
+    high1 = pd.Series.rolling(data.high, N1).max()
     rsv = (data.close - low1) / (high1 - low1) * 100
     k = acc_SMA(rsv, N2)
     d = acc_SMA(k, N3)

@@ -25,13 +25,14 @@ def cal_mavol30(data):
     mavol30 = pd.Series.rolling(data['volume'], 30).sum() / 30
     return mavol30
 
+'''
 def cal_turnover(data):
     try:
         turn_over = data['volume'] / 100 / data['share_oustanding']
         return turn_over
     except Exception:
         pass
-
+'''
 
 
 def cal_PHLambdaT(data):

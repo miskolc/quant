@@ -11,9 +11,9 @@ from quant.dao.basic.stock_industry_dao import stock_industry_dao
 
 # collect k_data from tushare and save into db
 @exc_time
-def collect_single(code, start, end, table_name='k_data'):
+def collect_single(code, start, end, table_name='k_data_week'):
     try:
-        data = ts.get_k_data(code, start=start, end=end)
+        data = ts.get_k_data(code, start=start, end=end, ktype='W')
         data['code'] = code
         data['pre_close'] = data['close'].shift(1)
         data = data.dropna()
@@ -23,9 +23,9 @@ def collect_single(code, start, end, table_name='k_data'):
 
 
 @exc_time
-def collect_single_daily(code, table_name='k_data'):
+def collect_single_weekly(code, table_name='k_data'):
     try:
-        data = ts.get_k_data(code)
+        data = ts.get_k_data(code, ktype='W')
         data['code'] = code
         data['pre_close'] = data['close'].shift(1)
         data = data.tail(1)
@@ -47,7 +47,7 @@ def collect_all():
 
 # 抓取沪深每天K_data_daily数据
 @exc_time
-def collect_all_daily(table_name='k_data'):
+def collect_all_weekly(table_name='k_data'):
     now = datetime.now().strftime('%Y-%m-%d')
     is_holiday = ts.is_holiday(now)
     # 如果是假日, 跳过
@@ -57,4 +57,4 @@ def collect_all_daily(table_name='k_data'):
     df_industry = stock_industry_dao.get_list()
     for index,row in df_industry.iterrows():
         code = row['code']
-        collect_single_daily(code=code, table_name=table_name)
+        collect_single_weekly(code=code, table_name=table_name)

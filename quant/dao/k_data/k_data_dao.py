@@ -39,7 +39,7 @@ class K_Data_Dao:
         df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
-        df = stock_structure_dao.fill_stock_structure(code, df)
+        #df = stock_structure_dao.fill_stock_structure(code, df)
 
         #df_performance = stock_performance_dao.get_by_code(code, start, end)
 
@@ -59,7 +59,7 @@ class K_Data_Dao:
 
     @exc_time
     def get_k_data_with_features(self, code, start, end):
-        df = self.get_k_data(code, start, end)
+        df = self.get_k_data(code, start, end, cal_next_direction=True)
 
         df_sh = index_k_data_dao.get_sh_k_data(start, end)
         df = self.fill_index_feature(df, df_sh, 'sh_direction')

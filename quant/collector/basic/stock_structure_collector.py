@@ -10,14 +10,14 @@ from quant.dao.basic.stock_industry_dao import stock_industry_dao
 from quant.crawler.sina_finance_api import sina_finance_api
 import time
 import tushare as ts
-
+from quant.dao.basic.stock_industry_dao import stock_industry_dao
 
 def collect_all():
-    df = ts.get_hs300s()
+    df = stock_industry_dao.get_list()
     for code in df['code'].values:
         try:
             collect_single(code)
-            time.sleep(0.5)
+            time.sleep(1)
         except Exception as e:
             logger.error(repr(e))
 

@@ -2,9 +2,6 @@
 import os
 import sys
 
-CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
-sys.path.append(ROOT_DIR)
 import os
 import re
 from inspect import getmembers, isfunction
@@ -41,6 +38,9 @@ def get_col_name_list(func_list):
 def collect_features(df):
     col_list = []
     for func in func_list:
+        if func[0] == 'acc_SMA':
+            continue;
+
         if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators,
                                                                                                   func[0]) \
                 or hasattr(cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(
