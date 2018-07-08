@@ -151,9 +151,6 @@ def cal_willr_28(data):
     return willr_28
 
 
-
-
-
 def acc_kdj(data, N1=9, N2=3, N3=3):
     low1 = pd.rolling_min(data.low, N1)
     high1 = pd.rolling_max(data.high, N1)
