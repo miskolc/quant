@@ -1,10 +1,10 @@
 import unittest
 
-from quant.collector.basic.stock_performance_collector import  collect_single_quarter
+from quant.collector.basic.stock_basic_collector import  collect_stock_basic
 from quant.test import before_run
 import tushare as ts
 
-class Stock_Performance_Classified_Test(unittest.TestCase):
+class Stock_Basic__Test(unittest.TestCase):
     def setUp(self):
         before_run()
 
@@ -43,5 +43,5 @@ class Stock_Performance_Classified_Test(unittest.TestCase):
         '''
 
 
-    def test_collect_single_quarter(self):
-        collect_single_quarter(2018, 1)
+    def test_collect_stock_basic(self):
+        collect_stock_basic()

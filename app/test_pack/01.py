@@ -122,8 +122,8 @@ print(df_sh)
 
 '''
 
-df = ts.get_hs300s()
-
+df = ts.get_stock_basics()
+df.to_csv('result.csv')
 print(df)
 
 

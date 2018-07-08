@@ -38,7 +38,7 @@ dataSource = DataSource()
 if default_config.DATABASE_QUANT_URI:
     # 使用单例模式保存数据库engine
     mysql_quant_engine = create_engine(default_config.DATABASE_QUANT_URI, encoding='utf8',
-                                       convert_unicode=True, pool_size=100, pool_recycle=1200)
+                                       convert_unicode=True, pool_size=50, pool_recycle=1200)
     dataSource.mysql_quant_engine = mysql_quant_engine
     dataSource.mysql_quant_conn = mysql_quant_engine.connect()
     dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)

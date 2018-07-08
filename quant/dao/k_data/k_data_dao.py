@@ -14,7 +14,7 @@ from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.feature_utils import adjust_features
 from quant.feature_utils.feature_collector import collect_features
 from quant.dao.basic.stock_structure_dao import stock_structure_dao
-from quant.dao.basic.stock_performance_dao import stock_performance_dao
+from quant.dao.basic.stock_basic_dao import stock_performance_dao
 
 class K_Data_Dao:
     @staticmethod
@@ -31,7 +31,7 @@ class K_Data_Dao:
         return features
 
     @exc_time
-    def get_k_data(self, code, start, end, cal_next_direction=True):
+    def get_k_data(self, code, start, end, cal_next_direction=False):
         sql = ('''select  k.`date`,  k.code,  k.open,  k.close,  k.high,  k.low,  k.volume,  k.pre_close
                from k_data k 
                where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc ''')
@@ -42,10 +42,6 @@ class K_Data_Dao:
         df = stock_structure_dao.fill_stock_structure(code, df)
 
         #df_performance = stock_performance_dao.get_by_code(code, start, end)
-
-
-
-
 
         if cal_next_direction:
             df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])

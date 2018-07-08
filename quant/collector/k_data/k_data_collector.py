@@ -6,6 +6,7 @@ import tushare as ts
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
+from quant.dao.basic.stock_industry_dao import stock_industry_dao
 
 
 # collect k_data from tushare and save into db
@@ -56,3 +57,26 @@ def collect_hs300_daily(table_name='k_data'):
     for code in df['code'].values:
         collect_single_daily(code=code, table_name=table_name)
 
+# 抓取所有k_data数据
+@exc_time
+def collect_all():
+    now = datetime.now().strftime('%Y-%m-%d')
+    df_industry = stock_industry_dao.get_list()
+    for index,row in df_industry.iterrows():
+        code = row['code']
+        collect_single(code=code, start='2015-01-01', end=now)
+
+
+# 抓取沪深每天K_data_daily数据
+@exc_time
+def collect_all_daily(table_name='k_data'):
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = ts.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
+    df_industry = stock_industry_dao.get_list()
+    for index,row in df_industry.iterrows():
+        code = row['code']
+        collect_single_daily(code=code, table_name=table_name)
