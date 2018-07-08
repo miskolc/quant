@@ -161,9 +161,9 @@ def acc_kdj(data, N1=9, N2=3, N3=3):
     k = acc_SMA(rsv, N2)
     d = acc_SMA(k, N3)
     j = k * 3 - d * 2
-    kdj_df = pd.DataFrame(columns=['k', 'd', 'j'])
-    kdj_df['k'] = k
-    kdj_df['d'] = d
-    kdj_df['j'] = j
+    kdj_df = pd.DataFrame(columns=['k_value', 'd_value', 'j_value'])
+    kdj_df['k_value'] = k
+    kdj_df['d_value'] = d
+    kdj_df['j_value'] = j
 
     return kdj_df
