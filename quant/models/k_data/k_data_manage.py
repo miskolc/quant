@@ -12,11 +12,12 @@ from quant.models.k_data.sequantial_neural_classifier import SequantialNeuralCla
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel
+from quant.dao.basic.stock_pool_dao import stock_pool_dao
 
 
 # 训练K_data模型
 def training_k_data():
-    df = ts.get_hs300s()
+    df = stock_pool_dao.get_list()
     for code in df['code'].values:
         try:
             logger.debug('begin training mode, code:%s' % code)
@@ -44,7 +45,7 @@ def training_k_data():
 
 # 预测K_data
 def predict_k_data():
-    df = ts.get_hs300s()
+    df = stock_pool_dao.get_list()
     df_index = index_k_data_dao.get_rel_price();
 
     for code in df['code'].values:

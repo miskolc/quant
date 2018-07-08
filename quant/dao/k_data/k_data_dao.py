@@ -14,7 +14,7 @@ from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.feature_utils import adjust_features
 from quant.feature_utils.feature_collector import collect_features
 from quant.dao.basic.stock_structure_dao import stock_structure_dao
-from quant.dao.basic.stock_basic_dao import stock_performance_dao
+
 
 class K_Data_Dao:
     @staticmethod
