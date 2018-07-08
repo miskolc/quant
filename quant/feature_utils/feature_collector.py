@@ -1,5 +1,11 @@
 # ae.h - 2018/5/21
 import os
+import sys
+
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+sys.path.append(ROOT_DIR)
+import os
 import re
 from inspect import getmembers, isfunction
 
@@ -8,14 +14,7 @@ import pandas as pd
 from quant.feature_utils import momentum_indicators, overlaps_studies, volume_indicators, cycle_indicators, \
     price_transform, volatility_indicators, custome_features, pattern_recognition, statistic_functions
 
-# os_ip_modules = __import__('overlaps_studies')
-#
-# mi_ip_modules = __import__('momentum_indicators')
-
 root_path = os.path.dirname(os.path.abspath(__file__))
-# print(root_path)
-# feature_path = os.path.join(root_path, 'feature_utils/')
-
 
 momentum_list = [m for m in getmembers(momentum_indicators) if isfunction(m[1])]
 overlaps_list = [o for o in getmembers(overlaps_studies) if isfunction(o[1])]
@@ -42,8 +41,10 @@ def get_col_name_list(func_list):
 def collect_features(df):
     col_list = []
     for func in func_list:
-        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators, func[0])\
-                or hasattr(cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(volatility_indicators, func[0])\
+        if hasattr(momentum_indicators, func[0]) or hasattr(overlaps_studies, func[0]) or hasattr(volume_indicators,
+                                                                                                  func[0]) \
+                or hasattr(cycle_indicators, func[0]) or hasattr(price_transform, func[0]) or hasattr(
+            volatility_indicators, func[0]) \
                 or hasattr(custome_features, func[0]) or hasattr(statistic_functions, func[0]):
             col_name = re.match(r'(^.{4})(.{0,})', func[0]).group(2)
             func_feature = func[1](df)

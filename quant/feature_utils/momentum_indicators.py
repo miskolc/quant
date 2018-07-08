@@ -1,8 +1,15 @@
 # coding = utf-8
 # ae.h - 2018/5/20
+import os
+import sys
+
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+sys.path.append(ROOT_DIR)
+
 from talib import abstract
 import pandas as pd
-import numpy as np
+from quant.feature_utils.f_utils import acc_SMA
 
 
 def cal_adx(data):
@@ -107,10 +114,17 @@ def cal_rsi(data):
     return rsi
 
 
-def cal_stoch(data):
-    stoch_func = abstract.Function('stoch')
-    stoch = stoch_func(data)
-    return stoch
+# def cal_stoch(data):
+#     stoch_func = abstract.Function('stoch')
+#     stoch = stoch_func(data, fastk_period=9, slowk_period=3, slowd_period=3, slowk_matype=1)
+#     print(stoch)
+#     return stoch
+#
+# def cal_stochf(data):
+#     stochf_func = abstract.Function('stochf')
+#     stochf = stochf_func(data)
+#     print(stochf)
+#     return stochf
 
 
 def cal_ultosc(data):
@@ -124,6 +138,7 @@ def cal_willr_10(data):
     willr_10 = willr_10_func(data, timeperiod=10)
     return willr_10
 
+
 def cal_willr_14(data):
     willr_14_func = abstract.Function('willr')
     willr_14 = willr_14_func(data, timeperiod=14)
@@ -134,3 +149,18 @@ def cal_willr_28(data):
     willr_28_func = abstract.Function('willr')
     willr_28 = willr_28_func(data, timeperiod=28)
     return willr_28
+
+
+def acc_kdj(data, N1=9, N2=3, N3=3):
+    low1 = pd.rolling_min(data.low, N1)
+    high1 = pd.rolling_max(data.high, N1)
+    rsv = (data.close - low1) / (high1 - low1) * 100
+    k = acc_SMA(rsv, N2)
+    d = acc_SMA(k, N3)
+    j = k * 3 - d * 2
+    kdj_df = pd.DataFrame(columns=['k_value', 'd_value', 'j_value'])
+    kdj_df['k_value'] = k
+    kdj_df['d_value'] = d
+    kdj_df['j_value'] = j
+
+    return kdj_df
