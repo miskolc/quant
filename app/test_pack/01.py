@@ -122,9 +122,9 @@ print(df_sh)
 
 '''
 
-df = ts.get_stock_basics()
-df.to_csv('result.csv')
-print(df)
+df_sz50 = ts.get_sz50s()
+df_zz = ts.get_zz500s()
+print(df_sz50)
 
 
 '''
