@@ -11,4 +11,4 @@ class K_Data_Technical_Feature_Collector_Test(unittest.TestCase):
 
 
     def test_collect_single(self):
-        collect_single('600196', '2015-01-01', '2018-07-06')
+        collect_single('600073', '2015-01-01', '2018-07-06')

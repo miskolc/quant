@@ -22,10 +22,7 @@ PROJECT_NAME = "quant-collector"
 
 if __name__ == '__main__':
 
-    # feature_collector.collect_hs300_full()
-    # k_data_60m.collect_hs300_full()
-    # index_k_data_60m.collect_index_china_daily()
-    # k_data_60m_technical_feature_collector.collect_hs300_daily()
+    k_data_feature_collector.collect_full()
 
 
     #schedule.every().day.at("15:30").do(k_data_60m.collect_hs300_daily)

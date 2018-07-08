@@ -35,7 +35,7 @@ def training():
 
 if __name__ == '__main__':
     warnings.filterwarnings(module='sklearn*', action='ignore', category=DeprecationWarning)
-    
+
     training()
     #schedule.every().day.at("14:40").do(predict)
     #schedule.every().day.at("17:00").do(training)
