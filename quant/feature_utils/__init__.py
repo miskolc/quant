@@ -1,7 +1,7 @@
 # ae.h - 2018/5/20
 
 
-exclude_features = ['date','code', ]
+exclude_features = ['date','code', 'slowk','slowd']
 
 
 def adjust_features(list, addition_features):

@@ -59,7 +59,7 @@ class K_Data_Dao:
 
     @exc_time
     def get_k_data_with_features(self, code, start, end):
-        df = self.get_k_data(code, start, end)
+        df = self.get_k_data(code, start, end, cal_next_direction=True)
 
         df_sh = index_k_data_dao.get_sh_k_data(start, end)
         df = self.fill_index_feature(df, df_sh, 'sh_direction')
