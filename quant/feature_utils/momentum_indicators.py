@@ -1,8 +1,15 @@
 # coding = utf-8
 # ae.h - 2018/5/20
+import os
+import sys
+
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+sys.path.append(ROOT_DIR)
+
 from talib import abstract
 import pandas as pd
-import numpy as np
+from quant.feature_utils.f_utils import acc_SMA
 
 
 def cal_adx(data):
@@ -144,20 +151,7 @@ def cal_willr_28(data):
     return willr_28
 
 
-def acc_SMA(data, N):
-    sma_v = pd.Series(index=data.index)
-    last = np.nan
-    for key in data.index:
-        x = data[key]
-        if last == last:
-            x1 = (x + (N - 1) * last) / N
-        else:
-            x1 = x
-        last = x1
-        sma_v[key] = x1
-        if x1 != x1:
-            last = x
-    return sma_v
+
 
 
 def acc_kdj(data, N1=9, N2=3, N3=3):
