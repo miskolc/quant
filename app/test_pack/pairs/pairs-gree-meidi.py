@@ -86,7 +86,7 @@ print("区间",df["close"].mean() + df["close"].std(), df["close"].mean() -df["c
 #hres = hurst(df["close"])
 #print("hres:"+hres)
 
-#gmb_test(df)
+gmb_test(df)
 
 print(df.tail(100))
 

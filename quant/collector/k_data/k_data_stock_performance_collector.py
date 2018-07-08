@@ -11,7 +11,7 @@ import pandas as pd
 from quant.log.quant_logging import logger
 from datetime import datetime
 from quant.common_tools.datetime_utils import get_current_date
-from quant.dao.basic.stock_performance_dao import stock_performance_dao
+from quant.dao.basic.stock_basic_dao import stock_performance_dao
 
 '''
     esp,每股收益
