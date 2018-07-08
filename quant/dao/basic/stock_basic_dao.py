@@ -9,11 +9,11 @@ from quant.dao.data_source import dataSource
 
 class StockBasicDao:
     @exc_time
-    def get_by_code(self, code, year, quarter):
-        sql = ("select `code`, eps, pb, pe, roe, income_yoy, profits_yoy from stock_basic "
+    def get_by_code(self, code):
+        sql = ("select `code`, eps, pb, pe, roe, income_yoy, profits_yoy, total_assets, total_liabilities, retained_profits, total_market from stock_basic "
                "where code=%(code)s ")
 
-        df = pd.read_sql(sql=sql, params={"code": code, "year": year, "quarter": quarter}
+        df = pd.read_sql(sql=sql, params={"code": code}
                          , con=dataSource.mysql_quant_conn)
 
         df = df.fillna(0)

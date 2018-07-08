@@ -2,6 +2,8 @@
 import os
 import sys
 
+import datetime
+
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(CURRENT_DIR)))
 sys.path.append(ROOT_DIR)
@@ -12,11 +14,12 @@ import pandas as pd
 from quant.common_tools.decorators import exc_time
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 
 @exc_time
 def cal_kdj():
-    df = k_data_dao.get_k_data(code='601939', start='2017-12-01', end='2018-07-06')
+    df = k_data_dao.get_k_data(code='600547', start='2017-12-01', end='2018-07-06')
 
     k_d_j = acc_kdj(df)
 
@@ -28,18 +31,5 @@ def cal_kdj():
 if __name__ == '__main__':
     ccb_df = cal_kdj()
 
-    print(ccb_df['k'])
-
-    # ccb_k_gradient = np.gradient(ccb_df['k'].rolling(center=False, window=2).mean())
-
-    # corr = ccb_df['k'].rolling(center=False, window=2).var()
-
-    values = ccb_df['k'].values
-    gradient_arr = np.gradient(values)
-
-    sns.set(style="darkgrid")
-    plt.plot(ccb_df['k'], label='k')
-    plt.plot(ccb_df['d'], label='d')
-    plt.plot(gradient_arr, label='gradient')
-    plt.legend()
-    plt.show()
+    for i in range(10, 120, 10):
+        price = ccb_df['close'].rolling(window=i).max()

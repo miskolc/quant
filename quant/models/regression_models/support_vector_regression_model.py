@@ -65,8 +65,8 @@ class SupportVectorRegressionModel(BaseModel):
             return
 
         X = preprocessing.scale(data)
-        pac = PCAModel(self.module_name).load(code)
-        X = pac.transform(X)
+        pca = PCAModel(self.module_name).load(code)
+        X = pca.transform(X)
 
         support_vector_regression_model = joblib.load(model_path)
 
