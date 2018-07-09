@@ -8,7 +8,7 @@ from quant.dao.k_data.index_k_data_dao import index_k_data_dao
 from quant.log.quant_logging import logger
 from quant.models.k_data.logistic_regression_classifier import LogisticRegressionClassifier
 from quant.models.k_data.random_forest_classifier import RandomForestClassifierModel
-from quant.models.k_data.sequantial_neural_classifier import SequantialNeuralClassifier
+#from quant.models.k_data.sequantial_neural_classifier import SequantialNeuralClassifier
 from quant.models.k_data.support_vector_classifier import SupportVectorClassifier
 from quant.models.k_data.xgboost_classifier import XGBoostClassier
 from quant.models.pca_model import PCAModel

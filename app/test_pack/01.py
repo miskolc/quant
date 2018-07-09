@@ -120,12 +120,19 @@ print(df_sh[["vol",'open','close']])
 df_sh = ts.bar(conn=ts.get_apis(), code='XAUUSD',freq='X', start_date='2018-01-08', factors=[ 'tor'])
 print(df_sh)
 
-'''
+
 
 df_sz50 = ts.get_sz50s()
 df_zz = ts.get_zz500s()
 print(df_sz50)
+'''
 
+df_sh = ts.bar(conn=ts.get_apis(), code='601398', factors=[ 'tor'])
+print(df_sh)
+
+
+#df_now = ts.get_realtime_quotes('601398')
+#print(df_now)
 
 '''
 
