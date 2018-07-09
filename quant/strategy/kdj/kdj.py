@@ -4,8 +4,9 @@ from quant.feature_utils.momentum_indicators import acc_kdj
 from quant.dao.k_data.k_data_dao import k_data_dao
 from quant.common_tools.datetime_utils import get_current_date
 
+
 def cal_signal(code="600196"):
-    data = k_data_tech_feature_dao.get_k_data(code, '2018-07-01',  get_current_date())
+    data = k_data_tech_feature_dao.get_k_data(code, '2018-07-01', get_current_date())
     df_k_data = k_data_dao.get_k_data(code, start='2018-06-01', end=get_current_date())
 
     price = df_k_data['close'].tail(1).values[0]
@@ -28,11 +29,10 @@ def cal_signal(code="600196"):
         return "up"
 
     # 下穿, 死叉
-    if k_pre > d_pre and abs(k -d) < 1:
+    if k_pre > d_pre and abs(k - d) < 1:
         return "down"
 
     return "hold";
-
 
 
 if __name__ == '__main__':
@@ -48,9 +48,6 @@ if __name__ == '__main__':
 
             if label == 'up':
                 df_k_data = k_data_dao.get_k_data(code, start='2018-06-01', end='2018-07-05')
-
-
-
 
                 list.append(code)
         except:
