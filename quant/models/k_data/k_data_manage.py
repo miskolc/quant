@@ -29,14 +29,14 @@ def training_k_data():
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
-            ann = SequantialNeuralClassifier()
+            #ann = SequantialNeuralClassifier()
 
             pca.training_model(code, data, features)
             lr.training_model(code, data, features)
             svc.training_model(code, data, features)
             rf.training_model(code, data, features)
             xgb.training_model(code, data, features)
-            ann.training_model(code, data, features)
+            #ann.training_model(code, data, features)
 
             logger.debug('training mode end, code:%s' % code)
         except Exception as e:
@@ -58,19 +58,19 @@ def predict_k_data():
             svc = SupportVectorClassifier()
             rf = RandomForestClassifierModel()
             xgb = XGBoostClassier()
-            ann = SequantialNeuralClassifier()
+            #ann = SequantialNeuralClassifier()
 
             lr_pred = lr.predict(code, data[features])
             svc_pred = svc.predict(code, data[features])
             rf_pred = rf.predict(code, data[features])
             xgb_pred = xgb.predict(code, data[features])
-            ann_pred = ann.predict(code, data[features])
+            #ann_pred = ann.predict(code, data[features])
 
             k_data_predict_log_dao.insert(code, logistic_regression=lr_pred,
                                           support_vector_classifier=svc_pred,
                                           random_forest_classifier=rf_pred,
                                           xgb_classifier=xgb_pred,
-                                          sequantial_neural=ann_pred
+                                          sequantial_neural=0
                                           )
             logger.debug('predict end, code:%s' % code)
 

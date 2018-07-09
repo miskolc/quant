@@ -19,4 +19,13 @@ class StockIndustryDao:
 
         return df
 
+    @exc_time
+    def get_stock_code_list(self):
+        sql = ("select DISTINCT code from stock_industry ")
+
+        df = pd.read_sql(sql=sql
+                         , con=dataSource.mysql_quant_conn)
+
+        return df
+
 stock_industry_dao = StockIndustryDao()

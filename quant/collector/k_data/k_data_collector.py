@@ -39,7 +39,7 @@ def collect_single_daily(code, table_name='k_data'):
 @exc_time
 def collect_all():
     now = datetime.now().strftime('%Y-%m-%d')
-    df_industry = stock_industry_dao.get_list()
+    df_industry = stock_industry_dao.get_stock_code_list()
     for index,row in df_industry.iterrows():
         code = row['code']
         collect_single(code=code, start='2015-01-01', end=now)
@@ -54,7 +54,7 @@ def collect_all_daily(table_name='k_data'):
     if is_holiday:
         return
 
-    df_industry = stock_industry_dao.get_list()
+    df_industry = stock_industry_dao.get_stock_code_list()
     for index,row in df_industry.iterrows():
         code = row['code']
         collect_single_daily(code=code, table_name=table_name)

@@ -24,13 +24,13 @@ from quant.common_tools.datetime_utils import get_current_date
 
 
 def predict():
-    '''
+
     now = datetime.now().strftime('%Y-%m-%d')
     is_holiday = ts.is_holiday(now)
     # 如果是假日, 跳过
     if is_holiday:
         return
-    '''
+
     k_data_manage.predict_k_data()
 
 
