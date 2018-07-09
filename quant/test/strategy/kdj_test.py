@@ -16,7 +16,7 @@ from scipy import optimize
 
 @exc_time
 def cal_kdj():
-    df = k_data_dao.get_k_data(code='600585', start='2017-12-01', end='2018-07-06')
+    df = k_data_dao.get_k_data(code='002008', start='2017-12-01', end='2018-07-06')
 
     k_d_j = acc_kdj(df)
 
