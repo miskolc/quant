@@ -107,7 +107,7 @@ class K_Data_Dao:
         last_60 = (datetime.now() - timedelta(days=120)).strftime('%Y-%m-%d')
 
         df = self.get_k_data(code, start=last_60, end=now, cal_next_direction=False)
-        df = df[['open', 'close', 'low', 'high', 'volume', 'share_oustanding']]
+        df = df[['open', 'close', 'low', 'high', 'volume']]
 
         df_real = ts.get_realtime_quotes(code)
 
