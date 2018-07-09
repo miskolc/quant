@@ -55,7 +55,7 @@ def collect_full_daily():
     if is_holiday:
         return
 
-    df = stock_industry_dao.get_list()
+    df = stock_industry_dao.get_stock_code_list()
     for code in df['code'].values:
         try:
             collect_single_daily(code)

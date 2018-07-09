@@ -22,13 +22,13 @@ import tushare as ts
 
 
 def training():
-    '''
+
     now = datetime.now().strftime('%Y-%m-%d')
     is_holiday = ts.is_holiday(now)
     # 如果是假日, 跳过
     if is_holiday:
         return
-    '''
+
     k_data_manage.training_k_data()
 
 
