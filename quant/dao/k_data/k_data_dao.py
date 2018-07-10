@@ -36,7 +36,7 @@ class K_Data_Dao:
                from k_data k 
                where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc ''')
 
-        df = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
+        data = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
                          , con=dataSource.mysql_quant_conn)
 
         #df = stock_structure_dao.fill_stock_structure(code, df)
@@ -44,10 +44,16 @@ class K_Data_Dao:
         #df_performance = stock_performance_dao.get_by_code(code, start, end)
 
         if cal_next_direction:
-            df['p_change'] = ((df['close'] - df['pre_close']) / df['pre_close'])
-            df['next_direction'] = df['p_change'].apply(cal_direction).shift(-1)
-            df = df.dropna()
-        return df
+            data['p_change'] = ((data['close'] - data['pre_close']) / data['pre_close'])
+            #data['next_direction'] = data['p_change'].apply(cal_direction).shift(-1)
+            #计算未来3天, 给收益大于3%打上标签
+            next_3 = pd.Series(pd.Series.rolling(data['p_change'], 3).sum(), name='next_p_change_3')
+            data = data.join(next_3)
+            data['next_p_change_3'] = data['next_p_change_3'].shift(-3)
+            data['next_direction'] = data['next_p_change_3'].apply(cal_direction, i=0.03)
+
+            data = data.dropna()
+        return data
 
     @exc_time
     def get_k_data_all(self):

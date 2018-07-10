@@ -12,21 +12,12 @@ from quant.common_tools.datetime_utils import get_current_date
 from quant.dao.basic.stock_pool_dao import stock_pool_dao
 from quant.dao.k_data.k_data_dao import k_data_dao
 from quant.dao.k_data.k_data_tech_feature_dao import k_data_tech_feature_dao
+from quant.dao.basic.stock_industry_dao import stock_industry_dao
+from quant.log.quant_logging import logger
 import pandas as pd
 
-def cal_signal(code):
-    data = k_data_tech_feature_dao.get_k_data(code, '2018-07-01', get_current_date())
-    df_k_data = k_data_dao.get_k_data(code, start='2018-06-01', end=get_current_date())
 
-    price = df_k_data['close'].tail(1).values[0]
-
-    ma10 = data['ma10'].values[-1]
-    if price < ma10:
-        return
-
-    if price < 4:
-        return
-
+def cal_signal(data):
     k_pre = data['k_value'].values[-2]
     d_pre = data['d_value'].values[-2]
 
@@ -35,13 +26,31 @@ def cal_signal(code):
 
     # 上穿, 金叉
     if k_pre < d_pre and abs(k - d) < 1:
-        return "up"
+        return "up",k,d
 
     # 下穿, 死叉
     if k_pre > d_pre and abs(k - d) < 1:
-        return "down"
+        return "down",k,d
 
-    return "hold", k, d;
+    return "hold",k,d
+
+
+def cal_single_stock(code):
+    data = k_data_tech_feature_dao.get_k_data(code, get_current_date(), get_current_date())
+    df_k_data = k_data_dao.get_k_data(code, start='2018-06-01', end=get_current_date())
+
+    price = df_k_data['close'].tail(1).values[0]
+
+    ma10 = data['ma10'].values[-1]
+    if price < ma10:
+        return None, None, None
+
+    if price < 4:
+        return None, None, None
+
+    label, k, d = cal_signal(data)
+
+    return label, k, d;
 
 
 if __name__ == '__main__':
@@ -55,20 +64,33 @@ if __name__ == '__main__':
         code = row['code']
 
         try:
-            label, k, d = cal_signal(code)
+            label, k, d = cal_single_stock(code)
+
+            if label is None:
+                continue
 
             if label == 'up':
-                #data = df.append({'bk_code': bk_code, 'bk_name': bk_name, 'code': code, 'name': name}, ignore_index=True)
+                df_stock_industry = stock_industry_dao.get_by_code(code)
+                name = df_stock_industry['name'].values[0]
 
-                list.append(code)
-        except:
-            pass
-    print(list)
+                if name.find('ST') > -1:
+                    continue
+
+                bk_code = df_stock_industry['bk_code'].values[0]
+                bk_name = df_stock_industry['bk_name'].values[0]
+
+                data = data.append({'bk_code': bk_code, 'bk_name': bk_name, 'code': code,
+                                    'name': name, 'date': get_current_date(), 'label':label, 'k':k, 'd':d},
+                                   ignore_index=True)
+        except Exception as e:
+            logger.debug("code:%s, error:%s" % (code, repr(e)))
+
 
     data.to_sql('k_data_strategy_kdj_log', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
     '''
-    label = cal_signal(600017)
+    label = cal_single_stock('600006')
 
     print(label)
+
     '''

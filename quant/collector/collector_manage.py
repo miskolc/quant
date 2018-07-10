@@ -20,10 +20,11 @@ PROJECT_NAME = "quant-collector"
 
 if __name__ == '__main__':
 
-    k_data_feature_collector.collect_full_daily()
+    #k_data_feature_collector.collect_full_daily()
+    #k_data.collect_all_daily();
+    #index_k_data.collect_index_china_daily();
 
 
-    #schedule.every().day.at("15:30").do(k_data_60m.collect_hs300_daily)
     schedule.every().day.at("15:30").do(k_data.collect_all_daily)
     schedule.every().day.at("15:32").do(index_k_data.collect_index_china_daily)
     schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)

@@ -23,7 +23,7 @@ def collect_single(code, start, end, table_name='k_data_tech_feature'):
 
 @exc_time
 def collect_single_daily(code, table_name='k_data_tech_feature'):
-    start = get_next_date(-100)
+    start = get_next_date(-200)
     end = get_next_date(1)
 
     data = k_data_dao.get_k_data(code, start=start, end=end, cal_next_direction=False)

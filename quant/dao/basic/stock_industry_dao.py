@@ -11,6 +11,17 @@ import tushare as ts
 
 
 class StockIndustryDao:
+
+    @exc_time
+    def get_by_code(self, code):
+        sql = ("select `bk_code`, bk_name, code, name from stock_industry where code = %(code)s")
+
+        df = pd.read_sql(sql=sql, params={"code":code}
+                         , con=dataSource.mysql_quant_conn)
+
+        return df
+
+
     @exc_time
     def get_list(self):
         sql = ("select `bk_code`, bk_name, code, name from stock_industry ")

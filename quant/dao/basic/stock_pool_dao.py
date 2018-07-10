@@ -1,12 +1,11 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/6/7
 
+import pandas as pd
+import tushare as ts
+
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
-import pandas as pd
-from quant.dao import cal_direction
-from quant.crawler.yahoo_finance_api import yahoo_finance_api
-import tushare as ts
 
 
 class StockPoolDao:

@@ -60,7 +60,7 @@ def collect_features(df):
                 col_names_list = func_feature.columns.values
                 for col in col_names_list:
                     col_list.append(col)
-    # df.to_csv('resultt.csv')
+    #df.to_csv('resultt.csv')
     df = df.dropna()
 
     col_list = list(set(col_list))

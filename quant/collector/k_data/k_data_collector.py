@@ -7,7 +7,7 @@ from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
 from quant.dao.basic.stock_industry_dao import stock_industry_dao
-
+from quant.dao.basic.trade_date_dao import trade_date_dao
 
 # collect k_data from tushare and save into db
 @exc_time
@@ -49,7 +49,7 @@ def collect_all():
 @exc_time
 def collect_all_daily(table_name='k_data'):
     now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
+    is_holiday = trade_date_dao.is_holiday(now)
     # 如果是假日, 跳过
     if is_holiday:
         return
