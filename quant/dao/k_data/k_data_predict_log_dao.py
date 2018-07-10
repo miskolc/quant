@@ -55,7 +55,7 @@ class K_Data_Predict_Log_Dao:
                 
                 WHERE
                   (k.support_vector_classifier + k.logistic_regression + k.xgb_classifier + k.sequantial_neural +
-                   k.random_forest_classifier) >= 4
+                   k.random_forest_classifier) >= 2
                   AND k.date = :date
                 ORDER BY s.bk_code, s.code
         ''' )

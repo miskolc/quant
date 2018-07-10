@@ -45,12 +45,12 @@ class K_Data_Dao:
 
         if cal_next_direction:
             data['p_change'] = ((data['close'] - data['pre_close']) / data['pre_close'])
-            #data['next_direction'] = data['p_change'].apply(cal_direction).shift(-1)
+            data['next_direction'] = data['p_change'].apply(cal_direction, i=0.02).shift(-1)
             #计算未来3天, 给收益大于3%打上标签
-            next_3 = pd.Series(pd.Series.rolling(data['p_change'], 3).sum(), name='next_p_change_3')
-            data = data.join(next_3)
-            data['next_p_change_3'] = data['next_p_change_3'].shift(-3)
-            data['next_direction'] = data['next_p_change_3'].apply(cal_direction, i=0.03)
+            #next_3 = pd.Series(pd.Series.rolling(data['p_change'], 3).sum(), name='next_p_change_3')
+            #data = data.join(next_3)
+            #data['next_p_change_3'] = data['next_p_change_3'].shift(-3)
+            #data['next_direction'] = data['next_p_change_3'].apply(cal_direction, i=0.03)
 
             data = data.dropna()
         return data

@@ -8,7 +8,7 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
-from quant.common_tools.datetime_utils import get_current_date
+from quant.common_tools.datetime_utils import get_current_date, get_next_date
 from quant.dao.basic.stock_pool_dao import stock_pool_dao
 from quant.dao.k_data.k_data_dao import k_data_dao
 from quant.dao.k_data.k_data_tech_feature_dao import k_data_tech_feature_dao
@@ -36,8 +36,8 @@ def cal_signal(data):
 
 
 def cal_single_stock(code):
-    data = k_data_tech_feature_dao.get_k_data(code, get_current_date(), get_current_date())
-    df_k_data = k_data_dao.get_k_data(code, start='2018-06-01', end=get_current_date())
+    data = k_data_tech_feature_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
+    df_k_data = k_data_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
 
     price = df_k_data['close'].tail(1).values[0]
 
