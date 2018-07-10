@@ -88,7 +88,6 @@ def cal_pair_stock():
                     X = sm.add_constant(x)
 
                     fit_result = sm.OLS(y, X).fit()
-                    print(fit_result.summary())
                     f_value = fit_result.fittedvalues
                     coef_value = fit_result.params[1]
                     stationary_value = y - coef_value * x
