@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/6/7
+from sqlalchemy import text
 
 from quant.common_tools.decorators import exc_time
 from quant.dao.data_source import dataSource
@@ -21,8 +22,8 @@ class StockIndustryDao:
 
     @exc_time
     def get_stock_code_list(self):
-        sql = ("select DISTINCT code from stock_industry ")
-
+        # sql = ("select DISTINCT code from stock_industry")
+        sql = text("select DISTINCT code FROM stock_industry where code not like '9%' and code not like '3%' and name not like '*%' and name not like '*st' and name not like 'st%'")
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)
 
