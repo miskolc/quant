@@ -20,14 +20,15 @@ from quant.common_tools.datetime_utils import get_next_date
 
 @exc_time
 def code_muning_850():
-    code_list = stock_industry_dao.get_stock_code_list()
+    code_list = stock_industry_dao.get_stock_code_list().values.tolist()
     pair_set = set()
     for i in range(0, len(code_list)):
         for j in range(1, len(code_list)):
-            code1 = code_list[i]
-            code2 = code_list[j]
+            code1 = code_list[i][0]
+            code2 = code_list[j][0]
             code_tuple = sorted((code1, code2))
             pair_set.add((code_tuple[0], code_tuple[1]))
+    print(pair_set)
     return pair_set
 
 
