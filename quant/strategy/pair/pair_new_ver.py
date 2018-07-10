@@ -53,7 +53,7 @@ def cal_z_score(series):
 def cal_pair_stock():
     pair_set = code_muning_850()
     # pair_set = set()
-    # pair_set.add(('000538', '600518'))
+    # pair_set.add(('002500', '002736'))
     whole_df = k_data_dao.get_k_data_all()
 
     pair_stock_df = pd.DataFrame(
@@ -88,12 +88,14 @@ def cal_pair_stock():
                     X = sm.add_constant(x)
 
                     fit_result = sm.OLS(y, X).fit()
-                    print(fit_result.summary)
-                    coef_value = fit_result.fittedvalues
+                    print(fit_result.summary())
+                    f_value = fit_result.fittedvalues
+                    coef_value = fit_result.params[1]
                     stationary_value = y - coef_value * x
-                    mean_value = np.mean(y - coef_value * x)
+                    # mean_value = np.mean(y - coef_value * x)
                     z_score = cal_z_score(stationary_value)
-                    img_path = CURRENT_DIR + '/' + code1 + '-' + code2 + '.png'
+                    mean_value = np.mean(z_score)
+                    img_path = CURRENT_DIR + '/plot/' + code1 + '-' + code2 + '.png'
 
                     temp_dict = {}
                     temp_dict['stock1'] = code1
@@ -109,17 +111,17 @@ def cal_pair_stock():
 
                     plt.figure(12, figsize=(20, 10))
 
-                    #sub1
+                    # sub1
                     plt.subplot(221)
-                    plt.title(code1 + '/plot/' + code2 + '-Fit Result')
+                    plt.title(code1 + '-' + code2 + '-Fit Result')
                     plt.xlabel(code1)
                     plt.ylabel(code2)
                     plt.scatter(x, y, alpha=0.8, c=['y', 'b'], label='Prices Scatter')
-                    plt.plot(x, coef_value, 'r', label='OLS')
+                    plt.plot(x, f_value, 'r', label='OLS')
 
                     plt.legend()
 
-                    #sub2
+                    # sub2
                     plt.subplot(222)
                     plt.title('Price Curve')
                     plt.xlabel(code1)
@@ -129,23 +131,24 @@ def cal_pair_stock():
 
                     plt.legend()
 
-                    #sub3
+                    # sub3
                     plt.subplot(212)
-                    plt.title('Z-Score(current: %.4f)' % z_score.values[0])
+                    plt.title('Z-Score(current: %.4f)' % z_score.values[-1])
                     plt.xlabel('Coint-Score: %.6f' % coint_score)
-                    plt.plot(z_score.values, label='Z-Score')
-                    plt.hlines(mean_value, 0, 1000, label='Mean')
-                    plt.hlines(1, 0, 1000, colors='r', label='upper')
-                    plt.hlines(-1, 0, 1000, color='g', label='lower')
+                    plt.plot(z_score.values, color='b', label='Z-Score')
+                    plt.axhline(mean_value, label='Mean')
+                    plt.axhline(1.0, label='upper', linestyle='--', c='r')
+                    plt.axhline(-1.0, label='lower', linestyle='--', c='g')
 
                     plt.legend()
 
                     plt.savefig(img_path)
+                    plt.close()
 
 
         except Exception as e:
             print(repr(e))
-    pair_stock_df.to_csv('1.csv')
+    pair_stock_df.to_csv('pair_new.csv')
 
 
 if __name__ == '__main__':
