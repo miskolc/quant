@@ -8,7 +8,7 @@ from quant.common_tools.decorators import exc_time
 from quant.crawler.yahoo_finance_api import yahoo_finance_api
 from quant.dao.data_source import dataSource
 from quant.log.quant_logging import logger
-
+from quant.dao.basic.trade_date_dao import trade_date_dao
 '''
     上证综合指数: 000001
     深证成份指数: 399001
@@ -72,7 +72,7 @@ def collect_single_index_daily_from_ts(code, table_name='index_k_data'):
 @exc_time
 def collect_index_china_daily():
     now = datetime.now().strftime('%Y-%m-%d')
-    is_holiday = ts.is_holiday(now)
+    is_holiday = trade_date_dao.is_holiday(now)
     # 如果是假日, 跳过
     if is_holiday:
         return

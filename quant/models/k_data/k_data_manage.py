@@ -16,9 +16,10 @@ from quant.dao.basic.stock_pool_dao import stock_pool_dao
 
 
 # 训练K_data模型
-def training_k_data():
+def training_k_data(start, end):
     df = stock_pool_dao.get_list()
-    for code in df['code'].values:
+    codes = df['code'].values[start: end]
+    for code in codes:
         try:
             logger.debug('begin training mode, code:%s' % code)
             data, features = k_data_dao.get_k_data_with_features(code, '2015-01-01',
