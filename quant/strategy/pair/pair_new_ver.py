@@ -28,7 +28,6 @@ def code_muning_850():
             code2 = code_list[j][0]
             code_tuple = sorted((code1, code2))
             pair_set.add((code_tuple[0], code_tuple[1]))
-    print(pair_set)
     return pair_set
 
 
