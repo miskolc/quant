@@ -46,4 +46,3 @@ from quant.feature_utils.momentum_indicators import acc_SMA, acc_kdj
 
 df = ts.get_k_data('000651', start='2015-01-01', end='2018-07-06')
 
-acc_kdj(df)
