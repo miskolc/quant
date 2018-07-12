@@ -15,7 +15,9 @@ from quant.dao.k_data.k_data_tech_feature_dao import k_data_tech_feature_dao
 from quant.dao.basic.stock_industry_dao import stock_industry_dao
 from quant.log.quant_logging import logger
 import pandas as pd
-
+import tushare as ts
+from quant.feature_utils.momentum_indicators import acc_kdj
+from quant.feature_utils.overlaps_studies import cal_ma5,cal_ma10
 
 def cal_signal(data):
     k_pre = data['k_value'].values[-2]
@@ -25,24 +27,30 @@ def cal_signal(data):
     d = data['d_value'].values[-1]
 
     # 上穿, 金叉
-    if k_pre < d_pre and abs(k - d) < 1:
+    if k_pre < d_pre and abs(k - d) < 2:
         return "up",k,d
 
     # 下穿, 死叉
-    if k_pre > d_pre and abs(k - d) < 1:
+    if k_pre > d_pre and abs(k - d) < 2:
         return "down",k,d
 
     return "hold",k,d
 
 
 def cal_single_stock(code):
-    data = k_data_tech_feature_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
-    df_k_data = k_data_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
+    #data = k_data_tech_feature_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
+    #df_k_data = k_data_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
+    data = ts.get_k_data(code)
+    data = data.join(acc_kdj(data))
 
-    price = df_k_data['close'].tail(1).values[0]
+    data['ma10'] = cal_ma10(data)
+    data['ma5'] = cal_ma5(data)
+
+    price = data['close'].tail(1).values[0]
 
     ma10 = data['ma10'].values[-1]
-    if price < ma10:
+    ma5 = data['ma5'].values[-1]
+    if price < ma5:
         return None, None, None
 
     if price < 4:
@@ -62,7 +70,7 @@ if __name__ == '__main__':
     list = []
     for index, row in df_pool.iterrows():
         code = row['code']
-
+        logger.debug("execute code:%s" % code)
         try:
             label, k, d = cal_single_stock(code)
 

@@ -1,1 +1,0 @@
-#price_retrieval_daily('600179',)
