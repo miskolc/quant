@@ -17,6 +17,15 @@ from quant.dao.basic.stock_structure_dao import stock_structure_dao
 
 
 class K_Data_Dao:
+
+    @exc_time
+    def get_k_data(self, code, start, end):
+
+        data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start, end=end)
+        return data
+
+
+    '''
     @staticmethod
     def get_addition_index_features():
         return ['sh_direction', 'sz_direction', 'hs300_direction', 'zz500_direction',
@@ -29,32 +38,7 @@ class K_Data_Dao:
         features.extend(K_Data_Dao.get_addition_index_features())
 
         return features
-
-    @exc_time
-    def get_k_data(self, code, start, end, cal_next_direction=False):
-        sql = ('''select  k.`date`,  k.code,  k.open,  k.close,  k.high,  k.low,  k.volume,  k.pre_close
-               from k_data k 
-               where k.code=%(code)s and k.date BETWEEN %(start)s and %(end)s order by k.date asc ''')
-
-        data = pd.read_sql(sql=sql, params={"code": code, "start": start, "end": end}
-                         , con=dataSource.mysql_quant_conn)
-
-        #df = stock_structure_dao.fill_stock_structure(code, df)
-
-        #df_performance = stock_performance_dao.get_by_code(code, start, end)
-
-        if cal_next_direction:
-            data['p_change'] = ((data['close'] - data['pre_close']) / data['pre_close'])
-            data['next_direction'] = data['p_change'].apply(cal_direction).shift(-1)
-            #计算未来3天, 给收益大于3%打上标签
-            #next_3 = pd.Series(pd.Series.rolling(data['p_change'], 3).sum(), name='next_p_change_3')
-            #data = data.join(next_3)
-            #data['next_p_change_3'] = data['next_p_change_3'].shift(-3)
-            #data['next_direction'] = data['next_p_change_3'].apply(cal_direction, i=0.03)
-
-            data = data.dropna()
-        return data
-
+    
     @exc_time
     def get_k_data_all(self):
         sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data ")
@@ -134,6 +118,6 @@ class K_Data_Dao:
         features = adjust_features(features, self.get_addition_features())
 
         return df, features
-
+    '''
 
 k_data_dao = K_Data_Dao()
