@@ -4,6 +4,10 @@
 from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 
+'''
+    HS300指数: SH.000300
+
+'''
 
 class K_Data_Dao:
 
