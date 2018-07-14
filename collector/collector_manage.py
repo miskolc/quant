@@ -23,15 +23,15 @@ if __name__ == '__main__':
     #k_data_feature_collector.collect_full_daily()
     #k_data.collect_all_daily();
     #index_k_data.collect_index_china_daily();
-    k_data_feature_collector.collect_full_daily()
+    #k_data_feature_collector.collect_full_daily()
 
-    schedule.every().day.at("15:30").do(k_data.collect_all_daily)
-    schedule.every().day.at("15:32").do(index_k_data.collect_index_china_daily)
-    schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
-    schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
-    schedule.every().day.at("15:35").do(k_data_feature_collector.collect_full_daily)
+    #schedule.every().day.at("15:30").do(k_data.collect_all_daily)
+    #schedule.every().day.at("15:32").do(index_k_data.collect_index_china_daily)
+    #schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
+    #schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
+    #schedule.every().day.at("15:35").do(k_data_feature_collector.collect_full_daily)
 
-    schedule.every().friday.at("15:35").do(k_data_week_collector.collect_all_weekly)
+    #schedule.every().friday.at("15:35").do(k_data_week_collector.collect_all_weekly)
 
     #schedule.every().day.at("15:32").do(index_k_data_60m.collect_index_china_daily)
 

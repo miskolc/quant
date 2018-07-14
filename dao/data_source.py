@@ -2,6 +2,8 @@
 # greg.chen - 2018/5/19
 from sqlalchemy import create_engine, MetaData
 
+
+import futuquant as ft
 from config import default_config
 
 
@@ -33,6 +35,14 @@ class DataSource(object):
         self._mysql_quant_metadata = value
 
 
+    @property
+    def futu_quote_ctx(self):
+        return self._futu_quote_ctx
+
+    @futu_quote_ctx.setter
+    def futu_quote_ctx(self, value):
+        self._futu_quote_ctx = value
+
 dataSource = DataSource()
 
 if default_config.DATABASE_QUANT_URI:
@@ -42,4 +52,6 @@ if default_config.DATABASE_QUANT_URI:
     dataSource.mysql_quant_engine = mysql_quant_engine
     dataSource.mysql_quant_conn = mysql_quant_engine.connect()
     dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
+
+    dataSource.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
 
