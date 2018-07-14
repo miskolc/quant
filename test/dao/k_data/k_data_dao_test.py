@@ -15,6 +15,11 @@ class K_Data_Dao_Test(unittest.TestCase):
         df = k_data_dao.get_k_data("SH.600196", start="2015-01-01", end="2018-05-27")
         self.assertIsNotNone(df)
 
+    def test_get_trading_days(self):
+        df = k_data_dao.get_trading_days(start="2015-01-01", end="2018-05-27")
+        self.assertIsNotNone(df)
+        print(df)
+
     def tearDown(self):
         dataSource.futu_quote_ctx.close();
 
