@@ -21,7 +21,7 @@ class K_Data_Dao_Test(unittest.TestCase):
         print(df)
 
     def tearDown(self):
-        dataSource.futu_quote_ctx.close();
+        dataSource.futu_quote_ctx.close()
 
     '''
     def test_get_k_data_with_features(self):
