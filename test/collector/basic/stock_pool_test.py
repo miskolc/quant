@@ -14,4 +14,9 @@ class Stock_Pool_Test(unittest.TestCase):
 
     def test_get_list(self):
         df = stock_pool_dao.get_list()
+
+
+
         print(df)
+
+
