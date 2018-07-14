@@ -4,7 +4,7 @@
 import pandas as pd
 import tushare as ts
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 
 
@@ -16,6 +16,7 @@ class StockPoolDao:
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)
 
+        df['code'] = df['code'].apply(stock_pool_dao.fill_market)
         return df
 
     @exc_time
@@ -28,6 +29,15 @@ class StockPoolDao:
 
         df_zz.to_sql('stock_pool', dataSource.mysql_quant_engine, if_exists='append', index=False)
         df_hs300.to_sql('stock_pool', dataSource.mysql_quant_engine, if_exists='append', index=False)
+
+    def fill_market(self, code):
+
+        if code.startswith("6"):
+            return 'SH.'+ code
+
+        else:
+            return 'SZ.' + code
+
 
 
 stock_pool_dao = StockPoolDao()
