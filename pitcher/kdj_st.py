@@ -3,8 +3,18 @@ import numpy as np
 from dao.k_data.k_data_dao import k_data_dao
 
 
-def kdj_strategy(context):
-    kdj_data
-    data = get_k_data(start = ,end=context.current_date)
+class KDJStrategy:
+    def handle_data(self, context):
 
-    print(context.current_date)
+        k_data_df = futu_dao.kdata.get_k_data(start=context.current_date-9, end=context.current_date)
+
+        calcu_features()
+
+
+        if k[-1] > d[-1] and k[-2] < d[-2]:
+            buy()
+
+
+        print(context.current_date)
+
+    def
