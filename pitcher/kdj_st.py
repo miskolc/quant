@@ -1,9 +1,11 @@
 # ae_h - 2018/7/13
 import numpy as np
 from dao.k_data.k_data_dao import k_data_dao
-
+from common_tools.decorators import exc_time
 
 class KDJStrategy:
+
+    @exc_time
     def handle_data(self, context):
 
         k_data_df = futu_dao.kdata.get_k_data(start=context.current_date-9, end=context.current_date)
@@ -16,5 +18,3 @@ class KDJStrategy:
 
 
         print(context.current_date)
-
-    def
