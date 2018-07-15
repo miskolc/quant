@@ -1,9 +1,9 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/6/06
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from crawler.east_money_api import east_money_api
-from dao.basic.stock_industry_dao import stock_industry_dao
+from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.data_source import dataSource
 from log.quant_logging import logger
@@ -23,10 +23,10 @@ from log.quant_logging import logger
 def collect_stock_basic():
     stock_basic_dao.truncate()
 
-    df_industry = stock_industry_dao.get_list()
-    for index, row in df_industry.iterrows():
+    df_pool = stock_pool_dao.get_list()
+    for index, row in df_pool.iterrows():
         code = row['code']
-        df = east_money_api.get_stock_basic(code)
+        df = east_money_api.get_stock_basic(code[3:])
         try:
 
             df.to_sql('stock_basic', dataSource.mysql_quant_engine, if_exists='append', index=False)

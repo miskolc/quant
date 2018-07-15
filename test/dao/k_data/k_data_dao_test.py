@@ -12,7 +12,8 @@ class K_Data_Dao_Test(unittest.TestCase):
 
     def test_get_k_data(self):
 
-        df = k_data_dao.get_k_data("SH.600196", start="2015-01-01", end="2018-05-27")
+        df = k_data_dao.get_k_data("SH.000300", start="2018-01-02", end="2018-01-10")
+        print(df)
         self.assertIsNotNone(df)
 
     def test_get_trading_days(self):

@@ -3,7 +3,7 @@
 import pandas as pd
 from sqlalchemy.sql import text
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 
 

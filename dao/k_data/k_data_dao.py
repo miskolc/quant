@@ -12,7 +12,7 @@ from dao.data_source import dataSource
 
 class K_Data_Dao:
     @exc_time
-    def get_k_data(self, code, start, end):
+    def get_k_data(self, code, start=None, end=None):
         state, data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start, end=end)
         return data
 
