@@ -3,9 +3,8 @@
 
 from common_tools.decorators import exc_time
 from dao import cal_direction
-from dao.data_source import dataSource
-from config import default_config
-import futuquant as ft
+from dao.k_data import fill_market
+
 '''
     HS300指数: SH.000300
 
@@ -16,7 +15,7 @@ class K_Data_Dao:
     @exc_time
     def get_k_data(self, code, start, end, futu_quote_ctx):
 
-        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,end=end)
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
 
         return data
 
@@ -27,16 +26,14 @@ class K_Data_Dao:
 
         return data
 
-    def get_k_training_data(self, code, start=None, end=None):
-        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+    def get_k_training_data(self, code, start, end, futu_quote_ctx):
 
-        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,end=end)
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
 
         data['next_direction'] = data['change_rate'].apply(cal_direction).shift(-1)
 
         feature = ['open','close', 'high', 'low', 'pe_ratio', 'turnover_rate', 'volume']
 
-        futu_quote_ctx.close()
 
 
         return data, feature
