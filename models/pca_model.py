@@ -5,7 +5,7 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.externals import joblib
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 
 
 class PCAModel(BaseModel):

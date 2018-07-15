@@ -8,12 +8,9 @@ import futuquant as ft
 
 class K_Data_Weekly_Dao:
     @exc_time
-    def get_k_data(self, code, start=None, end=None):
-        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+    def get_k_data(self, code, start, end, futu_quote_ctx):
 
         state, data = futu_quote_ctx.get_history_kline(code, ktype='K_WEEK', autype='qfq', start=start,end=end)
-
-        futu_quote_ctx.close()
 
         return data
 
