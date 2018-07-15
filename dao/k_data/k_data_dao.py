@@ -3,7 +3,8 @@
 
 from common_tools.decorators import exc_time
 from dao.data_source import dataSource
-
+from config import default_config
+import futuquant as ft
 '''
     HS300指数: SH.000300
 
@@ -13,20 +14,33 @@ from dao.data_source import dataSource
 class K_Data_Dao:
     @exc_time
     def get_k_data(self, code, start=None, end=None):
-        state, data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,
-                                                                  end=end)
+        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+
+        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,end=end)
+
+        futu_quote_ctx.close()
+
         return data
 
     @exc_time
     def get_trading_days(self, market='SH', start=None, end=None):
-        state, data = dataSource.futu_quote_ctx.get_trading_days(market, start_date=start, end_date=end)
+        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+
+        state, data = futu_quote_ctx.get_trading_days(market, start_date=start, end_date=end)
+
+        futu_quote_ctx.close()
+
         return data
 
     def get_k_training_data(self, code, start=None, end=None):
-        state, data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,
+        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+
+        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,
                                                                   end=end)
 
         feature = ['open','close', 'high', 'low']
+
+        futu_quote_ctx.close()
 
     '''
     @staticmethod
