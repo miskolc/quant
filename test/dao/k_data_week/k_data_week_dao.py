@@ -1,6 +1,6 @@
 import unittest
 
-from dao.k_data_week.k_data_week_dao import k_data_week_dao
+from dao.k_data_weekly.k_data_weekly_dao import k_data_week_dao
 from test import before_run
 
 
