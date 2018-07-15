@@ -5,7 +5,7 @@ import requests
 import json
 import pandas as pd
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from log.quant_logging import logger
 from lxml import etree
 import io

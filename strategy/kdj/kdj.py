@@ -8,12 +8,12 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
-from common_tools import get_current_date
+from common_tools.datetime_utils import get_current_date
 from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.basic.stock_industry_dao import stock_industry_dao
 from log.quant_logging import logger
 import pandas as pd
-import tushare as ts
+from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.momentum_indicators import acc_kdj
 from feature_utils.overlaps_studies import cal_ma5,cal_ma10
 
@@ -25,11 +25,11 @@ def cal_signal(data):
     d = data['d_value'].values[-1]
 
     # 上穿, 金叉
-    if k_pre < d_pre and abs(k - d) < 2:
+    if k_pre < d_pre and abs(k - d) < 5:
         return "up",k,d
 
     # 下穿, 死叉
-    if k_pre > d_pre and abs(k - d) < 2:
+    if k_pre > d_pre and abs(k - d) < 5:
         return "down",k,d
 
     return "hold",k,d
@@ -38,7 +38,7 @@ def cal_signal(data):
 def cal_single_stock(code):
     #data = k_data_tech_feature_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
     #df_k_data = k_data_dao.get_k_data(code, start=get_next_date(-10), end=get_current_date())
-    data = ts.get_k_data(code)
+    data = k_data_dao.get_k_data(code)
     data = data.join(acc_kdj(data))
 
     data['ma10'] = cal_ma10(data)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
                 continue
 
             if label == 'up':
-                df_stock_industry = stock_industry_dao.get_by_code(code)
+                df_stock_industry = stock_industry_dao.get_by_code(code[3:])
                 name = df_stock_industry['name'].values[0]
 
                 if name.find('ST') > -1:
@@ -85,7 +85,7 @@ if __name__ == '__main__':
                 bk_code = df_stock_industry['bk_code'].values[0]
                 bk_name = df_stock_industry['bk_name'].values[0]
 
-                data = data.append({'bk_code': bk_code, 'bk_name': bk_name, 'code': code,
+                data = data.append({'bk_code': bk_code, 'bk_name': bk_name, 'code': code[3:],
                                     'name': name, 'date': get_current_date(), 'label':label, 'k':k, 'd':d},
                                    ignore_index=True)
         except Exception as e:

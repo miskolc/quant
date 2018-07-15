@@ -2,7 +2,7 @@
 # greg.chen - 2018/6/7
 from sqlalchemy import text
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 import pandas as pd
 from dao import cal_direction
