@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from sqlalchemy import MetaData, select, and_
 from dao.data_source import dataSource
 from sqlalchemy import Table
