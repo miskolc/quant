@@ -1,29 +1,30 @@
 import unittest
 
+from config import default_config
+import futuquant as ft
 from dao.k_data.k_data_dao import k_data_dao
 
-from test import before_run
-from dao.data_source import dataSource
 
 
 class K_Data_Dao_Test(unittest.TestCase):
     def setUp(self):
-        before_run()
+        # before_run()
+        self.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
 
     def test_get_k_data(self):
 
-        df = k_data_dao.get_k_data("SH.000300", start="2018-01-02", end="2018-01-10")
+        df = k_data_dao.get_k_data(code = "600196", start="2018-01-02", end="2018-01-10", futu_quote_ctx= self.futu_quote_ctx)
         print(df)
         self.assertIsNotNone(df)
 
     def test_get_trading_days(self):
-        df = k_data_dao.get_trading_days(start="2015-01-01", end="2018-05-27")
-        self.assertIsNotNone(df)
+        df = k_data_dao.get_trading_days(start="2015-01-01", end="2018-05-27", futu_quote_ctx= self.futu_quote_ctx)
         print(df)
+        self.assertIsNotNone(df)
+
 
     def tearDown(self):
-        pass
-        #dataSource.futu_quote_ctx.close()
+        self.futu_quote_ctx.close()
 
     '''
     def test_get_k_data_with_features(self):

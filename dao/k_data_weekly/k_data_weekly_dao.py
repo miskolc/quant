@@ -2,15 +2,15 @@
 # greg.chen - 2018/5/19
 
 from common_tools.decorators import exc_time
-from config import default_config
-import futuquant as ft
+
+from dao.k_data import fill_market
 
 
 class K_Data_Weekly_Dao:
     @exc_time
     def get_k_data(self, code, start, end, futu_quote_ctx):
 
-        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_WEEK', autype='qfq', start=start,end=end)
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_WEEK', autype='qfq', start=start,end=end)
 
         return data
 
