@@ -3,6 +3,7 @@ import datetime
 
 import numpy as np
 from dao.k_data.k_data_dao import k_data_dao
+from dao.k_data_weekly.k_data_weekly_dao import k_data_week_dao
 from common_tools.decorators import exc_time
 from feature_utils.momentum_indicators import acc_kdj
 from pitcher.context import Context

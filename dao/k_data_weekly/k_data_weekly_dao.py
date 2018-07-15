@@ -5,8 +5,7 @@ from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 
 
-class K_Data_Week_Dao:
-
+class K_Data_Weekly_Dao:
     @exc_time
     def get_k_data(self, code, start=None, end=None):
         state, data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_WEEK', autype='qfq', start=start,
@@ -23,4 +22,5 @@ class K_Data_Week_Dao:
         return df
     '''
 
-k_data_week_dao = K_Data_Week_Dao()
+
+k_data_weekly_dao = K_Data_Weekly_Dao()
