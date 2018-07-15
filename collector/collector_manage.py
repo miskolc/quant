@@ -9,10 +9,8 @@ CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
-import collector.k_data.k_data_collector as k_data
-import collector.k_data.k_data_technical_feature_collector as k_data_feature_collector
-import collector.k_data.index_k_data_collector as index_k_data
-import collector.k_data_week.k_data_week_collector as k_data_week_collector
+import collector.basic.stock_basic_collector as stock_basic_collector
+
 import schedule
 import time
 
@@ -36,7 +34,7 @@ if __name__ == '__main__':
     #schedule.every().day.at("15:32").do(index_k_data_60m.collect_index_china_daily)
 
     #
-    #schedule.every().day.at("15:35").do(k_data_60m_technical_feature_collector.collect_hs300_daily)
+    schedule.every().day.at("15:35").do(stock_basic_collector.collect_stock_basic)
 
 
 
