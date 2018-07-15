@@ -24,7 +24,7 @@ class KDJStrategy:
         # for code in context.pool:
         daily_stock_data = k_data_dao.get_k_data(code='SZ.000528', start=get_next_date(days=-30, args=context.current_date),
                                            end=get_current_date(context.current_date))
-        weekly_stock_date = 
+        weekly_stock_date =
         daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
 
         # stock_data = daily_stock_data.join(ma_frame)

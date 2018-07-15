@@ -16,7 +16,7 @@ class K_Data_Week_Dao:
     '''
     @exc_time
     def get_k_data_all(self):
-        sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data_week ")
+        sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data_weekly ")
 
         df = pd.read_sql(sql=sql, con=dataSource.mysql_quant_conn)
         df = df.dropna()

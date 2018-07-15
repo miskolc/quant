@@ -11,7 +11,7 @@ from dao.basic.stock_industry_dao import stock_industry_dao
 
 # collect k_data from tushare and save into db
 @exc_time
-def collect_single(code, start, end, table_name='k_data_week'):
+def collect_single(code, start, end, table_name='k_data_weekly'):
     try:
         data = ts.get_k_data(code, start=start, end=end, ktype='W')
         data['code'] = code
