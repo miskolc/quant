@@ -2,14 +2,19 @@
 # greg.chen - 2018/5/19
 
 from common_tools.decorators import exc_time
-from dao.data_source import dataSource
+from config import default_config
+import futuquant as ft
 
 
 class K_Data_Weekly_Dao:
     @exc_time
     def get_k_data(self, code, start=None, end=None):
-        state, data = dataSource.futu_quote_ctx.get_history_kline(code, ktype='K_WEEK', autype='qfq', start=start,
-                                                                  end=end)
+        futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
+
+        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_WEEK', autype='qfq', start=start,end=end)
+
+        futu_quote_ctx.close()
+
         return data
 
     '''

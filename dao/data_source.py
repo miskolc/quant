@@ -53,5 +53,4 @@ if default_config.DATABASE_QUANT_URI:
     dataSource.mysql_quant_conn = mysql_quant_engine.connect()
     dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
 
-    dataSource.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
 
