@@ -13,22 +13,44 @@ from dao.k_data.k_data_dao import k_data_dao
 import seaborn as sns
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from dao.basic.stock_industry_dao import stock_industry_dao
+from dao.basic.stock_pool_dao import stock_pool_dao
+
+
+# @exc_time
+# def code_muning_850():
+#     code_list = stock_industry_dao.get_stock_code_list().values.tolist()
+#     pair_set = set()
+#     for i in range(0, len(code_list)):
+#         for j in range(1, len(code_list)):
+#             code1 = code_list[i][0]
+#             code2 = code_list[j][0]
+#             code_tuple = sorted((code1, code2))
+#             pair_set.add((code_tuple[0], code_tuple[1]))
+#     # return pair_set
+#     print(len(pair_set))
+#     print(pair_set)
 
 
 @exc_time
-def code_muning_850():
-    code_list = stock_industry_dao.get_stock_code_list().values.tolist()
-    pair_set = set()
-    for i in range(0, len(code_list)):
-        for j in range(1, len(code_list)):
+def code_muning():
+    code_list = stock_pool_dao.get_list().values.tolist()
+    # code_list = ['a', 'b', 'c', 'd', 'e']
+    lenth = len(code_list) - 1
+    pair_sets = []
+
+    for i in range(0, lenth, 1):
+        for j in range(lenth, 0, -1):
+            if i == j or j < i:
+                continue
             code1 = code_list[i][0]
             code2 = code_list[j][0]
-            code_tuple = sorted((code1, code2))
-            pair_set.add((code_tuple[0], code_tuple[1]))
-    return pair_set
+            pair_sets.append((code1, code2))
 
+    # print(pair_sets)
+    # print(len(pair_sets))
+    return pair_sets
 
 @exc_time
 def industry_filter(code1, code2):
@@ -50,7 +72,7 @@ def cal_z_score(series):
 
 @exc_time
 def cal_pair_stock():
-    pair_set = code_muning_850()
+    pair_set = code_muning()
     # pair_set = set()
     # pair_set.add(('002500', '002736'))
     whole_df = k_data_dao.get_k_data_all()
@@ -150,49 +172,4 @@ def cal_pair_stock():
 
 
 if __name__ == '__main__':
-    cal_pair_stock()
-
-
-
-
-
-    #
-    # stock1 = k_data_dao.get_k_data(code='601998', start='2015-01-01', end='2017-12-31')
-    # stock2 = k_data_dao.get_k_data(code='601818', start='2015-01-01', end='2017-12-31')
-    #
-    # stock1_price = stock1['close']
-    # stock2_price = stock2['close']
-    #
-    # close_vect = pd.concat([stock1_price, stock2_price], axis=1)
-    # close_vect.columns = ['601998', '601818']
-    # close_vect = close_vect.fillna(method='ffill')
-    #
-    # coint_result = sm.tsa.stattools.coint(close_vect['601998'], close_vect['601818'])
-
-    # print(coint_result[1])
-
-    # x = close_vect['601998']
-    # y = close_vect['601818']
-    #
-    # X = sm.add_constant(x)
-    # fit_result = sm.OLS(y, X).fit()
-    # print(fit_result.summary())
-    #
-    # sns.set_style('darkgrid')
-    #
-    # fig, ax = plt.subplots()
-    # plt.title(code/fit_result.fittedvalues)
-    # plt.xlabel(stock1['code'].values[0])
-    # plt.ylabel(stock2['code'].values[0])
-    # ax.scatter(x, y, s=10, alpha=0.8, c=['g', 'b'], label='s1')
-    # ax.plot(x, fit_result.fittedvalues, 'r', label='OLS')
-    #
-    # ax.legend(loc='best')
-    # plt.show()
-
-    # regu_df = pd.DataFrame({'Stationary': y - fit_result.fittedvalues*x, 'Mean': np.mean(y - fit_result.fittedvalues*x)})
-    #
-    # plt.plot(regu_df['Stationary'], label='res')
-    # plt.plot(regu_df['Mean'], label='mean')
-    # plt.legend()
-    # plt.show()
+    code_muning()
