@@ -83,7 +83,7 @@ class KDJStrategy:
                                     'ma20': ma20_close, 'profits_yoy': profits_yoy,
                                     'bm': 1 / basic_data['pb'].loc[-1:].values[0], 'mavol5': mavol5, 'mavol20': mavol20}
                     target_frame.loc[target_frame.shape[0] + 1] = target_stock
-                    
+
 
         # target_frame.to_csv('kdj_result.csv')
         # 死叉
