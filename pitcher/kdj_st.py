@@ -5,31 +5,26 @@ import pandas as pd
 
 from common_tools.datetime_utils import get_current_date, get_next_date
 from common_tools.decorators import exc_time
-from config import default_config
 from dao.basic.stock_basic_dao import stock_basic_dao
-from dao.k_data.k_data_dao import k_data_dao
-from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
-from feature_utils.momentum_indicators import acc_kdj
-from feature_utils.custome_features import cal_mavol5, cal_mavol20
-from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
-from pitcher.context import Context
 from dao.basic.stock_pool_dao import stock_pool_dao
-import futuquant as ft
+from dao.k_data.k_data_dao import k_data_dao
+from feature_utils.custome_features import cal_mavol5, cal_mavol20
+from feature_utils.momentum_indicators import acc_kdj
+from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
+from pitcher.Strategy import Strategy
+from pitcher.context import Context
 
 
-class KDJStrategy:
+class KDJStrategy(Strategy):
     def init(self, context):
         context.pool = stock_pool_dao.get_list()['code'].values
-        context.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST,
-                                                     port=default_config.FUTU_OPEND_PORT)
+
 
     def fill_zero(self, code):
         code = str(code)
         code = code.zfill(6)
         return code
 
-    def buy_in(self, stock):
-        context.buy_in_price =
 
     @exc_time
     def handle_data(self, context):
@@ -88,6 +83,7 @@ class KDJStrategy:
         # target_frame.to_csv('kdj_result.csv')
         # 死叉
             if pre_k > pre_d and ((k_value <= d_value) or (abs(k_value - d_value)<=10)):
+                pass
 
 
 if __name__ == '__main__':
