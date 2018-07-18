@@ -34,7 +34,7 @@ class K_Data_Dao:
 
         feature = ['open','close', 'high', 'low', 'pe_ratio', 'turnover_rate', 'volume']
 
-
+        data = data.dropna()
 
         return data, feature
 

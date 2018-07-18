@@ -28,8 +28,8 @@ class KDJStrategy:
         code = code.zfill(6)
         return code
 
-    def buy_in(self, stock):
-        context.buy_in_price =
+    # def buy_in(self, stock):
+        # context.buy_in_price =
 
     @exc_time
     def handle_data(self, context):
@@ -77,7 +77,7 @@ class KDJStrategy:
                 # pre_w_k_value = weekly_stock_date['k_value'] = weekly_stock_date['k_value'].iloc[-2:].values[0]
                 # pre_w_d_value = weekly_stock_date['d_value'] = weekly_stock_date['d_value'].iloc[-2:].values[0]
                 #
-                if last_close > ma5_close and mavol5 > mavol20 and profits_yoy > 30:
+                if last_close > ma5_close and profits_yoy > 30:
                     target_stock = {'code': self.fill_zero(code), 'close': last_close, 'k_value': k_value,
                                     'd_value': d_value, 'pre_k': pre_k, 'pre_d': pre_d,
                                     'ma20': ma20_close, 'profits_yoy': profits_yoy,
@@ -85,9 +85,9 @@ class KDJStrategy:
                     target_frame.loc[target_frame.shape[0] + 1] = target_stock
 
 
-        # target_frame.to_csv('kdj_result.csv')
+        target_frame.to_csv('kdj_result.csv')
         # 死叉
-            if pre_k > pre_d and ((k_value <= d_value) or (abs(k_value - d_value)<=10)):
+        #     if pre_k > pre_d and ((k_value <= d_value) or (abs(k_value - d_value)<=10)):
 
 
 if __name__ == '__main__':
