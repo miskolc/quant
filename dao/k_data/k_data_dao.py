@@ -4,8 +4,6 @@
 from common_tools.decorators import exc_time
 from dao import cal_direction
 from dao.k_data import fill_market
-from feature_utils.overlaps_studies import cal_ma20
-
 
 '''
     HS300指数: SH.000300
@@ -35,8 +33,6 @@ class K_Data_Dao:
         data['next_direction'] = data['change_rate'].apply(cal_direction).shift(-1)
 
         feature = ['open','close', 'high', 'low', 'pe_ratio', 'turnover_rate', 'volume']
-
-        cal_ma20(data)
 
         data = data.dropna()
 

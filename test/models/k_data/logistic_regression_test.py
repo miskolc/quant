@@ -33,6 +33,8 @@ class Logistic_Regression_Test(unittest.TestCase):
         model = LogisticRegressionClassifier()
         model.training_model(code, data, features)
 
+
+
     def test_predict(self):
         code = '600196'
         df_index = index_k_data_dao.get_rel_price();
