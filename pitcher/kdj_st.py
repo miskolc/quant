@@ -3,7 +3,7 @@ import datetime
 
 import pandas as pd
 
-from common_tools.datetime_utils import get_current_date, get_next_date
+from common_tools.datetime_utils import get_current_date, get_next_date, convert_to_datetime
 from common_tools.decorators import exc_time
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.basic.stock_pool_dao import stock_pool_dao
@@ -11,13 +11,20 @@ from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.custome_features import cal_mavol5, cal_mavol20
 from feature_utils.momentum_indicators import acc_kdj
 from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
-from pitcher.Strategy import Strategy
+from pitcher.strategy import Strategy
 from pitcher.context import Context
-
+from config import default_config
+import futuquant as ft
+from log.quant_logging import logger
 
 class KDJStrategy(Strategy):
+    
     def init(self, context):
-        context.pool = stock_pool_dao.get_list()['code'].values
+        super(KDJStrategy, self).init(context)
+        
+        #context.pool = stock_pool_dao.get_list()['code'].values
+        self.context = context
+        self.context.pool = ["000528"]
 
 
     def fill_zero(self, code):
@@ -27,15 +34,15 @@ class KDJStrategy(Strategy):
 
 
     @exc_time
-    def handle_data(self, context):
+    def handle_data(self):
         target_frame = pd.DataFrame(
             columns=['code', 'close', 'k_value', 'd_value', 'pre_k', 'pre_d', 'ma20', 'profits_yoy', 'bm', 'mavol5',
                      'mavol20'])
-        for code in context.pool:
+        for code in self.context.pool:
             daily_stock_data = k_data_dao.get_k_data(code=code,
                                                      start=get_next_date(days=-30, args=context.current_date),
-                                                     end=get_current_date(context.current_date),
-                                                     futu_quote_ctx=context.futu_quote_ctx)
+                                                     end=get_current_date(self.context.current_date),
+                                                     futu_quote_ctx=self.context.futu_quote_ctx)
 
             daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
             try:
@@ -71,25 +78,46 @@ class KDJStrategy(Strategy):
                 # w_d_value = weekly_stock_date['d_value'] = weekly_stock_date['d_value'].iloc[-1:].values[0]
                 # pre_w_k_value = weekly_stock_date['k_value'] = weekly_stock_date['k_value'].iloc[-2:].values[0]
                 # pre_w_d_value = weekly_stock_date['d_value'] = weekly_stock_date['d_value'].iloc[-2:].values[0]
-                #
-                if last_close > ma5_close and mavol5 > mavol20 and profits_yoy > 30:
+                # and mavol5 > mavol20
+                if last_close > ma5_close  and profits_yoy > 30:
                     target_stock = {'code': self.fill_zero(code), 'close': last_close, 'k_value': k_value,
                                     'd_value': d_value, 'pre_k': pre_k, 'pre_d': pre_d,
                                     'ma20': ma20_close, 'profits_yoy': profits_yoy,
                                     'bm': 1 / basic_data['pb'].loc[-1:].values[0], 'mavol5': mavol5, 'mavol20': mavol20}
                     target_frame.loc[target_frame.shape[0] + 1] = target_stock
 
+                    self.buy_in_percent(code=code, price=last_close, percent=0.1)
+
 
         # target_frame.to_csv('kdj_result.csv')
         # 死叉
             if pre_k > pre_d and ((k_value <= d_value) or (abs(k_value - d_value)<=10)):
-                pass
+
+                shares = self.context.portfolio.positions[code].shares
+                # 清仓
+                if shares > 0:
+                    self.sell_value(code, shares)
 
 
 if __name__ == '__main__':
     context = Context(start='2018-07-01', end='2018-07-14', base_capital=50000)
-    context.current_date = datetime.datetime.now()
+
     kdj = KDJStrategy()
     kdj.init(context)
-    kdj.handle_data(context)
-    context.futu_quote_ctx.close()
+
+    context.current_date = convert_to_datetime('2018-6-22')
+    kdj.handle_data()
+
+
+    logger.debug("base_capital:%s" % context.base_capital)
+    logger.debug("blance:%s" % context.blance)
+
+    context.current_date = convert_to_datetime('2018-07-04')
+    kdj.handle_data()
+
+
+    logger.debug(context.order_book[1])
+    logger.debug("blance:%s" % context.blance)
+    logger.debug("base_capital:%s" % context.base_capital)
+
+    kdj.context.futu_quote_ctx.close()

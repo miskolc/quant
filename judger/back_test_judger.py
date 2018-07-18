@@ -5,19 +5,19 @@ import matplotlib.pyplot as plt
 from dao.k_data.k_data_dao import k_data_dao
 from common_tools.decorators import exc_time
 import pandas as pd
-from config import default_config
-import futuquant as ft
+
 
 
 class DailyBackTestJudger():
     def __init__(self, start, end, base_capital):
         self.context = Context(start, end, base_capital)
-        self.context.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST,
-                                                     port=default_config.FUTU_OPEND_PORT)
+
         return
 
     @exc_time
     def execute(self, strategy):
+        strategy.init(self.context)
+
         for date in self.get_trade_days():
             self.context.current_date = date
             strategy.handle_date(self.context)

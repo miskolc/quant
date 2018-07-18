@@ -24,3 +24,6 @@ def get_next_date(days, args=None):
     else:
         return (datetime.now() + timedelta(days)).strftime(DATE_FORMAT)
 
+
+def convert_to_datetime(date):
+    return datetime.strptime(date, DATE_FORMAT)
