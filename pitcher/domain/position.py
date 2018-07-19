@@ -14,6 +14,7 @@ class Position(object):
         # 总金额
         self.total = total
 
+
     def __str__(self):
         # Override to print a readable string presentation of your object
         # below is a dynamic way of doing this without explicity constructing the string manually

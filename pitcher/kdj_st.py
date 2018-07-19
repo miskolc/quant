@@ -1,21 +1,18 @@
 # ae_h - 2018/7/13
-import datetime
 
 import pandas as pd
 
 from common_tools.datetime_utils import get_current_date, get_next_date, convert_to_datetime
 from common_tools.decorators import exc_time
 from dao.basic.stock_basic_dao import stock_basic_dao
-from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.custome_features import cal_mavol5, cal_mavol20
 from feature_utils.momentum_indicators import acc_kdj
 from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
-from pitcher.strategy import Strategy
-from pitcher.context import Context
-from config import default_config
-import futuquant as ft
 from log.quant_logging import logger
+from pitcher.context import Context
+from pitcher.strategy import Strategy
+
 
 class KDJStrategy(Strategy):
     
@@ -106,6 +103,7 @@ if __name__ == '__main__':
     kdj.init(context)
 
     context.current_date = convert_to_datetime('2018-6-22')
+    kdj.before_handle_data()
     kdj.handle_data()
 
 
@@ -113,6 +111,7 @@ if __name__ == '__main__':
     logger.debug("blance:%s" % context.blance)
 
     context.current_date = convert_to_datetime('2018-07-04')
+    kdj.before_handle_data()
     kdj.handle_data()
 
 

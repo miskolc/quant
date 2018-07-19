@@ -26,8 +26,8 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     DEBUG = False
     DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.80.32:3306/quant?charset=utf8"
-    FUTU_OPEND_HOST = "192.168.80.32"
-    FUTU_OPEND_HOST_PORT = 11111
+    FUTU_OPEND_HOST = "s1.natapp.cc"
+    FUTU_OPEND_PORT = 12111
 
 
 class RemoteDevelopmentConfig(Config):
