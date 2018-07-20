@@ -9,7 +9,7 @@ import numpy as np
 from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.momentum_indicators import acc_kdj
 import pandas as pd
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 import matplotlib.pyplot as plt
 from scipy import optimize
 

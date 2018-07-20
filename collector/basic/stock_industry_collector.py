@@ -4,8 +4,7 @@
 from crawler.east_money_api import east_money_api
 from dao.data_source import dataSource
 
-from common_tools import error_handler
-from common_tools import exc_time
+from common_tools.decorators import exc_time, error_handler
 
 
 @exc_time
