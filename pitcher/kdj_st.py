@@ -12,7 +12,7 @@ from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
 from log.quant_logging import logger
 from pitcher.context import Context
 from pitcher.strategy import Strategy
-
+import json
 
 class KDJStrategy(Strategy):
     
@@ -36,10 +36,11 @@ class KDJStrategy(Strategy):
             columns=['code', 'close', 'k_value', 'd_value', 'pre_k', 'pre_d', 'ma20', 'profits_yoy', 'bm', 'mavol5',
                      'mavol20'])
         for code in self.context.pool:
+
             daily_stock_data = k_data_dao.get_k_data(code=code,
-                                                     start=get_next_date(days=-30, args=context.current_date),
-                                                     end=get_current_date(self.context.current_date),
-                                                     futu_quote_ctx=self.context.futu_quote_ctx)
+                                                     start=get_next_date(days=-30, args=self.context.current_date),
+                                                     end=self.context.current_date,
+                                                     futu_quote_ctx=self.futu_quote_ctx)
 
             daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
             try:
@@ -95,6 +96,8 @@ class KDJStrategy(Strategy):
                 if shares > 0:
                     self.sell_value(code, shares)
 
+def obj_dict(obj):
+    return obj.__dict__
 
 if __name__ == '__main__':
     context = Context(start='2018-07-01', end='2018-07-14', base_capital=50000)
@@ -102,15 +105,21 @@ if __name__ == '__main__':
     kdj = KDJStrategy()
     kdj.init(context)
 
-    context.current_date = convert_to_datetime('2018-6-22')
+    context.current_date = '2018-6-22'
     kdj.before_handle_data()
     kdj.handle_data()
 
 
     logger.debug("base_capital:%s" % context.base_capital)
     logger.debug("blance:%s" % context.blance)
+    logger.debug("positions:%s" % context.portfolio.positions)
+    logger.debug("profits:%s" % context.profits)
+    logger.debug("order_book:%s" % context.order_book)
+    json = json.dumps(context, default=obj_dict)
+    logger.debug("profits:"+json)
 
-    context.current_date = convert_to_datetime('2018-07-04')
+
+    context.current_date = '2018-07-04'
     kdj.before_handle_data()
     kdj.handle_data()
 
@@ -118,5 +127,8 @@ if __name__ == '__main__':
     logger.debug(context.order_book[1])
     logger.debug("blance:%s" % context.blance)
     logger.debug("base_capital:%s" % context.base_capital)
+    logger.debug("positions:%s" % context.portfolio.positions)
+    logger.debug("profits:%s" % context.profits)
+    logger.debug("order_book:%s" % context.order_book)
 
-    kdj.context.futu_quote_ctx.close()
+    kdj.futu_quote_ctx.close()
