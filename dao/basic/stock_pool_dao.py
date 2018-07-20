@@ -11,7 +11,7 @@ from dao.data_source import dataSource
 class StockPoolDao:
     @exc_time
     def get_list(self):
-        sql = ("select DISTINCT code, name from stock_pool ")
+        sql = ("select DISTINCT code, name from stock_pool where type='hs300'")
 
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)
