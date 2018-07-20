@@ -26,15 +26,15 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     DEBUG = False
     DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@192.168.80.32:3306/quant?charset=utf8"
-    FUTU_OPEND_HOST = "s1.natapp.cc"
-    FUTU_OPEND_PORT = 12111
+    FUTU_OPEND_HOST = "192.168.80.32"
+    FUTU_OPEND_PORT = 11111
 
 
 class RemoteDevelopmentConfig(Config):
     DEBUG = True
     DATABASE_QUANT_URI = "mysql+mysqldb://root:aGiOxoNrqbeT7XWW@s1.natapp.cc:33068/quant?charset=utf8"
-    FUTU_OPEND_HOST = "localhost"
-    FUTU_OPEND_HOST_PORT = 11111
+    FUTU_OPEND_HOST = "s1.natapp.cc"
+    FUTU_OPEND_PORT = 12111
 
 
 config = {
@@ -50,7 +50,7 @@ if env is not None and env in config.keys():
     config["default"] = config[env]
     pass
 else:
-    config["default"] = DevelopmentConfig
+    config["default"] = RemoteDevelopmentConfig
 
 default_config = config['default']
 

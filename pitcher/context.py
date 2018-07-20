@@ -20,8 +20,6 @@ class Context:
         # 账户余额
         self.blance = base_capital
 
-        self.profit_df = pd.DataFrame(
-            columns=['code', 'daily_profit', 'daily_change_rate', 'total_profit', 'total_change_rate'])
         # 下单记录
         self.order_book = []
         # 投资组合, 'code', 'shares', 'price', 'total'
@@ -32,6 +30,8 @@ class Context:
         self.tax_rate = 0.001
         # 佣金, 双边收费
         self.commission_rate = 0.00025
+        # 记录每日收益
+        self.profits = []
 
     def __getattr__(self, item):
         return item

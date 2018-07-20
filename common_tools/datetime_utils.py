@@ -20,6 +20,7 @@ def get_current_date_hour():
 
 def get_next_date(days, args=None):
     if args:
+        args = convert_to_datetime(args)
         return (args + timedelta(days)).strftime(DATE_FORMAT)
     else:
         return (datetime.now() + timedelta(days)).strftime(DATE_FORMAT)

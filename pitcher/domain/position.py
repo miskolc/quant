@@ -1,10 +1,10 @@
-
+import json
 '''
     仓位类
 '''
 class Position(object):
 
-    def __init__(self, code, price, shares, total):
+    def __init__(self, code, price, shares, total, create_time):
         # 股票代码
         self.code = code
         # 价格
@@ -14,8 +14,9 @@ class Position(object):
         # 总金额
         self.total = total
 
+        self.create_time = create_time
 
-    def __str__(self):
-        # Override to print a readable string presentation of your object
-        # below is a dynamic way of doing this without explicity constructing the string manually
-        return ', '.join(['{key}={value}'.format(key=key, value=self.__dict__.get(key)) for key in self.__dict__])
+
+    def __repr__(self):
+
+        return json.dumps(self.__dict__)
