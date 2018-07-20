@@ -28,3 +28,7 @@ def get_next_date(days, args=None):
 
 def convert_to_datetime(date):
     return datetime.strptime(date, DATE_FORMAT)
+
+
+def get_current_quater(current_datetime):
+    return datetime.now().month // 3 + 1
