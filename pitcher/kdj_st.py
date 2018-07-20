@@ -104,7 +104,7 @@ if __name__ == '__main__':
     kdj = KDJStrategy()
     kdj.init(context)
 
-    context.current_date = convert_to_datetime('2018-7-19')
+    context.current_date = convert_to_datetime('2018-7-20')
     kdj.handle_data()
 
     logger.debug("base_capital:%s" % context.base_capital)
