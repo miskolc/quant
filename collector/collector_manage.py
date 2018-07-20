@@ -6,7 +6,7 @@ import sys
 
 # Append project path to system path
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
+ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
 
 import collector.basic.stock_basic_collector as stock_basic_collector

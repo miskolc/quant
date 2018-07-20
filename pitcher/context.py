@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from pitcher.domian.portfolio import Portfolio
+from pitcher.domain.portfolio import Portfolio
 
 
 class Context:
@@ -11,7 +11,9 @@ class Context:
         self.start = start
         # 结束时间
         self.end = end
-        # 总额
+        # 初始金额
+        self.init_capital = base_capital
+        # 总金额
         self.base_capital = base_capital
 
 
@@ -26,6 +28,10 @@ class Context:
         self.portfolio = Portfolio()
         # 当前时间
         self.current_date = None
+        # 印花税
+        self.tax_rate = 0.001
+        # 佣金, 双边收费
+        self.commission_rate = 0.00025
 
     def __getattr__(self, item):
         return item

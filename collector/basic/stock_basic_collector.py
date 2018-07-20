@@ -26,7 +26,7 @@ def collect_stock_basic():
     df_pool = stock_pool_dao.get_list()
     for index, row in df_pool.iterrows():
         code = row['code']
-        df = east_money_api.get_stock_basic(code[3:])
+        df = east_money_api.get_stock_basic(code)
         try:
 
             df.to_sql('stock_basic', dataSource.mysql_quant_engine, if_exists='append', index=False)

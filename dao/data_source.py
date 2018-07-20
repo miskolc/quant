@@ -2,8 +2,6 @@
 # greg.chen - 2018/5/19
 from sqlalchemy import create_engine, MetaData
 
-
-import futuquant as ft
 from config import default_config
 
 
