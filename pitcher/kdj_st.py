@@ -39,8 +39,8 @@ class KDJStrategy(Strategy):
         for code in self.context.pool:
             daily_stock_data = k_data_dao.get_k_data(code=code,
                                                      start=get_next_date(days=-30, args=context.current_date),
-                                                     end=get_current_date(self.context.current_date),
-                                                     futu_quote_ctx=self.context.futu_quote_ctx)
+                                                     end=self.context.current_date,
+                                                     futu_quote_ctx=self.futu_quote_ctx)
 
             daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
             try:
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     kdj = KDJStrategy()
     kdj.init(context)
 
-    context.current_date = convert_to_datetime('2018-7-20')
+    context.current_date = '2018-7-20'
     kdj.handle_data()
 
     logger.debug("base_capital:%s" % context.base_capital)
@@ -117,4 +117,4 @@ if __name__ == '__main__':
     logger.debug("blance:%s" % context.blance)
     logger.debug("base_capital:%s" % context.base_capital)
 
-    kdj.context.futu_quote_ctx.close()
+    kdj.futu_quote_ctx.close()
