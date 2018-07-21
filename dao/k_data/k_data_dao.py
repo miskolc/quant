@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
+from functools import lru_cache
 
 from common_tools.decorators import exc_time
 from dao import cal_direction
@@ -25,6 +26,15 @@ class K_Data_Dao:
         state, data = futu_quote_ctx.get_trading_days(market, start_date=start, end_date=end)
 
         return data
+
+    @exc_time
+    def get_multiple_history_kline(self, code_list, start, end, futu_quote_ctx):
+        code_list = list(map(fill_market, code_list))
+
+        state, data = futu_quote_ctx.get_multiple_history_kline(codelist=code_list
+                                                                , start=start, end=end,  ktype='K_DAY', autype='qfq')
+        return data
+
 
     def get_k_training_data(self, code, start, end, futu_quote_ctx):
 

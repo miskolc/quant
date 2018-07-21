@@ -2,48 +2,73 @@ import futuquant as ft
 
 from common_tools.trade_fee_utlis import cal_commission_fee, cal_tax_fee
 from config import default_config
+from dao.basic.stock_basic_dao import stock_basic_dao
+from dao.k_data import fill_market
 from dao.k_data.k_data_dao import k_data_dao
 from pitcher.domain.order import Order
 from pitcher.domain.position import Position
 from pitcher.domain.profit import Profit
+from common_tools.datetime_utils import get_next_date
 
 
 class Strategy:
     def init(self, context):
         self.context = context
         self.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST,
-                                                          port=default_config.FUTU_OPEND_PORT)
+                                                  port=default_config.FUTU_OPEND_PORT)
+
+    def before_trade(self):
+        # 获取code pool的所有的k_data
+        k_data_list = k_data_dao.get_multiple_history_kline(code_list=self.context.pool,
+                                                            start=get_next_date(days=-60, args=self.context.start),
+                                                            end=get_next_date(days=60, args=self.context.end),
+                                                            futu_quote_ctx=self.futu_quote_ctx)
+        self.k_data_dict = {}
+        for data in k_data_list:
+            code = data["code"].tail(1).values[0]
+            self.k_data_dict[code] = data
+
+        self.basic_data = stock_basic_dao.get_all()
+
+    def get_k_data(self, code, start, end):
+
+        start = start + " 00:00:00"
+        end = end + " 00:00:00"
+        code = fill_market(code)
+        k_data = self.k_data_dict[code]
+
+        return k_data.loc[(start <= k_data['time_key']) & (k_data['time_key'] <= end)]
+
+    def get_stock_basic(self, code):
+
+        return self.basic_data.loc[self.basic_data['code'] == code]
 
     def before_handle_data(self):
 
         if len(self.context.portfolio.positions) == 0:
             # 记录当日收益
-            self.context.profits.append(Profit(self.context.current_date, self.context.base_capital/self.context.init_capital))
+            self.context.profits.append(
+                Profit(self.context.current_date, self.context.base_capital / self.context.init_capital))
             return
 
         p_total = 0.0
         for position in self.context.portfolio.positions:
-            daily_stock_data = k_data_dao.get_k_data(code=position.code,
+            daily_stock_data = self.get_k_data(code=position.code,
                                                      start=self.context.current_date,
-                                                     end=self.context.current_date,
-                                                     futu_quote_ctx=self.futu_quote_ctx)
-
+                                                     end=self.context.current_date)
 
             # 如果当日没有交易数据, 使用上一日的仓位数据填充
             if len(daily_stock_data.index) > 0:
-
                 price = daily_stock_data['close'].tail(1).values[0]
                 position.price = price
 
             total = position.price * position.shares
-            p_total += total  - self.cal_sell_trade_fee(total)
+            p_total += total - self.cal_sell_trade_fee(total)
 
         # 计算净资产
         net_asset = p_total + self.context.blance
         # 记录当日收益
-        self.context.profits.append(Profit(self.context.current_date, net_asset/self.context.init_capital))
-
-
+        self.context.profits.append(Profit(self.context.current_date, net_asset / self.context.init_capital))
 
     # 买入
     # percent range is 0~1
@@ -78,7 +103,6 @@ class Strategy:
             trade_fee = cal_commission_fee(self.context.commission_rate, total)
             total = total + trade_fee
 
-
         # 账户余额扣除交易费用 + 交易金额
         self.context.blance -= total
         # 净资产扣除交易费用
@@ -99,7 +123,6 @@ class Strategy:
 
         if shares > total_shares:
             raise ValueError('shares invalid')
-
 
         price_in = position.price_in
 
@@ -139,11 +162,11 @@ class Strategy:
             position.price += price
             position.shares += shares
             position.total += total
-            position.trade_fee +=trade_fee
+            position.trade_fee += trade_fee
 
         else:
             # 新增投资组合
-            position = Position(code, price, shares, total, trade_fee,self.context.current_date)
+            position = Position(code, price, shares, total, trade_fee, self.context.current_date)
             # 记录投资组合
             self.context.portfolio.positions.append(position)
 
@@ -151,6 +174,7 @@ class Strategy:
 
     def add_order_book(self, code, action, price, shares, total, date_time, trade_fee):
 
-        order = Order(code=code, action=action, price=price, shares=shares, total=total, date_time=date_time, trade_fee=trade_fee)
+        order = Order(code=code, action=action, price=price, shares=shares, total=total, date_time=date_time,
+                      trade_fee=trade_fee)
 
         self.context.order_book.append(order)

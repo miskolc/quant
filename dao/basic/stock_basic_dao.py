@@ -21,6 +21,18 @@ class StockBasicDao:
         return df
 
     @exc_time
+    def get_all(self):
+        sql = ("select `code`, eps, pb, pe, roe, income_yoy, profits_yoy, total_assets, total_liabilities, retained_profits, total_market from stock_basic "
+              )
+
+        df = pd.read_sql(sql=sql
+                         , con=dataSource.mysql_quant_conn)
+
+        df = df.fillna(0)
+
+        return df
+
+    @exc_time
     def truncate(self):
         sql = text('truncate table stock_basic')
         dataSource.mysql_quant_conn.execute(sql)

@@ -13,7 +13,12 @@ def exc_time(func):
         start_time = time.time()
         tmp = func(*args, **kv)
         end_time = time.time()
-        logger.debug("%s executed,  elapsed time: %.2f ms" % (func.__name__, (end_time - start_time) * 1000))
+
+        if not kv:
+            logger.debug(
+                "%s executed,  elapsed time: %.2f ms" % (func.__name__, (end_time - start_time) * 1000))
+        else:
+            logger.debug("%s executed, kv:%s,  elapsed time: %.2f ms" % (func.__name__, str(kv), (end_time - start_time) * 1000))
         return tmp
 
     return fn
@@ -26,7 +31,7 @@ def error_handler(default=None):
             try:
                 return func(*args, **kv)
             except Exception as e:
-                logger.error('%s failed, args: %s' % (func.__name__, args))
+                logger.error('%s failed, kv: %s' % (func.__name__, str(kv)))
                 logger.error(traceback.format_exc())
                 return default
 

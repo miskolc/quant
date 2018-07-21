@@ -4,11 +4,10 @@ import json
 
 import pandas as pd
 
-from common_tools.datetime_utils import get_next_date, convert_to_datetime
+from common_tools.datetime_utils import get_next_date
 from common_tools.decorators import exc_time, error_handler
 from common_tools.json_utils import obj_dict
 from dao.basic.stock_basic_dao import stock_basic_dao
-from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.custome_features import cal_mavol5, cal_mavol20
 from feature_utils.momentum_indicators import acc_kdj
@@ -16,7 +15,7 @@ from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60
 from log.quant_logging import logger
 from pitcher.context import Context
 from pitcher.strategy import Strategy
-import traceback
+
 
 class KDJStrategy(Strategy):
     def init(self, context):
@@ -38,10 +37,9 @@ class KDJStrategy(Strategy):
                      'mavol20'])
         for code in self.context.pool:
 
-            daily_stock_data = k_data_dao.get_k_data(code=code,
+            daily_stock_data = self.get_k_data(code=code,
                                                      start=get_next_date(days=-30, args=self.context.current_date),
-                                                     end=self.context.current_date,
-                                                     futu_quote_ctx=self.futu_quote_ctx)
+                                                     end=self.context.current_date)
 
             daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
 
@@ -63,7 +61,7 @@ class KDJStrategy(Strategy):
                 # weekly_stock_date = k_data_weekly_dao.get_k_data(code=code,start=get_next_date(days=-300,
                 # args=context.current_date),end=get_current_date(context.current_date)) weekly_stock_date =
                 # weekly_stock_date.join(acc_kdj(weekly_stock_date))
-                basic_data = stock_basic_dao.get_by_code(code=code)
+                basic_data = self.get_stock_basic(code=code)
                 last_close = daily_stock_data['close'].iloc[-1:].values[0]
                 ma5_close = feature_frame['ma5'].iloc[-1:].values[0]
                 ma10_close = feature_frame['ma10'].iloc[-1:].values[0]
@@ -105,17 +103,19 @@ def back_test():
     kdj = KDJStrategy()
     kdj.init(context)
 
-    trade_days = list(k_data_dao.get_trading_days(start=context.start, end=context.end, futu_quote_ctx=kdj.futu_quote_ctx))
-
     try:
+
+        trade_days = list(
+            k_data_dao.get_trading_days(start=context.start, end=context.end, futu_quote_ctx=kdj.futu_quote_ctx))
+
+        kdj.before_trade()
+
         for date in trade_days:
 
             context.current_date = date
             kdj.before_handle_data()
 
             kdj.handle_data()
-
-
 
     finally:
         kdj.futu_quote_ctx.close()
