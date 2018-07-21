@@ -1,6 +1,8 @@
 # -*- coding: UTF-8 -*-
 # ae.h - 2018/4/23
 import functools
+import traceback
+
 from log.quant_logging import logger
 import time
 
@@ -20,11 +22,12 @@ def exc_time(func):
 def error_handler(default=None):
     def decorator(func):
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kv):
             try:
-                return func(*args, **kwargs)
+                return func(*args, **kv)
             except Exception as e:
-                logger.error('%s failed, args: %s, kv: %s, error message:%s' (func.__name__, args, kv,repr(e)))
+                logger.error('%s failed, args: %s' % (func.__name__, args))
+                logger.error(traceback.format_exc())
                 return default
 
         return wrapper
