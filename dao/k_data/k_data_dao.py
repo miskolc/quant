@@ -35,7 +35,7 @@ class K_Data_Dao:
                                                                 , start=start, end=end,  ktype='K_DAY', autype='qfq')
         return data
 
-
+    @exc_time
     def get_k_training_data(self, code, start, end, futu_quote_ctx):
 
         state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
@@ -47,6 +47,11 @@ class K_Data_Dao:
         data = data.dropna()
 
         return data, feature
+
+    @exc_time
+    def get_market_snapshot(self, code_list, futu_quote_ctx):
+        state, data = futu_quote_ctx.get_market_snapshot(code_list=code_list)
+        return data, data
 
     '''
     @staticmethod
