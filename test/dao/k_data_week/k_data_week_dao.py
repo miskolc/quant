@@ -18,7 +18,7 @@ class K_Data_Week_Dao_Test(unittest.TestCase):
     def test_get_k_data(self):
         df = k_data_weekly_dao.get_k_data('600196',start=None, end=None, futu_quote_ctx=self.futu_quote_ctx)
 
-        print(df)
+        df.to_csv("result.csv")
 
 
 

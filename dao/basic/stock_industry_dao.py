@@ -32,6 +32,15 @@ class StockIndustryDao:
         return df
 
     @exc_time
+    def get_by_bkcode(self, bk_code):
+        sql = ("select `bk_code`, bk_name, code, name from stock_industry where bk_code = %(bk_code)s")
+
+        df = pd.read_sql(sql=sql, params={"bk_code":bk_code}
+                         , con=dataSource.mysql_quant_conn)
+
+        return df
+
+    @exc_time
     def get_stock_code_list(self):
         # sql = ("select DISTINCT code from stock_industry")
         sql = text("select DISTINCT code FROM stock_industry where code not like '9%' and code not like '3%' and name not like '*%' and name not like '*st' and name not like 'st%'")
