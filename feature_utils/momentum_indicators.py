@@ -66,12 +66,6 @@ def cal_dx(data):
     return dx
 
 
-def cal_macd(data):
-    macd_func = abstract.Function('macd')
-    macd = macd_func(data)
-    return macd
-
-
 def cal_mfi(data):
     mfi_func = abstract.Function('mfi')
     mfi = mfi_func(data)
@@ -164,3 +158,25 @@ def acc_kdj(data, N1=9, N2=3, N3=3):
     kdj_df['j_value'] = j
 
     return kdj_df
+
+def cal_macd(data):
+    sema = pd.Series(pd.Series.ewm(data['close'], span=12).mean(),
+                     name='sema')
+    lema = pd.Series(pd.Series.ewm(data['close'], span=26).mean(),
+                     name='lema')
+
+    data_dif = sema - lema
+    data_dea = pd.Series(data_dif).ewm(span=9).mean()
+    data_macd = 2 * (data_dif - data_dea)
+
+    MACD = pd.Series(data_macd, name='macd')
+    DIF = pd.Series(data_dif, name='dif')
+    DEA = pd.Series(data_dea, name='dea')
+
+    macd_df = pd.DataFrame(columns=['macd', 'dif', 'dea'])
+
+    macd_df['macd'] = MACD
+    macd_df['dif'] = DIF
+    macd_df['dea'] = DEA
+
+    return macd_df
