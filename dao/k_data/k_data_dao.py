@@ -33,7 +33,16 @@ class K_Data_Dao:
 
         state, data = futu_quote_ctx.get_multiple_history_kline(codelist=code_list
                                                                 , start=start, end=end,  ktype='K_DAY', autype='qfq')
-        return data
+
+        k_data_dict = {}
+        for item in data:
+            if item is None or len(item["code"]) <= 0:
+                continue
+
+            code = item["code"].tail(1).values[0]
+            k_data_dict[code] = item
+
+        return k_data_dict
 
     @exc_time
     def get_k_training_data(self, code, start, end, futu_quote_ctx):
