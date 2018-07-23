@@ -23,7 +23,7 @@ class K_Data_Dao_Test(unittest.TestCase):
         self.assertIsNotNone(df)
 
     def test_get_market_snapshot(self):
-        df = k_data_dao.get_market_snapshot(code_list=['SH.600196'], futu_quote_ctx= self.futu_quote_ctx)
+        df = k_data_dao.get_market_snapshot(code_list=['600196', '601398'], futu_quote_ctx= self.futu_quote_ctx)
         print(df)
 
 

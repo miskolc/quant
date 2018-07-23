@@ -50,6 +50,8 @@ class K_Data_Dao:
 
     @exc_time
     def get_market_snapshot(self, code_list, futu_quote_ctx):
+        code_list = list(map(fill_market, code_list))
+
         state, data = futu_quote_ctx.get_market_snapshot(code_list=code_list)
         return data, data
 
