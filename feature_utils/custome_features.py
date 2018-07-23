@@ -12,6 +12,11 @@ def cal_mavol5(data):
     return mavol5
 
 
+def cal_mavol7(data, column='volume'):
+    mavol7 = pd.Series.rolling(data[column], 7).sum() / 10
+    return mavol7
+
+
 def cal_mavol10(data):
     mavol10 = pd.Series.rolling(data['volume'], 10).sum() / 10
     return mavol10
@@ -21,9 +26,11 @@ def cal_mavol20(data):
     mavol20 = pd.Series.rolling(data['volume'], 20).sum() / 20
     return mavol20
 
+
 def cal_mavol30(data):
     mavol30 = pd.Series.rolling(data['volume'], 30).sum() / 30
     return mavol30
+
 
 '''
 def cal_turnover(data):
@@ -55,4 +62,3 @@ def cal_VHLambdaT(data):
     VHLambdaT = (t_vol - t_minus_one) / (max_21_vol_high - max_21_vol_low)
 
     return VHLambdaT
-
