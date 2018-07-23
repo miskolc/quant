@@ -22,10 +22,10 @@ class KDJStrategy(Strategy):
     def init(self, context):
         super(KDJStrategy, self).init(context)
 
-        # context.pool = stock_pool_dao.get_list()['code'].values
+        context.pool = stock_pool_dao.get_list()['code'].values
         # context.pool = stock_industry_dao.get_list()['code'].values
         self.context = context
-        context.pool = ['600198', '601398']
+
 
         # self.context.pool = ["000528"]
 
@@ -37,7 +37,7 @@ class KDJStrategy(Strategy):
     @exc_time
     def handle_data(self):
         target_frame = pd.DataFrame(columns=['code', 'close', 'k_value', 'd_value', 'pre_k', 'pre_d', 'macd',
-                                             'pre_macd', 'diff', 'pre_diff', 'dea', 'pre_dea' 'current_vol_weekly',
+                                             'pre_macd', 'diff', 'pre_diff', 'dea', 'pre_dea', 'current_vol_weekly',
                                              'pre_vol_weekly'])
 
         for code in self.context.pool:
@@ -70,10 +70,10 @@ class KDJStrategy(Strategy):
                 # 金叉
                 # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value and current_vol_weekly / pre_vol_weely >= 1.3
                 # (k_value >= d_value or 10 >= abs(pre_k - pre_d) >= abs(k_value - d_value))
-                if k_value >= d_value :
-                    # and current_vol_weekly / pre_vol_weely >= 1.3 and (macd_diff > macd_dea)
-                    # and abs(k_value - d_value) <= 5
-
+                # k_value >= d_value and abs(k_value - d_value) <= 5
+                if (k_value >= d_value or 5 >= abs(pre_k - pre_d) >= abs(k_value - d_value)) \
+                        and (macd_diff > macd_dea) \
+                        and current_vol_weekly / pre_vol_weely >= 1.5:
 
                     # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value \
 
@@ -92,10 +92,7 @@ class KDJStrategy(Strategy):
                     print(target_stock)
 
                     # self.buy_in_percent(code=code, price=last_close, percent=0.1)
-            except Exception as e:
-                print(e)
-                print(code)
-                print(traceback.format_exc())
+            except:
                 continue
         target_frame.to_csv('kdj_result.csv')
 
