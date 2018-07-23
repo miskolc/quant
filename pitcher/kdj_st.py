@@ -3,7 +3,7 @@ import traceback
 
 import pandas as pd
 
-from common_tools.datetime_utils import get_next_date
+from common_tools.datetime_utils import get_next_date, get_current_date
 from common_tools.decorators import exc_time
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.basic.stock_pool_dao import stock_pool_dao
@@ -22,8 +22,8 @@ class KDJStrategy(Strategy):
     def init(self, context):
         super(KDJStrategy, self).init(context)
 
-        context.pool = stock_pool_dao.get_list()['code'].values
-        # context.pool = stock_industry_dao.get_list()['code'].values
+        # context.pool = stock_pool_dao.get_list()['code'].values
+        context.pool = stock_industry_dao.get_list()['code'].values
         self.context = context
 
 
@@ -48,13 +48,15 @@ class KDJStrategy(Strategy):
                                                          futu_quote_ctx=self.futu_quote_ctx)
                 weekly_stock_data = k_data_weekly_dao.get_k_data(code=code,
                                                                  start=None,
-                                                                 end=None,
+                                                                 end=get_next_date(-5),
                                                                  futu_quote_ctx=self.futu_quote_ctx)
 
                 pre_vol_weely = weekly_stock_data['volume'].iloc[-2:].values[0]
                 current_vol_weekly = weekly_stock_data['volume'].iloc[-1:].values[0]
                 daily_stock_data = daily_stock_data.join(acc_kdj(daily_stock_data))
+
                 daily_stock_data_withf = daily_stock_data.join(cal_macd(daily_stock_data))
+                daily_stock_data_withf['ma5'] = cal_ma5(daily_stock_data_withf)
 
                 k_value = daily_stock_data_withf['k_value'].iloc[-1:].values[0]
                 d_value = daily_stock_data_withf['d_value'].iloc[-1:].values[0]
@@ -65,22 +67,19 @@ class KDJStrategy(Strategy):
                 pre_macd_diff = daily_stock_data_withf['diff'].iloc[-2:].values[0]
                 macd_diff = daily_stock_data_withf['diff'].iloc[-1:].values[0]
                 pre_macd_dea = daily_stock_data_withf['dea'].iloc[-2:].values[0]
-                macd_dea = daily_stock_data_withf['dea'].iloc[-2:].values[0]
+                macd_dea = daily_stock_data_withf['dea'].iloc[-1:].values[0]
+                last_close = daily_stock_data_withf['close'].iloc[-1:].values[0]
+                close_ma5 = daily_stock_data_withf['ma5'].iloc[-1:].values[0]
 
                 # 金叉
                 # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value and current_vol_weekly / pre_vol_weely >= 1.3
                 # (k_value >= d_value or 10 >= abs(pre_k - pre_d) >= abs(k_value - d_value))
                 # k_value >= d_value and abs(k_value - d_value) <= 5
-                if (k_value >= d_value or 5 >= abs(pre_k - pre_d) >= abs(k_value - d_value)) \
-                        and (macd_diff > macd_dea) \
+                if (k_value >= d_value and pre_k <= pre_d or 5 >= abs(pre_k - pre_d) >= abs(k_value - d_value)) \
+                        and ((macd_diff > macd_dea) and current_macd_value > 0) \
                         and current_vol_weekly / pre_vol_weely >= 1.5:
+                    # and last_close >= close_ma5:
 
-                    # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value \
-
-                    # if k_value > d_value and abs(k_value - d_value) <= 20:
-                    # basic_data = stock_basic_dao.get_by_code(code=code)
-                    # 'bm': 1 / basic_data['pb'].loc[-1:].values[0],
-                    last_close = daily_stock_data_withf['close'].iloc[-1:].values[0]
                     target_stock = {'code': self.fill_zero(code), 'close': last_close, 'k_value': k_value,
                                     'd_value': d_value, 'pre_k': pre_k, 'pre_d': pre_d,
                                     'macd': current_macd_value,
@@ -111,7 +110,7 @@ if __name__ == '__main__':
     kdj = KDJStrategy()
     kdj.init(context)
 
-    context.current_date = '2018-7-20'
+    context.current_date = get_current_date()
     kdj.handle_data()
 
     logger.debug("base_capital:%s" % context.base_capital)
