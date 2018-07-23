@@ -1,21 +1,17 @@
 # ae_h - 2018/7/13
-import traceback
 
 import pandas as pd
 
 from common_tools.datetime_utils import get_next_date, get_current_date
 from common_tools.decorators import exc_time
-from dao.basic.stock_basic_dao import stock_basic_dao
-from dao.basic.stock_pool_dao import stock_pool_dao
+from dao.basic.stock_industry_dao import stock_industry_dao
 from dao.k_data.k_data_dao import k_data_dao
 from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
-from feature_utils.custome_features import cal_mavol5, cal_mavol20
 from feature_utils.momentum_indicators import acc_kdj, cal_macd
-from feature_utils.overlaps_studies import cal_ma5, cal_ma10, cal_ma20, cal_ma60, cal_ma145
+from feature_utils.overlaps_studies import cal_ma20
 from log.quant_logging import logger
 from pitcher.context import Context
 from pitcher.strategy import Strategy
-from dao.basic.stock_industry_dao import stock_industry_dao
 
 
 class KDJStrategy(Strategy):
@@ -77,6 +73,7 @@ class KDJStrategy(Strategy):
                 if (k_value >= d_value or abs(k_value - d_value) <= 10) and pre_k <= pre_d \
                         and ((macd_diff > macd_dea and pre_macd_diff < pre_macd_dea) or (macd_diff-macd_dea) < (pre_macd_diff-macd_dea) and 0.05 >= current_macd_value >= 0) \
                         and current_vol_weekly / pre_vol_weely >= 1.5:
+
                     target_stock = {'code': self.fill_zero(code), 'close': last_close, 'k_value': k_value,
                                     'd_value': d_value, 'pre_k': pre_k, 'pre_d': pre_d,
                                     'macd': current_macd_value,
