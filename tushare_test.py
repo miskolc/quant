@@ -21,7 +21,3 @@ from feature_utils.momentum_indicators import cal_macd
 #
 # print(macd_df['macdhist'])
 
-i =2166421.00
-j = 3346346
-
-print(j/i)
