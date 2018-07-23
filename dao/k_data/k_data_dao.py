@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
+from functools import lru_cache
 
 from common_tools.decorators import exc_time
 from dao import cal_direction
@@ -26,6 +27,15 @@ class K_Data_Dao:
 
         return data
 
+    @exc_time
+    def get_multiple_history_kline(self, code_list, start, end, futu_quote_ctx):
+        code_list = list(map(fill_market, code_list))
+
+        state, data = futu_quote_ctx.get_multiple_history_kline(codelist=code_list
+                                                                , start=start, end=end,  ktype='K_DAY', autype='qfq')
+        return data
+
+    @exc_time
     def get_k_training_data(self, code, start, end, futu_quote_ctx):
 
         state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
@@ -37,6 +47,13 @@ class K_Data_Dao:
         data = data.dropna()
 
         return data, feature
+
+    @exc_time
+    def get_market_snapshot(self, code_list, futu_quote_ctx):
+        code_list = list(map(fill_market, code_list))
+
+        state, data = futu_quote_ctx.get_market_snapshot(code_list=code_list)
+        return data, data
 
     '''
     @staticmethod

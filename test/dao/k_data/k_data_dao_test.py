@@ -13,7 +13,7 @@ class K_Data_Dao_Test(unittest.TestCase):
 
     def test_get_k_data(self):
 
-        df = k_data_dao.get_k_data(code = "600196", start="2018-01-02", end="2018-01-10", futu_quote_ctx= self.futu_quote_ctx)
+        df = k_data_dao.get_k_data(code = "600196", start="2018-01-02", end="2018-07-23", futu_quote_ctx= self.futu_quote_ctx)
         print(df)
         self.assertIsNotNone(df)
 
@@ -21,6 +21,10 @@ class K_Data_Dao_Test(unittest.TestCase):
         df = k_data_dao.get_trading_days(start="2015-01-01", end="2018-05-27", futu_quote_ctx= self.futu_quote_ctx)
         print(df)
         self.assertIsNotNone(df)
+
+    def test_get_market_snapshot(self):
+        df = k_data_dao.get_market_snapshot(code_list=['600196', '601398'], futu_quote_ctx= self.futu_quote_ctx)
+        print(df)
 
 
     def tearDown(self):

@@ -16,7 +16,7 @@ class Context:
         # 总金额
         self.base_capital = base_capital
 
-
+        self.pool = []
         # 账户余额
         self.blance = base_capital
 
