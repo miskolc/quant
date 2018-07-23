@@ -170,13 +170,13 @@ def cal_macd(data):
     data_macd = 2 * (data_dif - data_dea)
 
     MACD = pd.Series(data_macd, name='macd')
-    DIF = pd.Series(data_dif, name='dif')
+    DIF = pd.Series(data_dif, name='diff')
     DEA = pd.Series(data_dea, name='dea')
 
-    macd_df = pd.DataFrame(columns=['macd', 'dif', 'dea'])
+    macd_df = pd.DataFrame(columns=['macd', 'diff', 'dea'])
 
     macd_df['macd'] = MACD
-    macd_df['dif'] = DIF
+    macd_df['diff'] = DIF
     macd_df['dea'] = DEA
 
     return macd_df

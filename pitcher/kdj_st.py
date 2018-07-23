@@ -1,4 +1,5 @@
 # ae_h - 2018/7/13
+import traceback
 
 import pandas as pd
 
@@ -21,9 +22,10 @@ class KDJStrategy(Strategy):
     def init(self, context):
         super(KDJStrategy, self).init(context)
 
-        context.pool = stock_pool_dao.get_list()['code'].values
+        # context.pool = stock_pool_dao.get_list()['code'].values
         # context.pool = stock_industry_dao.get_list()['code'].values
         self.context = context
+        context.pool = ['600198', '601398']
 
         # self.context.pool = ["000528"]
 
@@ -34,8 +36,8 @@ class KDJStrategy(Strategy):
 
     @exc_time
     def handle_data(self):
-        target_frame = pd.DataFrame(columns=['code', 'close', 'k_value', 'd_value', 'pre_k', 'pre_d', 'bm', 'macd',
-                                             'pre_macd', 'current_macd_signal', 'pre_macd_signal', 'current_vol_weekly',
+        target_frame = pd.DataFrame(columns=['code', 'close', 'k_value', 'd_value', 'pre_k', 'pre_d', 'macd',
+                                             'pre_macd', 'diff', 'pre_diff', 'dea', 'pre_dea' 'current_vol_weekly',
                                              'pre_vol_weekly'])
 
         for code in self.context.pool:
@@ -60,30 +62,40 @@ class KDJStrategy(Strategy):
                 pre_d = daily_stock_data_withf['d_value'].iloc[-2:].values[0]
                 pre_macd_value = daily_stock_data_withf['macd'].iloc[-2:].values[0]
                 current_macd_value = daily_stock_data_withf['macd'].iloc[-1:].values[0]
-                pre_macd_signal = daily_stock_data_withf['macdsignal'].iloc[-2:].values[0]
-                current_macd_signal = daily_stock_data_withf['macdsignal'].iloc[-1:].values[0]
+                pre_macd_diff = daily_stock_data_withf['diff'].iloc[-2:].values[0]
+                macd_diff = daily_stock_data_withf['diff'].iloc[-1:].values[0]
+                pre_macd_dea = daily_stock_data_withf['dea'].iloc[-2:].values[0]
+                macd_dea = daily_stock_data_withf['dea'].iloc[-2:].values[0]
 
                 # 金叉
                 # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value and current_vol_weekly / pre_vol_weely >= 1.3
                 # (k_value >= d_value or 10 >= abs(pre_k - pre_d) >= abs(k_value - d_value))
-                if pre_k < pre_d and k_value >= d_value \
-                        and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value \
-                        and current_vol_weekly / pre_vol_weely >= 1.3:
+                if k_value >= d_value :
+                    # and current_vol_weekly / pre_vol_weely >= 1.3 and (macd_diff > macd_dea)
+                    # and abs(k_value - d_value) <= 5
+
+
+                    # and current_macd_value >= current_macd_signal and pre_macd_value < current_macd_value \
+
                     # if k_value > d_value and abs(k_value - d_value) <= 20:
-                    basic_data = stock_basic_dao.get_by_code(code=code)
-                    last_close = daily_stock_data['close'].iloc[-1:].values[0]
+                    # basic_data = stock_basic_dao.get_by_code(code=code)
+                    # 'bm': 1 / basic_data['pb'].loc[-1:].values[0],
+                    last_close = daily_stock_data_withf['close'].iloc[-1:].values[0]
                     target_stock = {'code': self.fill_zero(code), 'close': last_close, 'k_value': k_value,
                                     'd_value': d_value, 'pre_k': pre_k, 'pre_d': pre_d,
-                                    'bm': 1 / basic_data['pb'].loc[-1:].values[0], 'macd': current_macd_value,
-                                    'pre_macd': pre_macd_value, 'current_macd_signal': current_macd_signal,
-                                    'pre_macd_signal': pre_macd_signal, 'pre_vol_weekly': pre_vol_weely,
-                                    'current_vol_weekly': current_vol_weekly}
+                                    'macd': current_macd_value,
+                                    'pre_macd': pre_macd_value, 'diff': macd_diff,
+                                    'pre_diff': pre_macd_diff, 'dea': macd_dea, 'pre_dea': pre_macd_dea,
+                                    'current_vol_weekly': current_vol_weekly, 'pre_vol_weekly': pre_vol_weely,
+                                    }
                     target_frame.loc[target_frame.shape[0] + 1] = target_stock
-                    # print(target_stock)
+                    print(target_stock)
 
                     # self.buy_in_percent(code=code, price=last_close, percent=0.1)
             except Exception as e:
                 print(e)
+                print(code)
+                print(traceback.format_exc())
                 continue
         target_frame.to_csv('kdj_result.csv')
 
