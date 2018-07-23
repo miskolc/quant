@@ -1,14 +1,15 @@
 import futuquant as ft
-import talib
 
+from common_tools.datetime_utils import get_next_date
 from config import default_config
-from dao.k_data import fill_market
-from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
 from dao.basic.stock_industry_dao import stock_industry_dao
 from dao.k_data.k_data_dao import k_data_dao
-from feature_utils.momentum_indicators import cal_macd
+from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
+from feature_utils.custome_features import cal_mavol7
+from feature_utils.momentum_indicators import cal_macd,acc_kdj
 from feature_utils.overlaps_studies import cal_ma145
-
+from log.quant_logging import logger
+import traceback
 '''
 - 军工:BK0490
 
@@ -32,26 +33,42 @@ if __name__ == '__main__':
         code_list = list(df_industry['code'].values)
 
         #k_data_list = k_data_dao.get_market_snapshot(code_list=code_list, futu_quote_ctx=futu_quote_ctx)
-
+        rs = []
         for code in code_list:
-            df_week = k_data_weekly_dao.get_k_data(code, start=None, end=None, futu_quote_ctx=futu_quote_ctx)
-            df_week = df_week.join(cal_macd(df_week))
 
-            k_data = k_data_dao.get_k_data(code=code, start=None, end=None, futu_quote_ctx=futu_quote_ctx)
+            try:
+                w_data = k_data_weekly_dao.get_k_data(code, start=None, end=get_next_date(-5), futu_quote_ctx=futu_quote_ctx)
+                w_data = w_data.join(cal_macd(w_data))
+                w_data = w_data.join(acc_kdj(w_data))
 
-            k_data['ma145'] = cal_ma145(k_data)
+                k_data = k_data_dao.get_k_data(code=code, start=None, end=None, futu_quote_ctx=futu_quote_ctx)
 
-            pre_volume = df_week['volume'].values[-2]
-            volume = df_week['volume'].values[-1]
-            macd = df_week['macd'].values[-1]
+                k_data['ma145'] = cal_ma145(k_data)
+                k_data['turnover7'] = cal_mavol7(k_data, column='turnover')
 
-            k_close = k_data['close'].values[-1]
-            k_ma145 = k_data['ma145'].values[-1]
+                w_pre_volume = w_data['volume'].values[-2]
+                w_volume = w_data['volume'].values[-1]
+                w_macd = w_data['macd'].values[-1]
+                w_diff = w_data['diff'].values[-1]
+                w_dea = w_data['dea'].values[-1]
+                w_k_value = w_data['k_value'].values[-1]
+                w_d_value = w_data['d_value'].values[-1]
 
-            if k_close > k_ma145 and volume > pre_volume * 1.3 and macd > 0:
-                print(code, pre_volume,volume)
+                k_close = k_data['close'].values[-1]
+                k_ma145 = k_data['ma145'].values[-1]
+                k_turnover7 = k_data['turnover7'].values[-1]
 
+                if k_close > k_ma145 \
+                        and k_turnover7 > 75000000 \
+                        and round(w_volume/w_pre_volume, 1) >= 1.3 \
+                        and (w_macd > 0 or w_diff > w_dea)\
+                        and (w_k_value < w_d_value or abs(w_d_value-w_d_value) < 10)  :
+                    rs.append(code)
+            except Exception as e:
+                logger.error("code:%s" % code)
+                logger.error(traceback.format_exc())
 
+        print("rs:%s" % rs)
 
 
 
