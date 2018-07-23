@@ -60,6 +60,11 @@ def cal_ma60(data):
     ma60 = ma_func(data, timeperiod=60, price='close')
     return ma60
 
+def cal_ma145(data):
+    ma_func = abstract.Function('ma')
+    ma60 = ma_func(data, timeperiod=145, price='close')
+    return ma60
+
 def cal_mama(data):
     mama_func = abstract.Function('mama')
     mama = mama_func(data, price='close')

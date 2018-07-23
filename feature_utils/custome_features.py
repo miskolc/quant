@@ -11,6 +11,9 @@ def cal_mavol5(data):
     mavol5 = pd.Series.rolling(data['volume'], 5).sum() / 5
     return mavol5
 
+def cal_mavol7(data):
+    mavol7 = pd.Series.rolling(data['volume'], 7).sum() / 10
+    return mavol7
 
 def cal_mavol10(data):
     mavol10 = pd.Series.rolling(data['volume'], 10).sum() / 10

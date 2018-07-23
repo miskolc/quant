@@ -7,6 +7,7 @@ from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
 from dao.basic.stock_industry_dao import stock_industry_dao
 from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.momentum_indicators import cal_macd
+from feature_utils.overlaps_studies import cal_ma145
 
 '''
 - 军工:BK0490
@@ -34,20 +35,24 @@ if __name__ == '__main__':
 
         for code in code_list:
             df_week = k_data_weekly_dao.get_k_data(code, start=None, end=None, futu_quote_ctx=futu_quote_ctx)
-
             df_week = df_week.join(cal_macd(df_week))
 
-            code = code
+            k_data = k_data_dao.get_k_data(code=code, start=None, end=None, futu_quote_ctx=futu_quote_ctx)
+
+            k_data['ma145'] = cal_ma145(k_data)
 
             pre_volume = df_week['volume'].values[-2]
             volume = df_week['volume'].values[-1]
             macd = df_week['macd'].values[-1]
 
-            if volume > pre_volume * 1.3 and macd > 0:
+            k_close = k_data['close'].values[-1]
+            k_ma145 = k_data['ma145'].values[-1]
+
+            if k_close > k_ma145 and volume > pre_volume * 1.3 and macd > 0:
                 print(code, pre_volume,volume)
 
 
-            #k_data = k_data_list.loc[k_data_list['code'] == fill_market(code)]
+
 
 
 
