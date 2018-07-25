@@ -19,14 +19,11 @@ class Strategy:
 
     def before_trade(self):
         # 获取code pool的所有的k_data
-        k_data_list = k_data_dao.get_multiple_history_kline(code_list=self.context.pool,
+        self.k_data_dict = k_data_dao.get_multiple_history_kline(code_list=self.context.pool,
                                                             start=get_next_date(days=-60, args=self.context.start),
                                                             end=get_next_date(days=60, args=self.context.end),
                                                             futu_quote_ctx=self.futu_quote_ctx)
-        self.k_data_dict = {}
-        for data in k_data_list:
-            code = data["code"].tail(1).values[0]
-            self.k_data_dict[code] = data
+
 
         self.basic_data = stock_basic_dao.get_all()
 
@@ -144,7 +141,7 @@ class Strategy:
             position.shares -= shares
             total = shares * position.price
             position.total -= total
-            self.context.portfolio.positions.append(position)
+            #self.context.portfolio.positions.append(position)
 
         # 添加卖出记录
         self.add_order_book(code=code, action=0, price=position.price, shares=shares, total=total,

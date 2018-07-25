@@ -114,7 +114,6 @@ def back_test():
 
             context.current_date = date
             kdj.before_handle_data()
-
             kdj.handle_data()
 
     finally:
