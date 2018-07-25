@@ -1,12 +1,9 @@
-import numpy as np
-import json
 from datetime import date, datetime
 
-class JSONEncoder(json.JSONEncoder):
-    """ Special json encoder for numpy types """
+from common_tools.datetime_utils import DATE_TIME_FORMAT
 
-    def default(self, obj):
-        if isinstance(obj, (datetime, date)):
-            return obj.isoformat()
 
-        return obj.__dict__
+def obj_dict(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.strftime(DATE_TIME_FORMAT)
+    return obj.__dict__

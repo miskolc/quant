@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 DATE_FORMAT = '%Y-%m-%d'
 DATE_HOUR_FORMAT = '%Y-%m-%d %H'
-
+DATE_TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 def get_current_date(args=None):
     if args:
