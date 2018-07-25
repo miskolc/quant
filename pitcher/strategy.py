@@ -17,6 +17,7 @@ class Strategy:
         self.futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST,
                                                   port=default_config.FUTU_OPEND_PORT)
 
+    '''
     def before_trade(self):
         # 获取code pool的所有的k_data
         self.k_data_dict = k_data_dao.get_multiple_history_kline(code_list=self.context.pool,
@@ -26,6 +27,7 @@ class Strategy:
 
 
         self.basic_data = stock_basic_dao.get_all()
+     '''
 
     def get_k_data(self, code, start, end):
 

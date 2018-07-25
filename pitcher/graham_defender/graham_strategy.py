@@ -7,6 +7,7 @@ import numpy as np
 from common_tools.json_utils import obj_dict
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.basic.stock_pool_dao import stock_pool_dao
+from dao.k_data.k_data_dao import k_data_dao
 from log.quant_logging import logger
 from pitcher.strategy import Strategy
 from common_tools.decorators import exc_time
@@ -23,11 +24,10 @@ class GrahamDefender(Strategy):
 
     @exc_time
     def handle_data(self):
-        stock_codes = list(stock_pool_dao.get_list()['code'].values)
 
         self.context.target_list = pd.DataFrame(columns=['code', 'pe', 'pb', 'eps', 'm_cap'])
 
-        for code in stock_codes:
+        for code in self.context.pool:
             stock_basic_info = stock_basic_dao.get_by_code(code=code)
 
             try:
@@ -46,17 +46,23 @@ class GrahamDefender(Strategy):
         target_code_list = self.context.target_stock['code'].values
 
         for code in target_code_list:
-            price = self.get_k_data(code=code,start=self.context.current_date, end=self.context.current_date)
+            k_data = k_data_dao.get_k_data(code=code,start=self.context.current_date, end=self.context.current_date, futu_quote_ctx=self.futu_quote_ctx)
+            price = k_data['close'].values[-1]
             self.buy_in_percent(code=code, price=price, percent=0.2)
 
 
 
 if __name__ == '__main__':
-    context = Context(start='2017-07-01', end='2018-07-14', base_capital=20000)
+    context = Context(start='2017-07-01', end='2018-07-25', base_capital=20000)
     graham_defender = GrahamDefender()
     graham_defender.init(context)
-    graham_defender.before_trade()
+
+
+    context.current_date = '2018-07-20'
+
     graham_defender.handle_data()
-    context_json = json.dumps(context, default=obj_dict)
+    context_json = json.dumps(context.order_book, default=obj_dict)
+
+
     logger.debug("context:" + context_json)
     graham_defender.futu_quote_ctx.close()
