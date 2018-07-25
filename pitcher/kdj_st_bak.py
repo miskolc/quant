@@ -8,6 +8,7 @@ from common_tools.datetime_utils import get_next_date
 from common_tools.decorators import exc_time, error_handler
 from common_tools.json_utils import obj_dict
 from dao.basic.stock_basic_dao import stock_basic_dao
+from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.k_data.k_data_dao import k_data_dao
 from feature_utils.custome_features import cal_mavol5, cal_mavol20
 from feature_utils.momentum_indicators import acc_kdj
@@ -21,9 +22,9 @@ class KDJStrategy(Strategy):
     def init(self, context):
         super(KDJStrategy, self).init(context)
 
-        #context.pool = stock_pool_dao.get_list()['code'].values
+        context.pool = stock_pool_dao.get_list()['code'].values
         self.context = context
-        self.context.pool = ["000528","002008","600256","600536","600801"]
+        # self.context.pool = ["000528","002008","600256","600536","600801"]
 
     def fill_zero(self, code):
         code = str(code)
