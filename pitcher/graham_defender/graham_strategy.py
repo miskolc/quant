@@ -50,7 +50,6 @@ class GrahamDefender(Strategy):
             self.buy_in_percent(code=code, price=price, percent=0.2)
 
 
-        #     for code in self.context.target_list['code'].values:
 
 if __name__ == '__main__':
     context = Context(start='2017-07-01', end='2018-07-14', base_capital=20000)
