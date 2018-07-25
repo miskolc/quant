@@ -112,7 +112,7 @@ class Strategy:
                             date_time=self.context.current_date, trade_fee=trade_fee)
 
     # 卖出
-    def sell_value(self, code, shares):
+    def sell_value(self, code, price, shares):
 
         position = self.context.portfolio.get_position(code)
         total_shares = position.shares
@@ -122,18 +122,20 @@ class Strategy:
 
         if shares > total_shares:
             raise ValueError('shares invalid')
+        if shares == -1:
+            shares = position.shares
 
         price_in = position.price_in
 
         # 卖出金额
-        total = shares * position.price
+        total = shares * price
         # 交易费用
         trade_fee = self.cal_sell_trade_fee(total)
         total = total - trade_fee
 
         self.context.blance += total
 
-        profit = (position.price - price_in) * shares - trade_fee
+        profit = (price - price_in) * shares - trade_fee
         self.context.base_capital += profit
 
         # 如果全部卖出, 清空portfolio对应股票
@@ -141,12 +143,12 @@ class Strategy:
             self.context.portfolio.delete_position(code)
         else:
             position.shares -= shares
-            total = shares * position.price
+            total = shares * price
             position.total -= total
             #self.context.portfolio.positions.append(position)
 
         # 添加卖出记录
-        self.add_order_book(code=code, action=0, price=position.price, shares=shares, total=total,
+        self.add_order_book(code=code, action=0, price=price, shares=shares, total=total,
                             date_time=self.context.current_date, trade_fee=trade_fee)
 
     def cal_sell_trade_fee(self, total):
