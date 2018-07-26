@@ -107,7 +107,8 @@ class Strategy:
         # 净资产扣除交易费用
         self.context.base_capital -= trade_fee
 
-        self.add_position(code=code, price=price, shares=shares, total=total, trade_fee=trade_fee)
+        self.context.portfolio.add_position( code=code, price=price, shares=shares, total=total,
+                                             trade_fee=trade_fee, date=self.context.current_date)
         self.add_order_book(code=code, action=1, price=price, shares=shares, total=total,
                             date_time=self.context.current_date, trade_fee=trade_fee)
 
@@ -155,23 +156,6 @@ class Strategy:
         trade_fee = cal_tax_fee(self.context.tax_rate, total) + cal_commission_fee(self.context.commission_rate, total)
         return trade_fee
 
-    def add_position(self, code, price, shares, total, trade_fee):
-
-        position = self.context.portfolio.get_position(code)
-
-        if position is not None:
-            position.price += price
-            position.shares += shares
-            position.total += total
-            position.trade_fee += trade_fee
-
-        else:
-            # 新增投资组合
-            position = Position(code, price, shares, total, trade_fee, self.context.current_date)
-            # 记录投资组合
-            self.context.portfolio.positions.append(position)
-
-        return position
 
     def add_order_book(self, code, action, price, shares, total, date_time, trade_fee):
 

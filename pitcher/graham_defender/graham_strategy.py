@@ -27,7 +27,7 @@ class GrahamDefender(Strategy):
         self.context = context
 
 
-    @exc_time
+
     def handle_data(self):
 
         temp_target_list = pd.DataFrame(columns=['code', 'pe', 'pb', 'eps', 'm_cap'])
@@ -41,6 +41,7 @@ class GrahamDefender(Strategy):
                 shares = position.shares
                 price = position.price
                 self.sell_value(code=code, shares=shares, price=price)
+
 
         for code in self.context.pool:
             stock_basic_info = stock_basic_dao.get_by_code(code=code)
