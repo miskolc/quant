@@ -36,7 +36,7 @@ class GrahamDefender(Strategy):
                                          futu_quote_ctx=self.futu_quote_ctx)
 
         if abs(sh_index['change_rate'].rolling(window=3).sum().values[-1]) >= 0.049:
-            for position in context.portfolio.positions:
+            for position in context.portfolio.positions[:]:
                 code = position.code
                 shares = position.shares
                 price = position.price
@@ -77,7 +77,7 @@ class GrahamDefender(Strategy):
             self.sell_value(code=code, price=price, shares=-1)
 
         for code in stock_to_be_added:
-            k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=get_next_date(-1),
+            k_data = k_data_dao.get_k_data(code=code, start=self.context.current_date, end=self.context.current_date,
                                            futu_quote_ctx=self.futu_quote_ctx)
             price = k_data['close'].values[-1]
 
@@ -89,18 +89,22 @@ class GrahamDefender(Strategy):
 
 
 if __name__ == '__main__':
-    context = Context(start='2017-07-01', end='2018-07-25', base_capital=20000)
     graham_defender = GrahamDefender()
-    graham_defender.init(context)
+    try:
+        context = Context(start='2017-07-01', end='2018-07-25', base_capital=20000)
 
-    context.current_date = '2018-01-01'
+        graham_defender.init(context)
 
-    graham_defender.handle_data()
+        context.current_date = '2018-01-02'
 
-    context.current_date = '2018-01-21'
+        graham_defender.handle_data()
 
-    graham_defender.handle_data()
-    context_json = json.dumps(context, default=obj_dict)
+        context.current_date = '2018-01-22'
+        graham_defender.before_handle_data()
+        graham_defender.handle_data()
+        context_json = json.dumps(context, default=obj_dict)
 
-    logger.debug("context:" + context_json)
-    graham_defender.futu_quote_ctx.close()
+        logger.debug("context:" + context_json)
+        graham_defender.futu_quote_ctx.close()
+    finally:
+        graham_defender.futu_quote_ctx.close()

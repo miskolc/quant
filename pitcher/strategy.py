@@ -29,14 +29,7 @@ class Strategy:
         self.basic_data = stock_basic_dao.get_all()
      '''
 
-    def get_k_data(self, code, start, end):
 
-        start = start + " 00:00:00"
-        end = end + " 00:00:00"
-        code = fill_market(code)
-        k_data = self.k_data_dict[code]
-
-        return k_data.loc[(start <= k_data['time_key']) & (k_data['time_key'] <= end)]
 
     def get_stock_basic(self, code):
 
@@ -52,9 +45,9 @@ class Strategy:
 
         p_total = 0.0
         for position in self.context.portfolio.positions:
-            daily_stock_data = self.get_k_data(code=position.code,
+            daily_stock_data = k_data_dao.get_k_data(code=position.code,
                                                      start=self.context.current_date,
-                                                     end=self.context.current_date)
+                                                     end=self.context.current_date, futu_quote_ctx=self.futu_quote_ctx)
 
             # 如果当日没有交易数据, 使用上一日的仓位数据填充
             if len(daily_stock_data.index) > 0:

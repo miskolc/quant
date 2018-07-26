@@ -9,6 +9,7 @@ class Portfolio:
         self.positions = []
         self.position_history = []
 
+
     # 通过code, 获取仓位
     def get_position(self, code):
 
