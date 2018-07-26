@@ -26,7 +26,6 @@ class GrahamDefender(Strategy):
         context.pool = ['601398', '601088', '601288']
         self.context = context
 
-
     @exc_time
     def handle_data(self):
 
@@ -36,7 +35,7 @@ class GrahamDefender(Strategy):
                                          futu_quote_ctx=self.futu_quote_ctx)
 
         if abs(sh_index['change_rate'].rolling(window=3).sum().values[-1]) >= 0.049:
-            for position in context.portfolio.positions:
+            for position in context.portfolio.positions[:]:
                 code = position.code
                 shares = position.shares
                 price = position.price
@@ -69,7 +68,6 @@ class GrahamDefender(Strategy):
         stock_to_be_added = [i for i in target_code_list if i not in current_stock_code]
         stock_to_be_removed = [j for j in current_stock_code if j not in target_code_list]
 
-
         for code in stock_to_be_removed:
             k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date,
                                            futu_quote_ctx=self.futu_quote_ctx)
@@ -98,6 +96,8 @@ if __name__ == '__main__':
     graham_defender.handle_data()
 
     context.current_date = '2018-01-21'
+
+    graham_defender.before_handle_data()
 
     graham_defender.handle_data()
     context_json = json.dumps(context, default=obj_dict)
