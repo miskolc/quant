@@ -1,7 +1,7 @@
 from common_tools.decorators import exc_time
 
 from dao.data_source import dataSource
-from domain.position import Position
+from observer.domain.position import Position
 
 
 class Position_Dao():
