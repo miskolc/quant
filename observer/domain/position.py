@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, Float, DateTime
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from domain import Base
+from observer.domain import Base
 
 '''
     仓位类
