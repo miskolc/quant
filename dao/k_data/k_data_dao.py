@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
-from functools import lru_cache
 
 from common_tools.decorators import exc_time
 from dao import cal_direction

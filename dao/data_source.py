@@ -3,7 +3,8 @@
 from sqlalchemy import create_engine, MetaData
 
 from config import default_config
-
+from sqlalchemy.orm import sessionmaker
+from contextlib import contextmanager
 
 class DataSource(object):
 
@@ -41,6 +42,17 @@ class DataSource(object):
     def futu_quote_ctx(self, value):
         self._futu_quote_ctx = value
 
+    @contextmanager
+    def session_ctx(self):
+        session = self.Session()
+        try:
+            yield session
+            session.commit()
+        except Exception as ex:
+            session.rollback()
+        finally:
+            session.close()
+
 dataSource = DataSource()
 
 if default_config.DATABASE_QUANT_URI:
@@ -50,5 +62,11 @@ if default_config.DATABASE_QUANT_URI:
     dataSource.mysql_quant_engine = mysql_quant_engine
     dataSource.mysql_quant_conn = mysql_quant_engine.connect()
     dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)
+
+    Session = sessionmaker()
+    Session.configure(bind=dataSource.mysql_quant_engine)
+
+    dataSource.Session = Session
+
 
 
