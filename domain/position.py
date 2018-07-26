@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, Float, DateTime
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from observer.domain import Base
+from domain import Base
 
 '''
     仓位类
@@ -13,7 +13,9 @@ class Position(Base):
     price = Column(Float)
     price_in = Column(Float)
     shares = Column(Integer)
+    profit = Column(Float)
     create_time = Column(DateTime)
+    update_time = Column(DateTime)
 
     def __init__(self, code, name, price, price_in, shares):
         self.code = code

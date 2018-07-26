@@ -1,15 +1,13 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
+
 from config import default_config
 from dao.k_data import fill_market
 from dao.trade.position_dao import position_dao
-
+from datetime import datetime
 import futuquant as ft
 
 
-def f(position, code):
-    return position.code == code
-
-if __name__ == '__main__':
-
+def monitor():
     try:
         positions = position_dao.get_position_list()
 
@@ -27,9 +25,14 @@ if __name__ == '__main__':
             position = [position for position in positions if position.code == code][0]
             position.price = last_price
 
-            profit = round((last_price/position.price_in - 1) * 100, 2)
-            print(profit)
-
+            profit = round((last_price / position.price_in - 1) * 100, 2)
+            position.profit = profit
+            position.update_time = datetime.now()
             position_dao.update(position)
     finally:
         futu_quote_ctx.close()
+
+if __name__ == '__main__':
+    scheduler = BlockingScheduler()
+    scheduler.add_job(monitor, 'cron', day_of_week='1-5', hour='9-15',second='*/15')
+    scheduler.start()
