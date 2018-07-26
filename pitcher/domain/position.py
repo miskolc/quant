@@ -23,3 +23,7 @@ class Position(object):
 
         self.create_time = create_time
 
+
+    @property
+    def score(self):
+        return self._score
