@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
+from common_tools.datetime_utils import get_next_date
 from common_tools.json_utils import obj_dict
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.basic.stock_pool_dao import stock_pool_dao
@@ -21,15 +22,25 @@ class GrahamDefender(Strategy):
     def init(self, context):
         super(GrahamDefender, self).init(context)
 
-        context.pool = list(stock_pool_dao.get_list()['code'].values)
+        # context.pool = list(stock_pool_dao.get_list()['code'].values)
+        context.pool = ['601398', '601088', '601288']
         self.context = context
+
 
     @exc_time
     def handle_data(self):
 
-
-
         temp_target_list = pd.DataFrame(columns=['code', 'pe', 'pb', 'eps', 'm_cap'])
+
+        sh_index = k_data_dao.get_k_data('SH.000001', start=get_next_date(-30), end=get_next_date(-1),
+                                         futu_quote_ctx=self.futu_quote_ctx)
+
+        if abs(sh_index['change_rate'].rolling(window=3).sum().values[-1]) >= 0.049:
+            for position in context.portfolio.positions:
+                code = position.code
+                shares = position.shares
+                price = position.price
+                self.sell_value(code=code, shares=shares, price=price)
 
         for code in self.context.pool:
             stock_basic_info = stock_basic_dao.get_by_code(code=code)
@@ -44,31 +55,35 @@ class GrahamDefender(Strategy):
 
             if pe_value < 20 and pb_value < 1.8 and eps_value > 0:
                 target_stock = {'code': code, 'pe': pe_value, 'pb': pb_value, 'eps': eps_value, 'm_cap': m_cap}
-                temp_target_list.loc[self.context.target_list.shape[0] + 1] = target_stock
+                temp_target_list.loc[temp_target_list.shape[0] + 1] = target_stock
 
         temp_target_stock = temp_target_list.sort_values('m_cap', ascending=False)[:5]
         print('tem target list: %s' % temp_target_list)
-        target_code_list = temp_target_stock
+        target_code_list = temp_target_stock['code'].values
 
         current_stock_code = []
         for positions in self.context.portfolio.positions:
             current_stock_code.append(positions.code)
         print(current_stock_code)
 
-        stock_to_be_removed = [i for i in target_code_list if i not in current_stock_code]
-        stock_to_be_added = [j for j in current_stock_code if j not in target_code_list]
+        stock_to_be_added = [i for i in target_code_list if i not in current_stock_code]
+        stock_to_be_removed = [j for j in current_stock_code if j not in target_code_list]
 
-        for code in stock_to_be_added:
-            k_data = k_data_dao.get_k_data(code=code, start=self.context.current_date, end=self.context.current_date,
-                                           futu_quote_ctx=self.futu_quote_ctx)
-            price = k_data['close'].values[-1]
-            self.buy_in_percent(code=code, price=price, percent=0.2)
 
         for code in stock_to_be_removed:
-            k_data = k_data_dao.get_k_data(code=code, start=self.context.current_date, end=self.context.current_date,
+            k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date,
                                            futu_quote_ctx=self.futu_quote_ctx)
             price = k_data['close'].values[-1]
             self.sell_value(code=code, price=price, shares=-1)
+
+        for code in stock_to_be_added:
+            k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=get_next_date(-1),
+                                           futu_quote_ctx=self.futu_quote_ctx)
+            price = k_data['close'].values[-1]
+
+            if len(self.context.portfolio.positions) >= 5:
+                break
+            self.buy_in_percent(code=code, price=price, percent=0.2)
 
         self.context.next_open = datetime.strptime(self.context.current_date, '%Y-%m-%d') + dt.timedelta(days=20)
 
@@ -78,7 +93,11 @@ if __name__ == '__main__':
     graham_defender = GrahamDefender()
     graham_defender.init(context)
 
-    context.current_date = '2018-07-20'
+    context.current_date = '2018-01-01'
+
+    graham_defender.handle_data()
+
+    context.current_date = '2018-01-21'
 
     graham_defender.handle_data()
     context_json = json.dumps(context, default=obj_dict)
