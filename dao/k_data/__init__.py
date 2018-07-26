@@ -1,7 +1,10 @@
 
 def fill_market(code):
 
-    if code.startswith("6"):
+    if code.startswith('SH'):
+        return code
+
+    elif code.startswith("6"):
         return 'SH.'+ code
 
     elif code.startswith("0") or code.startswith("3"):
