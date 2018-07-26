@@ -1,21 +1,17 @@
 # ae_h - 2018/7/18
+import datetime as dt
 import json
 from datetime import datetime
 
 import pandas as pd
-import numpy as np
 
 from common_tools.datetime_utils import get_next_date
 from common_tools.json_utils import obj_dict
 from dao.basic.stock_basic_dao import stock_basic_dao
-from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.k_data.k_data_dao import k_data_dao
 from log.quant_logging import logger
-from pitcher.strategy import Strategy
-from common_tools.decorators import exc_time
 from pitcher.context import Context
-import datetime as dt
-import tushare as ts
+from pitcher.strategy import Strategy
 
 
 class GrahamDefender(Strategy):
@@ -26,8 +22,6 @@ class GrahamDefender(Strategy):
         context.pool = ['601398', '601088', '601288']
         self.context = context
 
-
-
     def handle_data(self):
 
         temp_target_list = pd.DataFrame(columns=['code', 'pe', 'pb', 'eps', 'm_cap'])
@@ -36,12 +30,11 @@ class GrahamDefender(Strategy):
                                          futu_quote_ctx=self.futu_quote_ctx)
 
         if abs(sh_index['change_rate'].rolling(window=3).sum().values[-1]) >= 0.049:
-            for position in context.portfolio.positions:
+            for position in self.context.portfolio.positions:
                 code = position.code
                 shares = position.shares
                 price = position.price
                 self.sell_value(code=code, shares=shares, price=price)
-
 
         for code in self.context.pool:
             stock_basic_info = stock_basic_dao.get_by_code(code=code)
@@ -69,7 +62,6 @@ class GrahamDefender(Strategy):
 
         stock_to_be_added = [i for i in target_code_list if i not in current_stock_code]
         stock_to_be_removed = [j for j in current_stock_code if j not in target_code_list]
-
 
         for code in stock_to_be_removed:
             k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date,
