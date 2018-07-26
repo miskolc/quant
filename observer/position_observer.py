@@ -1,3 +1,13 @@
+
+import os
+import sys
+
+# Append project path to system path
+CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.dirname(CURRENT_DIR)
+sys.path.append(ROOT_DIR)
+
+
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 from config import default_config
