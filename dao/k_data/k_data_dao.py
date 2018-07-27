@@ -2,9 +2,9 @@
 # greg.chen - 2018/5/19
 
 from common_tools.decorators import exc_time
-from dao import cal_direction
+from dao import dataSource
 from dao.k_data import fill_market
-
+import pandas as pd
 '''
     HS300指数: SH.000300
 
@@ -13,9 +13,14 @@ from dao.k_data import fill_market
 
 class K_Data_Dao:
     @exc_time
-    def get_k_data(self, code, start, end, futu_quote_ctx):
+    def get_k_data(self, code, start, end):
 
-        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
+        sql = ('''select  *
+                 from k_data  
+                 where code=%(code)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+
+        data = pd.read_sql(sql=sql, params={"code": fill_market(code), "start": start, "end": end}
+                           , con=dataSource.mysql_quant_conn)
 
         return data
 
