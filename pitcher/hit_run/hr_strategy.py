@@ -1,7 +1,8 @@
 # ae_h - 2018/7/23
-
+from pitcher.context import Context
 from pitcher.strategy import Strategy
 from common_tools.decorators import exc_time
+from dao.k_data.k_data_dao import k_data_dao
 
 class HitAndRunStrategy(Strategy):
     def init(self, context):
@@ -30,3 +31,13 @@ class HitAndRunStrategy(Strategy):
             sell
         '''
 
+        df = k_data_dao.get_k_data(code='603799', start='2018-06-01', end='2018-07-20')
+        print(df)
+
+
+
+if __name__ == '__main__':
+    context = Context(start='2018-06-01', end='2018-07-20', base_capital=50000)
+    hnr = HitAndRunStrategy()
+    hnr.init(context)
+    hnr.handle_data()
