@@ -1,7 +1,11 @@
 # ae_h - 2018/7/23
-
+from pitcher.context import Context
 from pitcher.strategy import Strategy
 from common_tools.decorators import exc_time
+from dao.k_data.k_data_dao import k_data_dao
+from feature_utils.overlaps_studies import cal_ma20, cal_ma145, cal_ma250
+import pandas as pd
+
 
 class HitAndRunStrategy(Strategy):
     def init(self, context):
@@ -30,3 +34,14 @@ class HitAndRunStrategy(Strategy):
             sell
         '''
 
+        df = k_data_dao.get_k_data(code='603799', start='2016-07-01', end='2018-07-27')
+        df['ma20'] = cal_ma20(df)
+        df['ma145'] = cal_ma145(df)
+        df['ma250'] = cal_ma250(df)
+        print(df)
+
+
+if __name__ == '__main__':
+    context = Context(start='2016-07-01', end='2018-07-27', base_capital=50000)
+    hnr = HitAndRunStrategy()
+    hnr.handle_data()
