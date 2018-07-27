@@ -4,13 +4,12 @@
 import os
 import sys
 
-# Append project path to system path
-from config import default_config
-
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
 
+# Append project path to system path
+from config import default_config
 import collector.basic.stock_basic_collector as stock_basic_collector
 import collector.k_data.k_data_collector  as k_data_collector
 from apscheduler.schedulers.blocking import BlockingScheduler
