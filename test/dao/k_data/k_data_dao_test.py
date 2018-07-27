@@ -13,7 +13,7 @@ class K_Data_Dao_Test(unittest.TestCase):
 
     def test_get_k_data(self):
 
-        df = k_data_dao.get_k_data(code = "600196", start="2018-01-02", end="2018-01-02", futu_quote_ctx= self.futu_quote_ctx)
+        df = k_data_dao.get_k_data(code = "600196", start="2018-01-02", end="2018-01-06")
         print(df)
         self.assertIsNotNone(df)
 
