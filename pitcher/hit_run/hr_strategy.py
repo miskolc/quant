@@ -30,4 +30,3 @@ class HitAndRunStrategy(Strategy):
             sell
         '''
 
-        
