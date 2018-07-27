@@ -13,7 +13,7 @@ class HitAndRunStrategy(Strategy):
     @exc_time
     def handle_data(self):
         '''
-        1st_touch: ma250*.3<=low<=ma250, close>=ma250, can repeat until trend turn;
+        1st_touch: ma250*.97<=low<=ma250, close>=ma250, can repeat until trend turn;
         if trend up:
             if touch ma145(close>=ma145): buy in
         elif trend up and close <= ma145: observe (til touch)
@@ -29,3 +29,5 @@ class HitAndRunStrategy(Strategy):
         else trend turn down:
             sell
         '''
+
+        

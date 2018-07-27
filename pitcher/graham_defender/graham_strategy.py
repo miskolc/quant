@@ -26,7 +26,6 @@ class GrahamDefender(Strategy):
         context.pool = ['601398', '601088', '601288']
         self.context = context
 
-
     @exc_time
     def handle_data(self):
 
@@ -68,7 +67,6 @@ class GrahamDefender(Strategy):
 
         stock_to_be_added = [i for i in target_code_list if i not in current_stock_code]
         stock_to_be_removed = [j for j in current_stock_code if j not in target_code_list]
-
 
         for code in stock_to_be_removed:
             k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date,
