@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import tushare as ts
 
-from common_tools import exc_time
+from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 
 

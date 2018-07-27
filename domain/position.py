@@ -8,11 +8,17 @@ from domain import Base
 '''
 class Position(Base):
     __tablename__ = 'position'
+    # 股票代码
     code = Column(String, primary_key=True)
+    # 股票名称
     name = Column(String)
+    # 当前价格
     price = Column(Float)
+    # 成本价
     price_in = Column(Float)
+    # 股数
     shares = Column(Integer)
+    # 盈亏
     profit = Column(Float)
     create_time = Column(DateTime)
     update_time = Column(DateTime)
