@@ -15,6 +15,7 @@ from log.quant_logging import logger
 
 from common_tools.decorators import exc_time
 
+INDEX_CODES = ['SH.000300', 'SH.000001']
 
 # collect k_data from tushare and save into db
 @exc_time
@@ -57,6 +58,20 @@ def collect_all(futu_quote_ctx):
         collect_single(code=code, start='2013-01-01', end=now, futu_quote_ctx=futu_quote_ctx)
 
 
+# 抓取所有k_data数据
+@exc_time
+def collect_all_index(futu_quote_ctx):
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = trade_date_dao.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
+    for code in INDEX_CODES:
+        collect_single(code=code, start='2013-01-01', end=now, futu_quote_ctx=futu_quote_ctx)
+
+
+
 # 抓取每天K_data数据
 @exc_time
 def collect_all_daily(futu_quote_ctx):
@@ -69,4 +84,17 @@ def collect_all_daily(futu_quote_ctx):
     df_industry = stock_industry_dao.get_stock_code_list()
     for index,row in df_industry.iterrows():
         code = row['code']
+        collect_single_daily(code=code, futu_quote_ctx=futu_quote_ctx)
+
+
+# 抓取每天K_data数据
+@exc_time
+def collect_all_index_daily(futu_quote_ctx):
+    now = datetime.now().strftime('%Y-%m-%d')
+    is_holiday = trade_date_dao.is_holiday(now)
+    # 如果是假日, 跳过
+    if is_holiday:
+        return
+
+    for code in INDEX_CODES:
         collect_single_daily(code=code, futu_quote_ctx=futu_quote_ctx)

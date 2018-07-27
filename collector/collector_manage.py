@@ -11,7 +11,7 @@ sys.path.append(ROOT_DIR)
 # Append project path to system path
 from config import default_config
 import collector.basic.stock_basic_collector as stock_basic_collector
-import collector.k_data.k_data_collector  as k_data_collector
+import collector.k_data.k_data_collector as k_data_collector
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 import futuquant as ft
@@ -26,5 +26,7 @@ if __name__ == '__main__':
     scheduler.add_job(stock_basic_collector.collect_stock_basic, 'cron', day_of_week='1-5', hour=15, minute=30)
 
     scheduler.add_job(k_data_collector.collect_all_daily, 'cron', day_of_week='1-5', hour=16, minute=30, args=[futu_quote_ctx])
+    scheduler.add_job(k_data_collector.collect_all_index_daily, 'cron', day_of_week='1-5', hour=16, minute=30, args=[futu_quote_ctx])
+
     scheduler.start()
 
