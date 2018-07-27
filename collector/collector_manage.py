@@ -5,39 +5,27 @@ import os
 import sys
 
 # Append project path to system path
+from config import default_config
+
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
 
 import collector.basic.stock_basic_collector as stock_basic_collector
+import collector.k_data.k_data_collector  as k_data_collector
+from apscheduler.schedulers.blocking import BlockingScheduler
 
-import schedule
-import time
-
+import futuquant as ft
 PROJECT_NAME = "quant-collector"
 
+
 if __name__ == '__main__':
-
-    #k_data_feature_collector.collect_full_daily()
-    #k_data.collect_all_daily();
-    #index_k_data.collect_index_china_daily();
-    #k_data_feature_collector.collect_full_daily()
-
-    #schedule.every().day.at("15:30").do(k_data.collect_all_daily)
-    #schedule.every().day.at("15:32").do(index_k_data.collect_index_china_daily)
-    #schedule.every().day.at("16:30").do(index_k_data.collect_index_hk_daily)
-    #schedule.every().day.at("8:30").do(index_k_data.collect_index_usa_daily)
-    #schedule.every().day.at("15:35").do(k_data_feature_collector.collect_full_daily)
-
-    #schedule.every().friday.at("15:35").do(k_data_week_collector.collect_all_weekly)
-
-    #schedule.every().day.at("15:32").do(index_k_data_60m.collect_index_china_daily)
-
-    #
-    schedule.every().day.at("15:35").do(stock_basic_collector.collect_stock_basic)
+    futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
 
 
+    scheduler = BlockingScheduler()
+    scheduler.add_job(stock_basic_collector.collect_stock_basic, 'cron', day_of_week='1-5', hour=15, minute=30)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    scheduler.add_job(k_data_collector.collect_all_daily, 'cron', day_of_week='1-5', hour=16, minute=30, args=[futu_quote_ctx])
+    scheduler.start()
+
