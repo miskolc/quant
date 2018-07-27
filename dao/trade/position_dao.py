@@ -1,8 +1,8 @@
-from common_tools.decorators import exc_time
+import copy
 
+from common_tools.decorators import exc_time
 from dao.data_source import dataSource
 from domain.position import Position
-from dao.orm_serializer import serielizer
 
 
 class Position_Dao():
@@ -32,8 +32,7 @@ class Position_Dao():
 
         with dataSource.session_ctx() as session:
             for instance in session.query(Position).filter(Position.code == given_code).all():
-                print(serielizer(instance))
-
+                return copy.deepcopy(instance)
 
 
 

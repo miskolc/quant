@@ -4,6 +4,8 @@ import falcon
 import json
 import pdb
 
+from common_tools.orm_serializer import DateEncoder
+
 
 class JSONTranslator(object):
     def process_request(self, req, resp):
@@ -26,4 +28,4 @@ class JSONTranslator(object):
     def process_response(self, req, resp, resource):
         if 'result' not in resp.context:
             return
-        resp.body = json.dumps(resp.context['result'])
+        resp.body = json.dumps(resp.context['result'], ensure_ascii=False, cls=DateEncoder)

@@ -7,7 +7,7 @@ import json
 def serielizer(model):
     columns = [c.key for c in class_mapper(model.__class__).columns]
 
-    return json.dumps(dict((c, getattr(model, c)) for c in columns), cls=DateEncoder, ensure_ascii=False)
+    return dict((c, getattr(model, c)) for c in columns)
 
 
 class DateEncoder(json.JSONEncoder):
@@ -16,5 +16,5 @@ class DateEncoder(json.JSONEncoder):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         elif isinstance(obj, datetime.date):
             return obj.strftime("%Y-%m-%d")
-        else:
-            return json.JSONEncoder.default(self, obj)
+        # else:
+            # return json.JSONEncoder.default(self, obj)
