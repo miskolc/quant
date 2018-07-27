@@ -21,7 +21,7 @@ from common_tools.decorators import exc_time
 def collect_single(code, start, end, futu_quote_ctx):
     table_name = 'k_data'
     try:
-        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start,
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,
                                                        end=end)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
@@ -39,7 +39,7 @@ def collect_single_daily(code, futu_quote_ctx, start=None, end=None):
         end = get_current_date()
 
     try:
-        state, data = futu_quote_ctx.get_history_kline(code, ktype='K_DAY', autype='qfq', start=start, end=end)
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start, end=end)
         data = data.tail(1)
         data.to_sql(table_name, dataSource.mysql_quant_engine, if_exists='append', index=False)
     except Exception as e:
@@ -59,7 +59,7 @@ def collect_all(futu_quote_ctx):
 
 # 抓取每天K_data数据
 @exc_time
-def collect_all_daily(table_name='k_data'):
+def collect_all_daily(futu_quote_ctx):
     now = datetime.now().strftime('%Y-%m-%d')
     is_holiday = trade_date_dao.is_holiday(now)
     # 如果是假日, 跳过
@@ -69,4 +69,4 @@ def collect_all_daily(table_name='k_data'):
     df_industry = stock_industry_dao.get_stock_code_list()
     for index,row in df_industry.iterrows():
         code = row['code']
-        collect_single_daily(code=code, table_name=table_name)
+        collect_single_daily(code=code, futu_quote_ctx=futu_quote_ctx)
