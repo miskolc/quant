@@ -10,7 +10,7 @@ ROOT_DIR = os.path.dirname(os.path.dirname(CURRENT_DIR))
 sys.path.append(ROOT_DIR)
 
 from dao.trade.position_dao import position_dao
-from common_tools.orm_serializer import DateEncoder
+
 
 class PositionHandler(object):
     def on_get(self, req, resp):
