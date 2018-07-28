@@ -15,7 +15,7 @@ class Stock_Industry_Classified_Test(unittest.TestCase):
 
 
     def test_collect_industry_single(self):
-        data = east_money_api.get_stock_industry_by_bk_code('BK0490', '军工')
+        data = east_money_api.get_stock_industry_by_bk_code('BK0696', '国产软件')
         data.to_sql('stock_industry', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
         print(data)

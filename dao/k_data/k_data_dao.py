@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
-
+from common_tools.datetime_utils import get_next_date, get_current_date
 from common_tools.decorators import exc_time
-from dao import dataSource
+from dao import dataSource, cal_direction
 from dao.k_data import fill_market
 import pandas as pd
 '''
@@ -13,13 +13,39 @@ import pandas as pd
 
 class K_Data_Dao:
     @exc_time
-    def get_k_data(self, code, start, end):
+    def get_k_data(self, code, start=None, end=None):
+
+        if start is None:
+            start = get_next_date(-720)
+
+        if end is None:
+            end = get_current_date()
 
         sql = ('''select  *
                  from k_data  
                  where code=%(code)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
 
         data = pd.read_sql(sql=sql, params={"code": fill_market(code), "start": start, "end": end}
+                           , con=dataSource.mysql_quant_conn)
+
+        return data
+
+    @exc_time
+    def get_multiple_k_data(self, code_list, start=None, end=None):
+
+        if start is None:
+            start = get_next_date(-720)
+
+        if end is None:
+            end = get_current_date()
+
+        sql = ('''select  *
+                 from k_data  
+                 where code in %(code_list)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+
+        codes_list = [fill_market(code) for code in code_list]
+
+        data = pd.read_sql(sql=sql, params={"code_list": codes_list, "start": start, "end": end}
                            , con=dataSource.mysql_quant_conn)
 
         return data

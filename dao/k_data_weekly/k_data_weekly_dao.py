@@ -1,19 +1,52 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
-
+from common_tools.datetime_utils import get_current_date
 from common_tools.decorators import exc_time
-
+from dao import dataSource
+import pandas as pd
 from dao.k_data import fill_market
 
 
 class K_Data_Weekly_Dao:
     @exc_time
-    def get_k_data(self, code, start, end, futu_quote_ctx):
+    def get_k_data(self, code, start, end):
 
-        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_WEEK', autype='qfq', start=start,end=end)
+        if start is None:
+            start = '2013-01-01'
+
+        if end is None:
+            end = get_current_date()
+
+        sql = ('''select  *
+                 from k_data_weekly  
+                 where code=%(code)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+
+        data = pd.read_sql(sql=sql, params={"code": fill_market(code), "start": start, "end": end}
+                           , con=dataSource.mysql_quant_conn)
 
         return data
 
+    @exc_time
+    def get_multiple_k_data(self, code_list, start=None, end=None):
+
+        if start is None:
+            start = '2013-01-01'
+
+        if end is None:
+            end = get_current_date()
+
+        sql = ('''select  *
+                 from k_data_weekly  
+                 where code in %(code_list)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+
+        codes_list = [fill_market(code) for code in code_list]
+
+        data = pd.read_sql(sql=sql, params={"code_list": codes_list, "start": start, "end": end}
+                           , con=dataSource.mysql_quant_conn)
+
+        return data
+
+    '''
     @exc_time
     def get_multiple_history_kline(self, code_list, start, end, futu_quote_ctx):
         code_list = list(map(fill_market, code_list))
@@ -31,7 +64,9 @@ class K_Data_Weekly_Dao:
 
         return k_data_dict
 
-    '''
+
+
+    
     @exc_time
     def get_k_data_all(self):
         sql = ("select `date`, code, open, close, high, low, volume, pre_close from k_data_weekly ")
