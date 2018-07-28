@@ -17,6 +17,13 @@ class K_Data_Dao_Test(unittest.TestCase):
         print(df)
         self.assertIsNotNone(df)
 
+    def get_multiple_k_data(self):
+
+        df = k_data_dao.get_multiple_k_data(code_list = ["601398", '600196', '000001'], start="2018-07-02", end="2018-07-28")
+        print(df)
+        self.assertIsNotNone(df)
+
+
     def test_get_trading_days(self):
         df = k_data_dao.get_trading_days(start="2015-01-01", end="2018-05-27", futu_quote_ctx= self.futu_quote_ctx)
         print(df)
