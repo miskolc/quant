@@ -19,7 +19,7 @@ class K_Data_Collector_Test(unittest.TestCase):
         collect_all(self.futu_quote_ctx)
 
     def test_collect_single(self):
-        collect_single(code='601398',futu_quote_ctx=self.futu_quote_ctx, start='2013-01-01', end=get_current_date())
+        collect_single(code='601668',futu_quote_ctx=self.futu_quote_ctx, start='2013-01-01', end=get_current_date())
 
     def test_collect_all_daily(self):
         collect_all_daily(self.futu_quote_ctx)

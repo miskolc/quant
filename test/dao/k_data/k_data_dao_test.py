@@ -1,9 +1,10 @@
 import unittest
 
+from common_tools.datetime_utils import get_next_date, get_current_date
 from config import default_config
 import futuquant as ft
 from dao.k_data.k_data_dao import k_data_dao
-
+from feature_utils.momentum_indicators import cal_macd
 
 
 class K_Data_Dao_Test(unittest.TestCase):
@@ -33,6 +34,12 @@ class K_Data_Dao_Test(unittest.TestCase):
         df = k_data_dao.get_market_snapshot(code_list=['600196', '601398'], futu_quote_ctx= self.futu_quote_ctx)
         print(df)
 
+    def test_get_last_macd_cross_point(self):
+        df = k_data_dao.get_k_data(code = "601668", start=get_next_date(-120), end=get_current_date())
+        df = df.join(cal_macd(df))
+        item = k_data_dao.get_last_macd_cross_point(df, window_size=8)
+
+        print(item)
 
     def tearDown(self):
         self.futu_quote_ctx.close()
