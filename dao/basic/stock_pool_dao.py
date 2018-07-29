@@ -16,12 +16,11 @@ class StockPoolDao:
         df = pd.read_sql(sql=sql
                          , con=dataSource.mysql_quant_conn)
 
-        #df['code'] = df['code'].apply(stock_pool_dao.fill_market)
+        # df['code'] = df['code'].apply(stock_pool_dao.fill_market)
         return df
 
     @exc_time
     def init_pool(self):
-
         df_zz = ts.get_zz500s()
         df_zz['type'] = 'zz500'
         df_hs300 = ts.get_hs300s()
@@ -29,8 +28,6 @@ class StockPoolDao:
 
         df_zz.to_sql('stock_pool', dataSource.mysql_quant_engine, if_exists='append', index=False)
         df_hs300.to_sql('stock_pool', dataSource.mysql_quant_engine, if_exists='append', index=False)
-
-
 
 
 stock_pool_dao = StockPoolDao()
