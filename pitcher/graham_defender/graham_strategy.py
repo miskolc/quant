@@ -71,9 +71,9 @@ class GrahamDefender(object):
         stock_to_be_removed = [j for j in current_stock_code if j not in target_code_list]
 
         for code in stock_to_be_removed:
-            k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date)
-            price = k_data['close'].values[-1]
+
             # self.sell_value(code=code, price=price, shares=-1)
+
             logger.info('direction = sell:' + code)
 
         for code in stock_to_be_added:
@@ -87,7 +87,11 @@ class GrahamDefender(object):
             #if len(self.context.portfolio.positions) >= 5:
                 #break
             # self.buy_in_percent(code=code, price=price, percent=0.2)
-            logger.info('direction = buy:'+code)
+            k_data = k_data_dao.get_k_data(code=code, start=get_next_date(-2), end=self.context.current_date)
+            price = k_data['close'].values[-1]
+            shares = int(4000 / price / 100) * 100
+
+            print('direction = buy:%s, shares:%s'%(code, shares))
         #self.context.next_open = datetime.strptime(self.context.current_date, '%Y-%m-%d') + dt.timedelta(days=20)
 
 

@@ -1,4 +1,5 @@
 import futuquant as ft
+from sklearn import linear_model
 
 from common_tools.datetime_utils import get_next_date, get_current_date
 from config import default_config
@@ -11,6 +12,7 @@ from feature_utils.momentum_indicators import cal_macd, acc_kdj
 from feature_utils.overlaps_studies import cal_ma145
 from log.quant_logging import logger
 import traceback
+import pandas as pd
 
 '''
     1. close>ma145
@@ -37,7 +39,7 @@ def cal_stock_pool():
     w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end=get_current_date())
     k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-720), end=get_current_date())
 
-    #k_data_list = k_data_list.set_index('code', inplace=True)
+    # k_data_list = k_data_list.set_index('code', inplace=True)
 
     # k_data_list = k_data_dao.get_market_snapshot(code_list=code_list, futu_quote_ctx=futu_quote_ctx)
     matched = []
@@ -49,6 +51,20 @@ def cal_stock_pool():
     print("matched:%s" % matched)
 
 
+def macd_predict(data, predict_x):
+    max_len = len(data.values) - 1
+    diff_lm = linear_model.LinearRegression()
+    X = data.values[0:max_len].reshape(-1, 1)
+    Y = data.shift(-1).dropna().values
+    diff_lm.fit(X, Y)
+    #print(diff_lm.coef_)
+    #print(diff_lm.intercept_)
+
+    predict_y = diff_lm.predict(predict_x)
+
+    return predict_y
+
+
 def cal_single_stock(code, k_data_list, w_data_list):
     try:
         w_data = w_data_list.loc[w_data_list['code'] == fill_market(code)]
@@ -57,8 +73,8 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
         k_data = k_data_list.loc[k_data_list['code'] == fill_market(code)]
         k_data = k_data.join(cal_macd(k_data))
-        if len(k_data) == 0:
-            return
+        if len(k_data['code'].values) == 0:
+            return False
 
         k_data['ma145'] = cal_ma145(k_data)
         k_data['turnover7'] = cal_mavol7(k_data, column='turnover')
@@ -80,26 +96,56 @@ def cal_single_stock(code, k_data_list, w_data_list):
         k_ma145 = k_data['ma145'].values[-1]
         k_turnover7 = k_data['turnover7'].values[-1]
 
+        diff = k_data['diff'].values[-1]
+        dea = k_data['dea'].values[-1]
+        last5_diff = k_data['diff'].tail(5)
+        last5_dea = k_data['dea'].tail(5)
+
+        pre_diff = k_data['diff'].values[-2]
+        pre_dea = k_data['dea'].values[-2]
+        macd = w_data['macd'].values[-1]
+
+        '''
         if k_close < k_ma145:
             logger.debug("code:%s, close price less than ma145" % code)
             return False
+        '''
 
         if k_turnover7 < 75000000:
             logger.debug("code:%s, turnover less than 75000000" % code)
-            return
+            return False
 
         if round(w_volume / w_pre_volume, 1) < 1.3:
             logger.debug("code:%s, volume  less than pre_volume * 1.3" % code)
             return False
 
-        if (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea) \
-                or (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_dea - w_diff < abs(w_dea * 0.2)):
+        if pre_diff < pre_dea and diff > -0.35 and diff > dea:
+            return True
 
-            macd_point = k_data_dao.get_last_macd_cross_point(k_data, window_size=5)
+        # 通过机器学习预测, 下一个diff, 和 下一个dea
+        next_diff = macd_predict(last5_diff, diff)[0]
+        next_dea = macd_predict(last5_dea, dea)[0]
+        if diff < dea and diff > -0.35 and next_diff > next_dea:
+            return True
+
+            # if (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea)\
+            # or (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff < w_dea  and w_dea - w_diff < abs(w_dea * 0.2)):
+
+        '''
+        elif macd > -0.35 and abs(dea - diff) < 0.2 and abs(pre_dea - pre_diff) < 0.2:
+
+            if (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea) \
+                    or (w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff < w_dea and w_dea - w_diff < abs(w_dea * 0.2)):
+                return True
+
+            #macd_point = k_data_dao.get_last_macd_cross_point(k_data, window_size=8)
 
             # 日k上 macd已经金叉(-3days)
-            if macd_point is not None:
-                return True
+            #if macd_point is not None:
+                #return True
+        '''
+
+        return False
 
     except Exception as e:
         logger.error("code:%s" % code)
@@ -107,15 +153,17 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
     return False
 
+
 if __name__ == '__main__':
 
     cal_stock_pool()
     '''
-    #BK0712
+    # BK0712
 
-    code_list = ['603616']
+    code_list = ['000151']
     w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end=get_current_date())
-    k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-60), end=get_current_date())
-    #k_data_list = k_data_list.set_index('code', inplace=True, drop=False)
-    cal_single_stock('603616',w_data_list, k_data_list)
-   '''
+    k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-365), end=get_current_date())
+    # k_data_list = k_data_list.set_index('code', inplace=True, drop=False)
+    rs = cal_single_stock('000151', k_data_list=k_data_list, w_data_list=w_data_list)
+    print(rs)
+    '''

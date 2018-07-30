@@ -21,12 +21,13 @@ PROJECT_NAME = "quant-collector"
 if __name__ == '__main__':
     futu_quote_ctx = ft.OpenQuoteContext(host=default_config.FUTU_OPEND_HOST, port=default_config.FUTU_OPEND_PORT)
 
-    scheduler = BlockingScheduler()
-    scheduler.add_job(stock_basic_collector.collect_stock_basic, 'cron', day_of_week='1-5', hour=15, minute=30)
 
-    scheduler.add_job(k_data_collector.collect_all_daily, 'cron', day_of_week='1-5', hour=16, minute=30,
+    scheduler = BlockingScheduler()
+    scheduler.add_job(stock_basic_collector.collect_stock_basic, 'cron', day_of_week='0-4', hour=15, minute=30)
+
+    scheduler.add_job(k_data_collector.collect_all_daily, 'cron', day_of_week='0-4', hour=16, minute=30,
                       args=[futu_quote_ctx])
-    scheduler.add_job(k_data_collector.collect_all_index_daily, 'cron', day_of_week='1-5', hour=16, minute=30,
+    scheduler.add_job(k_data_collector.collect_all_index_daily, 'cron', day_of_week='0-4', hour=16, minute=30,
                       args=[futu_quote_ctx])
 
     scheduler.start()

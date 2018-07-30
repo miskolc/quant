@@ -13,7 +13,7 @@ def cal_mavol5(data):
 
 
 def cal_mavol7(data, column='volume'):
-    mavol7 = pd.Series.rolling(data[column], 7).sum() / 10
+    mavol7 = pd.Series.rolling(data[column], 7).sum() / 7
     return mavol7
 
 
