@@ -45,6 +45,6 @@ def monitor():
 if __name__ == '__main__':
 
      scheduler = BlockingScheduler()
-     scheduler.add_job(monitor, 'cron', day_of_week='1-5', hour='9-15',second='*/10')
+     scheduler.add_job(monitor, 'cron', day_of_week='0-4', hour='9-15',second='*/10')
      scheduler.start()
 
