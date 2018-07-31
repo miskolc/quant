@@ -97,11 +97,12 @@ class EastMoneyApi:
         buf = io.StringIO(content)
         line = buf.readline()
 
-        df = pd.DataFrame(columns=['pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy', 'total_market', 'total_assets', 'total_liabilities', 'retained_profits'])
+        df = pd.DataFrame(
+            columns=['pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy', 'total_market', 'total_assets',
+                     'total_liabilities', 'retained_profits'])
         dict = {"code": code}
         while line is not None and len(line) > 0:
             line = buf.readline()
-
 
             if line.find('var hypmData') > -1:
                 line = line.replace("var hypmData=", '')
@@ -127,7 +128,7 @@ class EastMoneyApi:
                 dict['roe'] = data[0]["WeightedYieldOnNetAssets"]
                 # 净利润同比(%)
                 dict['profits_yoy'] = data[0]["ProfitsYOYRate"]
-                if dict['profits_yoy'] == "\\" or dict['profits_yoy']  == '':
+                if dict['profits_yoy'] == "\\" or dict['profits_yoy'] == '':
                     dict['profits_yoy'] = None
 
                 # 营收同比率(%)
@@ -144,7 +145,40 @@ class EastMoneyApi:
 
         df = df.append(dict, ignore_index=True)
 
-        return df;
+        return df
+
+    @exc_time
+    def get_industry_vol(self, bkcode):
+        url = 'http://nufm.dfcfw.com/EM_Finance2014NumericApplication/JS.aspx?type=CT&cmd=%s' \
+              '&sty=FDPBPFB&st=z&sr=&p=&ps=&cb=jQuery17205845203068985219_1533009446115&js=([[(x)]])' \
+              '&token=7bc05d0d4c3c22ef9fca8c2a912d779c&_=1533009446214' % bkcode
+        response = requests.get(url)
+        content = response.content.decode('utf-8')
+        bracket_start_index = content.find('[[') + 2
+        bracket_end_index = content.find(']]') + 2
+        content = content[bracket_start_index:bracket_end_index]
+        content = content.split(',')
+        print(content[9])
+
+    @exc_time
+    def get_concept_board(self):
+
+        concept_dict = {}
+
+        url = 'http://quote.eastmoney.com/center/sidemenu.json'
+        resp = requests.get(url=url)
+        content = resp.content.decode('utf-8')
+        concept_start_index = content.find('概念板块')
+        concept_end_index = content.find('地域板块')
+        content = content[concept_start_index:concept_end_index]
+        content = '[' + content[content.find('{'):content.rfind('}') - 1] + ']'
+        content_json = json.loads(content)
+
+        for item in content_json:
+            concept_dict[item['key'].split('-')[1]] = item['title']
+
+        return concept_dict
 
 
 east_money_api = EastMoneyApi()
+

@@ -6,8 +6,12 @@
 # state, data = quote_ctx.get_history_kline('SH.600196', start='2010-01-01', end='2018-07-11', ktype='K_DAY', autype='qfq')
 #
 # print(data)
-from math import log
+# from math import log
+#
+# a = log(20)
+#
+# print(a)
 
-a = log(20)
+s = 'boards-BK07131'
 
-print(a)
+print(s.split('-')[1])

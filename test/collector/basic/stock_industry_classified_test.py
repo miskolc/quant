@@ -11,7 +11,7 @@ class Stock_Industry_Classified_Test(unittest.TestCase):
         before_run()
 
     def test_collect_industry(self):
-        stock_industry_collector.collect_all();
+        stock_industry_collector.collect_all()
 
 
     def test_collect_industry_single(self):
@@ -19,3 +19,5 @@ class Stock_Industry_Classified_Test(unittest.TestCase):
         data.to_sql('stock_industry', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
         print(data)
+
+
