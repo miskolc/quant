@@ -160,7 +160,28 @@ class EastMoneyApi:
         content = content.split(',')
         print(content[9])
 
+    @exc_time
+    def get_concept_board(self):
+
+        concept_dict = {}
+
+        url = 'http://quote.eastmoney.com/center/sidemenu.json'
+        resp = requests.get(url=url)
+        content = resp.content.decode('utf-8')
+        concept_start_index = content.find('概念板块')
+        concept_end_index = content.find('地域板块')
+        content = content[concept_start_index:concept_end_index]
+        content = '[' + content[content.find('{'):content.rfind('}') - 1] + ']'
+        content_json = json.loads(content)
+
+        for item in content_json:
+            concept_dict[item['key'].split('-')[1]] = item['title']
+
+        return concept_dict
+
 
 east_money_api = EastMoneyApi()
 
-
+if __name__ == '__main__':
+    east_money_api = EastMoneyApi()
+    east_money_api.get_concept_board()
