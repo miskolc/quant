@@ -5,6 +5,7 @@ from common_tools.decorators import exc_time
 from dao import dataSource, cal_direction
 from dao.k_data import fill_market
 import pandas as pd
+
 '''
     HS300指数: SH.000300
 
@@ -21,7 +22,7 @@ class K_Data_Dao:
         if end is None:
             end = get_current_date()
 
-        sql = ('''select  *
+        sql = ('''select  time_key, code, open, round(close, 3)  as close, high, low, change_rate, last_close, turnover, turnover_rate, volume, pe_ratio
                  from k_data  
                  where code=%(code)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
 
@@ -62,7 +63,7 @@ class K_Data_Dao:
         code_list = list(map(fill_market, code_list))
 
         state, data = futu_quote_ctx.get_multiple_history_kline(codelist=code_list
-                                                                , start=start, end=end,  ktype='K_DAY', autype='qfq')
+                                                                , start=start, end=end, ktype='K_DAY', autype='qfq')
 
         k_data_dict = {}
         for item in data:
@@ -77,11 +78,12 @@ class K_Data_Dao:
     @exc_time
     def get_k_training_data(self, code, start, end, futu_quote_ctx):
 
-        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,end=end)
+        state, data = futu_quote_ctx.get_history_kline(fill_market(code), ktype='K_DAY', autype='qfq', start=start,
+                                                       end=end)
 
         data['next_direction'] = data['change_rate'].apply(cal_direction).shift(-1)
 
-        feature = ['open','close', 'high', 'low', 'pe_ratio', 'turnover_rate', 'volume']
+        feature = ['open', 'close', 'high', 'low', 'pe_ratio', 'turnover_rate', 'volume']
 
         data = data.dropna()
 
@@ -94,6 +96,21 @@ class K_Data_Dao:
         state, data = futu_quote_ctx.get_market_snapshot(code_list=code_list)
         return data
 
+    def get_last_macd_cross_point(self, data, window_size=3):
+
+        for index in range(1, window_size + 1):
+            pre_index = index + 1
+
+            diff = data['diff'].values[-index]
+            dea = data['dea'].values[-index]
+
+            pre_diff = data['diff'].values[-pre_index]
+            pre_dea = data['dea'].values[-pre_index]
+
+            if pre_diff < pre_dea and diff > dea:
+                return data.iloc[[-index]]
+
+        return None
     '''
     @staticmethod
     def get_addition_index_features():
