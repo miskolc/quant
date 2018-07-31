@@ -35,7 +35,7 @@ class GrahamDefender(object):
 
         sh_index = k_data_dao.get_k_data('SH.000001', start=get_next_date(-30), end=get_next_date(-1))
 
-        # if sh_index['change_rate'].rolling(window=3).sum().values[-1] >= -0.049:
+        # if sh_index['change_rate'].rolling(window=3).sum().values[-1] >= -0.039:
         #     for position in context.portfolio.positions[:]:
         #         code = position.code
         #         shares = position.shares
