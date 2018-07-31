@@ -17,4 +17,10 @@ def collect_all():
         data = east_money_api.get_stock_industry_by_bk_code(row["code"], row["name"])
         data.to_sql('stock_industry', dataSource.mysql_quant_engine, if_exists='append', index=False)
 
+    collect_concept_board()
 
+def collect_concept_board():
+    dict = east_money_api.get_concept_board()
+    for k, v in dict.items():
+        data = east_money_api.get_stock_industry_by_bk_code(k[:-1], v)
+        data.to_sql('stock_industry', dataSource.mysql_quant_engine, if_exists='append', index=False)

@@ -2,9 +2,7 @@
 
 import falcon
 import json
-import pdb
 
-from common_tools.orm_serializer import DateEncoder
 
 
 class JSONTranslator(object):
@@ -16,7 +14,7 @@ class JSONTranslator(object):
             raise falcon.HTTPBadRequest('Empty request body, Valid Json required')
 
         try:
-            req.context['doc'] = json.loads(body.decode('utf-8'))
+            req.context['data'] = json.loads(body.decode('utf-8'))
 
         except (ValueError, UnicodeDecodeError):
             raise falcon.HTTPError(falcon.HTTP_753,
@@ -25,7 +23,4 @@ class JSONTranslator(object):
                                    'JSON was incorrect or not encoded as '
                                    'UTF-8.')
 
-    def process_response(self, req, resp, resource):
-        if 'result' not in resp.context:
-            return
-        resp.body = json.dumps(resp.context['result'], ensure_ascii=False, cls=DateEncoder)
+

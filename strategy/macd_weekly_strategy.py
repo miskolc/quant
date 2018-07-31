@@ -73,7 +73,7 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
         k_data = k_data_list.loc[k_data_list['code'] == fill_market(code)]
         k_data = k_data.join(cal_macd(k_data))
-        if len(k_data['code'].values) == 0:
+        if len(k_data['code'].values) == 0 or  len(w_data['code'].values) == 0:
             return False
 
         k_data['ma145'] = cal_ma145(k_data)
@@ -85,8 +85,8 @@ def cal_single_stock(code, k_data_list, w_data_list):
         w_pre_macd = w_data['macd'].values[-1]
         w_pre_diff = w_data['diff'].values[-1]
         w_pre_dea = w_data['dea'].values[-1]
-        w_last5_diff = w_data['diff'].tail(5)
-        w_last5_dea = w_data['dea'].tail(5)
+        w_last3_diff = w_data['diff'].tail(3)
+        w_last3_dea = w_data['dea'].tail(3)
 
         w_macd = w_data['macd'].values[-1]
         w_diff = w_data['diff'].values[-1]
@@ -107,7 +107,7 @@ def cal_single_stock(code, k_data_list, w_data_list):
         pre_dea = k_data['dea'].values[-2]
         macd = w_data['macd'].values[-1]
 
-        '''
+
         if k_close < k_ma145:
             logger.debug("code:%s, close price less than ma145" % code)
             return False
@@ -116,18 +116,18 @@ def cal_single_stock(code, k_data_list, w_data_list):
         if k_turnover7 < 75000000:
             logger.debug("code:%s, turnover less than 75000000" % code)
             return False
-        
-        
+
+
         if round(w_volume / w_pre_volume, 1) < 1.3:
             logger.debug("code:%s, volume  less than pre_volume * 1.3" % code)
             return False
-        '''
+
         # 通过机器学习预测, 下一个diff, 和 下一个dea
         k_next_diff = macd_predict(k_last5_diff, k_diff)[0]
         k_next_dea = macd_predict(k_last5_dea, k_dea)[0]
 
-        w_next_diff = macd_predict(w_last5_diff, w_diff)[0]
-        w_next_dea = macd_predict(w_last5_dea, w_dea)[0]
+        w_next_diff = macd_predict(w_last3_diff, w_diff)[0]
+        w_next_dea = macd_predict(w_last3_dea, w_dea)[0]
 
 
         if pre_diff < pre_dea and k_diff > -0.35 and k_diff > k_dea:
@@ -137,6 +137,7 @@ def cal_single_stock(code, k_data_list, w_data_list):
             elif  w_dea > w_diff > -0.35 and w_next_diff > w_next_dea:
                 return True
 
+            return True
 
         if k_dea > k_diff > -0.35 and k_next_diff > k_next_dea:
 
@@ -174,7 +175,7 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
 
 if __name__ == '__main__':
-    '''
+
     cal_stock_pool()
     '''
     # BK0712
@@ -185,4 +186,4 @@ if __name__ == '__main__':
     # k_data_list = k_data_list.set_index('code', inplace=True, drop=False)
     rs = cal_single_stock('600372', k_data_list=k_data_list, w_data_list=w_data_list)
     print(rs)
-
+   '''

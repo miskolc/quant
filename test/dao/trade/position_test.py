@@ -17,4 +17,4 @@ class PositionTest(unittest.TestCase):
 
     def test_query(self):
         position_dao = Position_Dao()
-        position_dao.query_by_code('601800')
+        query_by_code('601800')

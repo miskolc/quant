@@ -1,15 +1,17 @@
 from sqlalchemy import Column, String, Integer, Float, DateTime
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from domain import Base
+from domain.base import Base
 
 '''
     仓位类
 '''
 class Position(Base):
-    __tablename__ = 'position'
+
     # 股票代码
     code = Column(String, primary_key=True)
+    # 策略code
+    strategy_code = Column(String, primary_key=True)
     # 股票名称
     name = Column(String)
     # 当前价格
@@ -20,15 +22,16 @@ class Position(Base):
     shares = Column(Integer)
     # 盈亏
     profit = Column(Float)
-    create_time = Column(DateTime)
-    update_time = Column(DateTime)
 
-    def __init__(self, code, name, price, price_in, shares):
+
+
+    def __init__(self, code, name, price, price_in, shares, strategy_code):
         self.code = code
         self.name = name
         self.price = price
         self.price_in = price_in
         self.shares = shares
+        self.strategy_code = strategy_code
 
     @hybrid_property
     def total_market(self):

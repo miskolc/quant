@@ -13,6 +13,9 @@ class Stock_Industry_Classified_Test(unittest.TestCase):
     def test_collect_industry(self):
         stock_industry_collector.collect_all()
 
+    def test_collect_concept_board(self):
+        stock_industry_collector.collect_concept_board()
+
 
     def test_collect_industry_single(self):
         data = east_money_api.get_stock_industry_by_bk_code('BK0696', '国产软件')

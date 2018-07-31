@@ -1,16 +1,9 @@
 # ae_h - 2018/7/27
-from sqlalchemy.orm import class_mapper
 import datetime
 import json
 
 
-def serielizer(model):
-    columns = [c.key for c in class_mapper(model.__class__).columns]
-
-    return dict((c, getattr(model, c)) for c in columns)
-
-
-class DateEncoder(json.JSONEncoder):
+class JsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.strftime('%Y-%m-%d %H:%M:%S')

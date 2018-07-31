@@ -10,7 +10,7 @@ ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
 
 from gateway.handler.k_data_handler import KDataHandler
-from gateway.handler.position_handler import PositionHandler, PositionItemHandler
+from gateway.handler.position_handler import PositionHandler, PositionItemHandler, PositionSearchHandler
 
 import falcon
 from gateway.handler.index_handler import IndexHandler
@@ -31,5 +31,7 @@ api.add_route('/static/{filename}', StaticResourceHandler())
 api.add_route('/k', k_data_test)
 api.add_route('/p', p_handelr)
 api.add_route('/position/{code}', PositionItemHandler())
+api.add_route('/position/search', PositionSearchHandler())
+
 api.add_error_handler(AppError, AppError.handle)
 
