@@ -7,6 +7,10 @@ import numpy as np
 import tushare as ts
 
 
+def cal_mavol3(data):
+    mavol3 = pd.Series.rolling(data['volume'], 3).sum() / 3
+    return mavol3
+
 def cal_mavol5(data):
     mavol5 = pd.Series.rolling(data['volume'], 5).sum() / 5
     return mavol5
