@@ -5,6 +5,7 @@ from common_tools.datetime_utils import get_next_date, get_current_date
 from feature_utils.custome_features import cal_mavol3
 import pandas as pd
 from log.quant_logging import logger
+
 '''
 
 bk_vol_frame = pd.Dataframe(columns=['bkcode', vol])
@@ -20,19 +21,25 @@ for bk in bks:
 
 '''
 
+
 def cal_bk_vol():
-    bk_vol_frame = pd.DataFrame(columns=['bkcode', 'total_mavol_3'])
+    bk_vol_frame = pd.DataFrame(columns=['bkcode', 'bk_name', 'total_mavol_3'])
 
+    filter_list = ['BK0743', 'BK0804', 'BK0568', 'BK0707', 'BK0701', 'BK0611', 'BK0705', 'BK0612', 'BK0500']
+    org_bk_code_list = list(stock_industry_dao.get_bkcode_list().values)
 
+    bk_code_list = [c for c in org_bk_code_list if c not in filter_list]
 
-    bk_code_list = stock_industry_dao.get_bkcode_list()
-
-    for bk in bk_code_list['bk_code'].values:
-
-        bk_stocks = stock_industry_dao.get_by_bkcode(bk)
+    for bk in bk_code_list:
+        bk_stocks = stock_industry_dao.get_by_bkcode(bk[0])
         bk_vol3 = 0
+        try:
+            bk_name = bk_stocks['bk_name'][0]
+        except:
+            bk_name = 'N/A'
+
         for code in bk_stocks['code'].values:
-            temp_dict = {}
+
             stock_df = k_data_dao.get_k_data(code=code, start=get_next_date(-30), end=get_current_date())
 
             if len(stock_df) == 0:
@@ -41,16 +48,13 @@ def cal_bk_vol():
             stock_df['mavol3'] = cal_mavol3(stock_df)
             try:
                 bk_vol3 += stock_df['mavol3'].values[-1:][0]
-                # temp_dict[bk] = bk_vol3
             except Exception as e:
-                logger.debug("code:%s, error:%s" %(code, repr(e)))
-        bk_vol_frame.loc[bk_vol_frame.shape[0] + 1] = {'bkcode':bk, 'total_mavol_3': bk_vol3}
+                logger.debug("code:%s, error:%s" % (code, repr(e)))
+        bk_vol_frame.loc[bk_vol_frame.shape[0] + 1] = {'bkcode': bk, 'bk_name': bk_name, 'total_mavol_3': bk_vol3}
 
-    # print(bk_vol_frame)
     bk_vol_frame = bk_vol_frame.sort_values('total_mavol_3', ascending=False)
-    bk_vol_frame.to_csv('bk.csv')
 
-
+    bk_vol_frame.to_csv('bk_csv.csv', encoding='utf_8_sig')
 
 
 if __name__ == '__main__':
