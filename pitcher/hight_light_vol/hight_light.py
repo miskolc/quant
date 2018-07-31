@@ -1,5 +1,6 @@
 # ae_h - 2018/7/31
 from dao.basic.stock_industry_dao import stock_industry_dao
+from dao.k_data.k_data_dao import k_data_dao
 import pandas as pd
 
 '''
@@ -24,7 +25,11 @@ def cal_bk_vol():
 
     bk_code_list = stock_industry_dao.get_bkcode_list()
     for bk in bk_code_list['bk_code'].values:
-        print(stock_industry_dao.get_by_bkcode(bk))
+        bk_stocks = stock_industry_dao.get_by_bkcode(bk)
+        for stock in bk_stocks['code'].values:
+            stock_df =
+
+
 
 
 if __name__ == '__main__':
