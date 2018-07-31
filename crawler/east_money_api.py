@@ -182,6 +182,3 @@ class EastMoneyApi:
 
 east_money_api = EastMoneyApi()
 
-if __name__ == '__main__':
-    east_money_api = EastMoneyApi()
-    east_money_api.get_concept_board()
