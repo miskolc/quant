@@ -8,7 +8,7 @@
             <v-layout row justify-space-between align-center>
               <v-flex>
                 <div class="search-input">
-                  <v-text-field label="Regular" prepend-icon="search" clearable clear-icon="cancel" single-line/>
+                  <v-text-field label="Code" prepend-icon="search" clearable clear-icon="cancel" single-line/>
                 </div>
               </v-flex>
               <v-flex>
@@ -63,9 +63,3 @@ export default {
   }
 }
 </script>
-<style lang="less">
-.handler-btn{
-  height: 100%;
-  float: right;
-}
-</style>

@@ -3,18 +3,25 @@
     <v-dialog v-model="dialog" persistent max-width="400px">
       <v-card>
         <v-card-title>
-          <span class="headline">custome</span>
+          <span class="headline">position</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
-            <v-text-field
-            v-if="!isEdit"
-            label="股票代码"
-            :mask="mask"
-            v-model="code"
-            :rules="nameRules"
-            required></v-text-field>
-           </v-form>
+            <v-layout wrap justify-center>
+              <v-flex xs12>
+                <v-select :items="[{
+                  text:'root',
+                  value:1
+                },{
+                  text:'admin',
+                  value:2
+                }]" :rules="selectRules" label="Select" required></v-select>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field v-if="!isEdit" label="Name" v-model="form.name" :rules="nameRules" required></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -30,10 +37,16 @@
 export default {
   data () {
     return {
+      form: {
+        name: ''
+      },
       valid: true,
+      selectRules: [
+        v => !!v || `Select is required`
+      ],
       nameRules: [
-        v => !!v || `code is required`,
-        v => (v && v.length <= 6) || `code must be less than 6 characters`
+        v => !!v || `name is required`,
+        v => (v && v.length <= 6) || `name must be less than 6 characters`
       ],
       code: ''
     }
@@ -41,15 +54,6 @@ export default {
   props: {
     dialog: Boolean,
     isEdit: Boolean
-  },
-  computed: {
-    mask () {
-      let mask = ''
-      for (let index = 0; index < 10; index++) {
-        mask += '#'
-      }
-      return mask
-    }
   },
   methods: {
     commit () {

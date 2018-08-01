@@ -1,52 +1,77 @@
 <template>
-  <v-container fluid grid-list-md>
-    <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
-      <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3 >
-        <v-card>
-          <v-card-title>
-            <h4>{{ props.item.name }}</h4>
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-list dense>
-            <v-list-tile>
-              <v-list-tile-content>Calories:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Fat:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Carbs:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Protein:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Sodium:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Calcium:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content>Iron:</v-list-tile-content>
-              <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card>
+  <v-layout wrap>
+    <v-layout row justify-space-between align-center>
+      <v-flex>
+        <div class="search-input">
+          <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
+        </div>
       </v-flex>
-    </v-data-iterator>
-  </v-container>
+      <v-flex>
+        <div class="handler-btn">
+          <v-btn light @click="dialog=true">add</v-btn>
+          <v-btn light @click="isDelete=!isDelete">delete</v-btn>
+        </div>
+      </v-flex>
+    </v-layout>
+    <v-container fluid grid-list-md>
+      <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
+        <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
+          <v-card>
+            <v-badge overlap color="orange">
+              <v-icon slot="badge" dark small>notifications</v-icon>
+              <v-card-title>
+                <h4>{{ props.item.name }}</h4>
+              </v-card-title>
+            </v-badge>
+            <v-divider></v-divider>
+            <v-list dense>
+              <v-list-tile>
+                <v-list-tile-content>Calories:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Fat:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Carbs:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Protein:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Sodium:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Calcium:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>Iron:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card>
+        </v-flex>
+      </v-data-iterator>
+    </v-container>
+    <AddPositionGropDialog :dialog.sync="dialog" />
+  </v-layout>
 </template>
 
 <script>
+import AddPositionGropDialog from './AddPositionGropDialog'
 export default {
+  components: {
+    AddPositionGropDialog
+  },
   data () {
     return {
+      dialog: false,
+      isDelete: false,
       rowsPerPageItems: [4, 8, 12],
       pagination: {
         rowsPerPage: 4
@@ -163,6 +188,9 @@ export default {
       }
       ]
     }
+  },
+  methods: {
+    add () {}
   }
 }
 </script>
