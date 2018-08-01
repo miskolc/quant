@@ -4,6 +4,7 @@ import sys
 
 from gateway.errors import AppError
 from gateway.handler.static_resource_handler import StaticResourceHandler
+from gateway.middleware.static_middleware import StaticMiddleware
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
@@ -21,15 +22,14 @@ from gateway.middleware.json_translater import JSONTranslator
 
 api = falcon.API(middleware=[RequireJSON(), JSONTranslator()])
 
-index_handler = IndexHandler()
 k_data_test = KDataHandler()
 
+api.add_route('/', IndexHandler())
+api.add_static_route('/static', CURRENT_DIR+'/static/dist')
+#api.add_route('/static/js/{filename}', StaticResourceHandler())
+#api.add_route('/static/css/{filename}', StaticResourceHandler())
+#api.add_route('/static/fonts/{filename}', StaticResourceHandler())
 
-api.add_route('/', index_handler)
-api.add_route('/static/dist/{filename}', StaticResourceHandler())
-api.add_route('/static/dist/js/{filename}', StaticResourceHandler())
-api.add_route('/static/dist/css/{filename}', StaticResourceHandler())
-api.add_route('/static/dist/fonts/{filename}', StaticResourceHandler())
 
 api.add_route('/k', k_data_test)
 api.add_route('/position', position.Collection())
