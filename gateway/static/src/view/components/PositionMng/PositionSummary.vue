@@ -17,8 +17,10 @@
       <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
           <v-card>
-            <v-badge overlap color="orange">
-              <v-icon slot="badge" dark small>notifications</v-icon>
+            <v-badge overlap v-model="isDelete" color="red">
+              <v-btn icon small slot="badge">
+                <v-icon dark small>clear</v-icon>
+              </v-btn>
               <v-card-title>
                 <h4>{{ props.item.name }}</h4>
               </v-card-title>
