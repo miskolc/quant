@@ -8,7 +8,6 @@
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-            v-if="!isEdit"
             label="股票代码"
             :mask="mask"
             v-model="code"
@@ -39,8 +38,7 @@ export default {
     }
   },
   props: {
-    dialog: Boolean,
-    isEdit: Boolean
+    dialog: Boolean
   },
   computed: {
     mask () {
@@ -55,8 +53,7 @@ export default {
     commit () {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
-        !this.isEdit && this.addCustome()
-        this.isEdit && this.updateCustome()
+        this.addCustome()
       }
     },
     addCustome () {

@@ -99,8 +99,8 @@ export default {
         //     // { icon: 'add', text: 'Create label' }
         //   ]
         // },
-        { icon: 'keyboard_arrow_down', text: 'Target Mng', path: '/target/panel' },
-        { icon: 'contacts', text: 'Position Mng', path: '/position' }
+        { icon: 'keyboard_arrow_down', text: 'Target Mng', path: '/target/mng' },
+        { icon: 'contacts', text: 'Position Mng', path: '/position/mng' }
       ]
     }
   },

@@ -17,12 +17,12 @@
 export default {
   props: {
     dialog: Boolean,
-    id: [String, Number],
     ids: Array
   },
   methods: {
     close () {
       this.$emit('update:dialog', false)
+      this.$emit('refresh')
     }
   }
 }

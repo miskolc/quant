@@ -1,15 +1,15 @@
 <template>
   <v-layout wrap>
-    <v-layout row justify-space-between align-center>
-      <v-flex>
+    <v-layout justify-space-between align-center>
+      <v-flex xs12 md6>
         <div class="search-input">
           <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
         </div>
       </v-flex>
-      <v-flex>
+      <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn light @click="dialog=true">add</v-btn>
-          <v-btn light @click="isDelete=!isDelete">delete</v-btn>
+          <v-btn @click="dialog=true">add</v-btn>
+          <v-btn @click="isDelete=!isDelete">delete</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -17,7 +17,7 @@
       <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
           <v-card>
-            <v-badge overlap v-model="isDelete" color="red">
+            <v-badge overlap v-model="isDelete" class="card-badge" color="red">
               <v-btn icon small slot="badge">
                 <v-icon dark small>clear</v-icon>
               </v-btn>
@@ -69,6 +69,18 @@ import AddPositionGropDialog from './AddPositionGropDialog'
 export default {
   components: {
     AddPositionGropDialog
+  },
+  props: {
+    index: [Number, String],
+    panel: Array
+  },
+  watch: {
+    panel: {
+      handler (n, o) {
+        if (!this.panel[this.index]) this.isDelete = false
+      },
+      deep: true
+    }
   },
   data () {
     return {
@@ -196,3 +208,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+.card-badge{
+  width: 100%;
+}
+</style>

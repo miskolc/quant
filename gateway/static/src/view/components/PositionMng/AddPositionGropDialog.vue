@@ -18,7 +18,7 @@
                 }]" :rules="selectRules" label="Select" required></v-select>
               </v-flex>
               <v-flex xs12>
-                <v-text-field v-if="!isEdit" label="Name" v-model="form.name" :rules="nameRules" required></v-text-field>
+                <v-text-field label="Name" v-model="form.name" :rules="nameRules" required></v-text-field>
               </v-flex>
             </v-layout>
           </v-form>
