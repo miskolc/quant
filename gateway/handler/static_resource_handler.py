@@ -8,7 +8,7 @@ class StaticResourceHandler(object):
         # do some sanity check on the filename
         resp.status = falcon.HTTP_200
 
-        path = 'static/' + filename
+        path = 'static/dist/' + filename
         filetype = mimetypes.guess_type(path, strict=True)[0]
         resp.content_type = filetype
 

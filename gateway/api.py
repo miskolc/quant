@@ -26,7 +26,7 @@ k_data_test = KDataHandler()
 p_handelr = PositionHandler()
 
 api.add_route('/', index_handler)
-api.add_route('/static/{filename}', StaticResourceHandler())
+api.add_route('/static/dist/{filename}', StaticResourceHandler())
 
 api.add_route('/k', k_data_test)
 api.add_route('/p', p_handelr)
