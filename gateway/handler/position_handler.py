@@ -7,10 +7,9 @@ import falcon
 from domain.position import Position
 from gateway.common.base_handler import BaseHandler
 from gateway.errors import ResourceNotFoundException, InvalidRequestException
-
 from dao.trade.position_dao import position_dao
-
 from cerberus import Validator
+from datetime import datetime
 
 FIELDS = {
     "code": {
@@ -33,7 +32,7 @@ FIELDS = {
     },
     "price": {
         'type': 'float',
-        'required': True,
+        'required': False,
         'min': 0
     },
     "price_in": {
@@ -63,9 +62,14 @@ def validate_position_create(req, res, resource, params):
     if not v.validate(req.context['data']):
         raise InvalidRequestException(v.errors)
 
+
 def validate_position_update(req, res, resource, params):
     schema = {
+        'code': FIELDS['code'],
+        'name': FIELDS['name'],
+        'strategy_code': FIELDS['strategy_code'],
         'price_in': FIELDS['price_in'],
+        'price': FIELDS['price_in'],
         'shares': FIELDS['shares']
     }
 
@@ -73,6 +77,7 @@ def validate_position_update(req, res, resource, params):
 
     if not v.validate(req.context['data']):
         raise InvalidRequestException(v.errors)
+
 
 class PositionHandler(BaseHandler):
     def on_get(self, req, resp):
@@ -96,11 +101,23 @@ class Collection(BaseHandler):
         else:
             raise InvalidRequestException(position_req)
 
+        self.on_success(res, None)
+
+    @falcon.before(validate_position_update)
     def on_put(self, req, res):
         position_req = req.context['data']
+        position = position_dao.query_by_code(strategy_code=position_req["strategy_code"], code=position_req["code"])
 
+        if position is None:
+            raise ResourceNotFoundException("Can not found position.")
 
+        position.price_in = position_req["price_in"]
+        position.price = position_req["price"]
+        position.shares = position_req["shares"]
+        position.update_time = datetime.now()
+        position_dao.update(position)
 
+        self.on_success(res, None)
 
 class PositionItemHandler(BaseHandler):
     """
@@ -113,7 +130,7 @@ class PositionItemHandler(BaseHandler):
         if pos_result is None:
             raise ResourceNotFoundException("Can not found position.")
 
-        self.on_success(resp=resp, data=pos_result)
+        self.on_success(resp=resp, data=pos_result.to_dict())
 
 
 class PositionSearchHandler(BaseHandler):
@@ -124,9 +141,9 @@ class PositionSearchHandler(BaseHandler):
     def on_post(self, req, resp):
         search_req = req.context['data']
 
-        rs = position_dao.query_by_strategy_code(search_req['strategy_code'])
+        position_dbs = position_dao.query_by_strategy_code(search_req['strategy_code'])
 
-        if rs is None:
+        if position_dbs is None:
             raise ResourceNotFoundException("Can not found position list.")
 
-        self.on_success(resp=resp, data=rs)
+        self.on_success(resp=resp, data=position_dbs)

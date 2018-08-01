@@ -5,13 +5,6 @@ from dao.data_source import dataSource
 from domain.position import Position
 
 
-def query_by_code(given_code):
-
-    with dataSource.session_ctx() as session:
-        position = session.query(Position).filter(Position.code == given_code).one()
-        return position.to_dict()
-
-
 class Position_Dao():
 
     @exc_time
@@ -30,13 +23,21 @@ class Position_Dao():
             session.delete(position)
 
     @exc_time
-    def query_by_strategy_code(self, given_code):
+    def query_by_code(self, strategy_code, code):
 
         with dataSource.session_ctx() as session:
-            position_dbs = session.query(Position).filter(Position.strategy_code == given_code).all()
-            rs = [position.to_dict() for position in position_dbs]
+            position_dbs = session.query(Position).filter(Position.strategy_code == strategy_code , Position.code == code).one()
 
-        return rs
+            return copy.deepcopy(position_dbs)
+
+    @exc_time
+    def query_by_strategy_code(self, strategy_code):
+
+        with dataSource.session_ctx() as session:
+            position_dbs = session.query(Position).filter(Position.strategy_code == strategy_code).all()
+
+            return copy.deepcopy(position_dbs)
+
 
 
 position_dao = Position_Dao()
