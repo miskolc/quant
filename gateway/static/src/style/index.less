@@ -1,0 +1,12 @@
+@black:#000123;
+.pl(@rem:20){padding-left:unit(@rem, rem)}
+.boxShadow(@x: 0, @y: 0, @blur: 8px, @color: rgba(0, 0, 0, 0.2)) {
+  -moz-box-shadow: @arguments;
+  -webkit-box-shadow: @arguments;
+  box-shadow: @arguments;
+}
+
+html {
+  overflow-y: auto;
+  // font-size: 20px;
+}
