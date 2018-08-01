@@ -1,38 +1,66 @@
 <template>
   <div>
     <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :pagination.sync="pagination"
-      :total-items="totalDesserts"
-      :loading="loading"
-      class="elevation-1"
-    >
-      <template slot="items" slot-scope="props">
+    v-model="selected"
+    :headers="headers"
+    :items="desserts"
+    :total-items="totalDesserts"
+    :loading="loading"
+    :pagination.sync="pagination"
+    select-all
+    item-key="name"
+    class="elevation-1"
+  >
+    <template slot="items" slot-scope="props">
+      <tr :active="props.selected" >
+        <td>
+          <v-checkbox
+          @click="props.selected = !props.selected"
+            :input-value="props.selected"
+            primary
+            hide-details
+          ></v-checkbox>
+        </td>
         <td>{{ props.item.name }}</td>
         <td>{{ props.item.calories }}</td>
         <td>{{ props.item.fat }}</td>
         <td>{{ props.item.carbs }}</td>
         <td>{{ props.item.protein }}</td>
         <td>{{ props.item.iron }}</td>
-        <td>{{ props.item.name }}</td>
-        <td>{{ props.item.calories }}</td>
         <td>{{ props.item.fat }}</td>
         <td>{{ props.item.carbs }}</td>
         <td>{{ props.item.protein }}</td>
         <td>{{ props.item.iron }}</td>
-      </template>
-    </v-data-table>
+        <td>{{ props.item.protein }}</td>
+        <td>{{ props.item.iron }}</td>
+        <td>
+          <v-btn flat icon color="red" @click="openDelete(0)">
+            <v-icon>delete_outline</v-icon>
+          </v-btn>
+        </td>
+      </tr>
+    </template>
+  </v-data-table>
+  <DeleteDialog :dialog.sync="deleteDialog" :id="id"/>
   </div>
 </template>
 <script>
+import DeleteDialog from './DeleteDialog'
 export default {
+  components: {
+    DeleteDialog
+  },
   data () {
     return {
+      deleteDialog: false,
+      id: '',
+      pagination: {
+        sortBy: 'name'
+      },
+      selected: [],
       totalDesserts: 0,
       desserts: [],
       loading: true,
-      pagination: {},
       headers: [
         {text: '代码', value: 'code'},
         { text: 'k线时间', value: 'time_key' },
@@ -45,7 +73,8 @@ export default {
         { text: '成交量', value: 'volume' },
         { text: '成交额', value: 'turnover' },
         { text: '涨跌幅', value: 'change_rate' },
-        { text: '昨收价', value: 'last_close' }
+        { text: '昨收价', value: 'last_close' },
+        { text: '删除', sortable: false }
       ]
     }
   },
@@ -61,14 +90,11 @@ export default {
       deep: true
     }
   },
-  mounted () {
-    this.getDataFromApi()
-      .then(data => {
-        this.desserts = data.items
-        this.totalDesserts = data.total
-      })
-  },
   methods: {
+    openDelete (id) {
+      this.id = id
+      this.deleteDialog = true
+    },
     getDataFromApi () {
       this.loading = true
       return new Promise((resolve, reject) => {
@@ -104,7 +130,7 @@ export default {
             items,
             total
           })
-        }, 1000)
+        }, 500)
       })
     },
     getDesserts () {
@@ -201,6 +227,13 @@ export default {
         }
       ]
     }
+  },
+  mounted () {
+    this.getDataFromApi()
+      .then(data => {
+        this.desserts = data.items
+        this.totalDesserts = data.total
+      })
   }
 }
 </script>

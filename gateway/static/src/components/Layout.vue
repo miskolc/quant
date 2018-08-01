@@ -88,17 +88,18 @@ export default {
     return {
       routes: [],
       items: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'Target Mng',
-          model: true,
-          children: [
-            { text: 'panel1', path: '/target/panel1' },
-            { text: 'panel2', path: '/target/panel2' },
-            { icon: 'add', text: 'Create label' }
-          ]
-        },
+        // {
+        //   icon: 'keyboard_arrow_up',
+        //   'icon-alt': 'keyboard_arrow_down',
+        //   text: 'Target Mng',
+        //   model: true,
+        //   children: [
+        //     { text: 'panel1', path: '/target/panel1' },
+        //     { text: 'panel2', path: '/target/panel2' }
+        //     // { icon: 'add', text: 'Create label' }
+        //   ]
+        // },
+        { icon: 'keyboard_arrow_down', text: 'Target Mng', path: '/target/panel' },
         { icon: 'contacts', text: 'Position Mng', path: '/position' }
       ]
     }
