@@ -26,9 +26,10 @@ k_data_test = KDataHandler()
 
 api.add_route('/', IndexHandler())
 api.add_static_route('/static', CURRENT_DIR+'/static/dist')
-#api.add_route('/static/js/{filename}', StaticResourceHandler())
-#api.add_route('/static/css/{filename}', StaticResourceHandler())
-#api.add_route('/static/fonts/{filename}', StaticResourceHandler())
+api.add_static_route('/static/js', CURRENT_DIR+'/static/dist/static/js')
+api.add_static_route('/static/css', CURRENT_DIR+'/static/dist/static/css')
+api.add_static_route('/static/fonts', CURRENT_DIR+'/static/dist/static/fonts')
+
 
 
 api.add_route('/k', k_data_test)
