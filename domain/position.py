@@ -24,15 +24,6 @@ class Position(Base):
     profit = Column(Float)
 
 
-
-    def __init__(self, code, name, price, price_in, shares, strategy_code):
-        self.code = code
-        self.name = name
-        self.price = price
-        self.price_in = price_in
-        self.shares = shares
-        self.strategy_code = strategy_code
-
     @hybrid_property
     def total_market(self):
         return round(self.price * self.shares,2)

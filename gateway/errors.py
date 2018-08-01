@@ -12,6 +12,11 @@ ERR_UNKNOWN = {
     'title': 'Unknown Error'
 }
 
+INVALID_REQUEST_EXCEPTION = {
+    'status': falcon.HTTP_400,
+    'code': 400,
+    'title': 'Invalid Request'
+}
 
 class AppError(Exception):
     def __init__(self, error=ERR_UNKNOWN, description=None):
@@ -46,4 +51,10 @@ class AppError(Exception):
 class ResourceNotFoundException(AppError):
     def __init__(self, description=None):
         super().__init__(RESOURCE_NOT_FOUND_EXCEPTION)
+        self.error['description'] = description
+
+
+class InvalidRequestException(AppError):
+    def __init__(self, description=None):
+        super().__init__(INVALID_REQUEST_EXCEPTION)
         self.error['description'] = description

@@ -10,7 +10,7 @@ ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
 
 from gateway.handler.k_data_handler import KDataHandler
-from gateway.handler.position_handler import PositionHandler, PositionItemHandler, PositionSearchHandler
+import gateway.handler.position_handler as position
 
 import falcon
 from gateway.handler.index_handler import IndexHandler
@@ -23,15 +23,15 @@ api = falcon.API(middleware=[RequireJSON(), JSONTranslator()])
 
 index_handler = IndexHandler()
 k_data_test = KDataHandler()
-p_handelr = PositionHandler()
+
 
 api.add_route('/', index_handler)
 api.add_route('/static/{filename}', StaticResourceHandler())
 
 api.add_route('/k', k_data_test)
-api.add_route('/p', p_handelr)
-api.add_route('/position/{code}', PositionItemHandler())
-api.add_route('/position/search', PositionSearchHandler())
+api.add_route('/position', position.Collection())
+api.add_route('/position/{code}', position.PositionItemHandler())
+api.add_route('/position/search', position.PositionSearchHandler())
 
 api.add_error_handler(AppError, AppError.handle)
 
