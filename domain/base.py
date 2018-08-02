@@ -15,7 +15,6 @@ def datetime_to_timestamp(date):
 
 
 class BaseModel(object):
-
     create_time = Column(DateTime, default=func.now())
     update_time = Column(DateTime, default=func.now(), onupdate=func.now())
 
@@ -41,7 +40,6 @@ class BaseModel(object):
              (getattr(self, key))),
             intersection))
         '''
-
 
 
 Base = declarative_base(cls=BaseModel)
