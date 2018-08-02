@@ -3,7 +3,7 @@
       <!-- <PositionSummary/> -->
     <div class="align-center mb-3">
       <v-btn @click="OffOn">off/on</v-btn>
-      <v-btn @click="dialog=true">add</v-btn>
+      <v-btn @click="dialog=true" color="info">add</v-btn>
     </div>
       <v-expansion-panel v-model="panel" expand>
       <v-expansion-panel-content v-for="(item,i) in items" :key="i">

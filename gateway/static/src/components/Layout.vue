@@ -38,10 +38,10 @@
               v-for="(child, i) in item.children"
               :key="i"
               @click="skipPage(child.path)"
-              :class="{'url-active':currentPath===child.path}"
+              :color="menuActive(child.path)"
             >
               <v-list-tile-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
+                <v-icon :color="menuActive(item.path)">{{ child.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
@@ -50,10 +50,10 @@
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>
-          <v-list-tile v-else :key="item.text" @click="skipPage(item.path)"
-              :class="{'url-active':currentPath === item.path}">
+          <v-list-tile  v-else :key="item.text" @click="skipPage(item.path)"
+              :color="menuActive(item.path)">
             <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon :color="menuActive(item.path)">{{ item.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
@@ -110,6 +110,9 @@ export default {
     }
   },
   methods: {
+    menuActive (path) {
+      return this.currentPath === path ? 'info' : ''
+    },
     skipPage (path) {
       if (path) return this.$router.push(path)
       console.log(1)
@@ -124,10 +127,3 @@ export default {
   }
 }
 </script>
-<style lang="less">
-.url-active{
-  a{
-    color: red
-  }
-}
-</style>

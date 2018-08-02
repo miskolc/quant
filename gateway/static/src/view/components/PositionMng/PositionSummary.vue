@@ -8,8 +8,8 @@
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn @click="dialog=true">add</v-btn>
-          <v-btn @click="isDelete=!isDelete">delete</v-btn>
+          <v-btn color="info" @click="dialog=true">add</v-btn>
+          <v-btn  @click="isDelete=!isDelete">delete</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -210,6 +210,6 @@ export default {
 </script>
 <style lang="less">
 .card-badge{
-  width: 100%;
+  width: 99%;
 }
 </style>

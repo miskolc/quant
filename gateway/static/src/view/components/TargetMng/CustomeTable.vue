@@ -8,8 +8,8 @@
       </v-flex>
       <v-flex>
         <div class="handler-btn">
-          <v-btn @click="addCustome">add</v-btn>
-          <v-btn @click="openDelete(true)">delete</v-btn>
+          <v-btn @click="addCustome" color="info">add</v-btn>
+          <v-btn @click="openDelete(true)" :disabled="!selected.length">delete</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -19,30 +19,31 @@
       :total-items="totalDesserts"
       :loading="loading"
       :pagination.sync="pagination"
-      select-all item-key="name"
+      select-all item-key="code"
       class="elevation-1">
       <template slot="items" slot-scope="props">
         <tr :active="props.selected" >
           <td>
             <v-checkbox
-            @click="props.selected = !props.selected"
+              color="info"
+              @click="props.selected = !props.selected"
               :input-value="props.selected"
               primary
               hide-details
             ></v-checkbox>
           </td>
-          <td>{{ props.item.name }}</td>
-          <td>{{ props.item.calories }}</td>
-          <td>{{ props.item.fat }}</td>
-          <td>{{ props.item.carbs }}</td>
-          <td>{{ props.item.protein }}</td>
-          <td>{{ props.item.iron }}</td>
-          <td>{{ props.item.fat }}</td>
-          <td>{{ props.item.carbs }}</td>
-          <td>{{ props.item.protein }}</td>
-          <td>{{ props.item.iron }}</td>
-          <td>{{ props.item.protein }}</td>
-          <td>{{ props.item.iron }}</td>
+          <td>{{ props.item.code }}</td>
+          <td>{{ props.item.time_key }}</td>
+          <td>{{ props.item.open }}</td>
+          <td>{{ props.item.close }}</td>
+          <td>{{ props.item.high }}</td>
+          <td>{{ props.item.low }}</td>
+          <td>{{ props.item.pe_ratio }}</td>
+          <td>{{ props.item.turnover_rate }}</td>
+          <td>{{ props.item.volume }}</td>
+          <td>{{ props.item.turnover }}</td>
+          <td>{{ props.item.change_rate }}</td>
+          <td>{{ props.item.last_close }}</td>
           <td>
             <v-btn flat icon color="red" @click="openDelete(false,props.item)">
               <v-icon>delete_outline</v-icon>
@@ -58,7 +59,6 @@
 
 <script>
 import AddOrUpdateCustomeDialog from './AddOrUpdateCustomeDialog'
-
 import DeleteDialog from './DeleteDialog'
 export default {
   components: {
@@ -71,64 +71,26 @@ export default {
       deleteDialog: false,
       ids: [],
       pagination: {
-        sortBy: 'name'
+        sortBy: ''
       },
       selected: [],
       totalDesserts: 0,
       desserts: [],
       loading: true,
-      headers: [{
-        text: '代码',
-        value: 'code'
-      },
-      {
-        text: 'k线时间',
-        value: 'time_key'
-      },
-      {
-        text: '开盘价',
-        value: 'open'
-      },
-      {
-        text: '收盘价',
-        value: 'close '
-      },
-      {
-        text: '最高价',
-        value: 'high'
-      },
-      {
-        text: '最低价',
-        value: 'low'
-      },
-      {
-        text: '市盈率',
-        value: 'pe_ratio'
-      },
-      {
-        text: '换手率',
-        value: 'turnover_rate'
-      },
-      {
-        text: '成交量',
-        value: 'volume'
-      },
-      {
-        text: '成交额',
-        value: 'turnover'
-      },
-      {
-        text: '涨跌幅',
-        value: 'change_rate'
-      },
-      {
-        text: '昨收价',
-        value: 'last_close'
-      },
-      {
-        text: '删除',
-        sortable: false
-      }
+      headers: [
+        { text: '代码', value: 'code' },
+        { text: 'k线时间', value: 'time_key' },
+        { text: '开盘价', value: 'open' },
+        { text: '收盘价', value: 'close' },
+        { text: '最高价', value: 'high' },
+        { text: '最低价', value: 'low' },
+        { text: '市盈率', value: 'pe_ratio' },
+        { text: '换手率', value: 'turnover_rate' },
+        { text: '成交量', value: 'volume' },
+        { text: '成交额', value: 'turnover' },
+        { text: '涨跌幅', value: 'change_rate' },
+        { text: '昨收价', value: 'last_close' },
+        { text: '删除', sortable: false }
       ]
     }
   },
@@ -200,52 +162,24 @@ export default {
       })
     },
     getDesserts () {
-      return [{
-        value: false,
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        iron: '1%'
-      },
-      {
-        value: false,
-        name: 'Ice cream sandwich',
-        calories: 237,
-        fat: 9.0,
-        carbs: 37,
-        protein: 4.3,
-        iron: '1%'
-      },
-      {
-        value: false,
-        name: 'Eclair',
-        calories: 262,
-        fat: 16.0,
-        carbs: 23,
-        protein: 6.0,
-        iron: '7%'
-      },
-      {
-        value: false,
-        name: 'Cupcake',
-        calories: 305,
-        fat: 3.7,
-        carbs: 67,
-        protein: 4.3,
-        iron: '8%'
-      },
-      {
-        value: false,
-        name: 'Gingerbread',
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: '16%'
+      let array = []
+      for (let index = 0; index < 10; index++) {
+        array.push({
+          code: Math.ceil(Math.random() * 1000000),
+          time_key: 159 + Math.ceil(Math.random() * 10),
+          open: 6.0 + Math.ceil(Math.random() * 10),
+          close: 24 + Math.ceil(Math.random() * 10),
+          high: 4.0 + Math.ceil(Math.random() * 10),
+          low: Math.ceil(Math.random() * 10) + '%',
+          pe_ratio: Math.ceil(Math.random() * 10) + '%',
+          turnover_rate: Math.ceil(Math.random() * 10) + '%',
+          volume: 6.0 + Math.ceil(Math.random() * 10),
+          turnover: 24 + Math.ceil(Math.random() * 10),
+          change_rate: 4.0 + Math.ceil(Math.random() * 10),
+          last_close: Math.ceil(Math.random() * 10)
+        })
       }
-      ]
+      return array
     }
   },
   mounted () {

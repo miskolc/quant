@@ -9,18 +9,18 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-        <td>{{ props.item.name }}</td>
-        <td>{{ props.item.calories }}</td>
-        <td>{{ props.item.fat }}</td>
-        <td>{{ props.item.carbs }}</td>
-        <td>{{ props.item.protein }}</td>
-        <td>{{ props.item.iron }}</td>
-        <td>{{ props.item.name }}</td>
-        <td>{{ props.item.calories }}</td>
-        <td>{{ props.item.fat }}</td>
-        <td>{{ props.item.carbs }}</td>
-        <td>{{ props.item.protein }}</td>
-        <td>{{ props.item.iron }}</td>
+        <td>{{ props.item.code }}</td>
+        <td>{{ props.item.time_key }}</td>
+        <td>{{ props.item.open }}</td>
+        <td>{{ props.item.close }}</td>
+        <td>{{ props.item.high }}</td>
+        <td>{{ props.item.low }}</td>
+        <td>{{ props.item.pe_ratio }}</td>
+        <td>{{ props.item.turnover_rate }}</td>
+        <td>{{ props.item.volume }}</td>
+        <td>{{ props.item.turnover }}</td>
+        <td>{{ props.item.change_rate }}</td>
+        <td>{{ props.item.last_close }}</td>
       </template>
     </v-data-table>
   </div>
@@ -108,98 +108,24 @@ export default {
       })
     },
     getDesserts () {
-      return [
-        {
-          value: false,
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%'
-        },
-        {
-          value: false,
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: '1%'
-        },
-        {
-          value: false,
-          name: 'Eclair',
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: '7%'
-        },
-        {
-          value: false,
-          name: 'Cupcake',
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: '8%'
-        },
-        {
-          value: false,
-          name: 'Gingerbread',
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: '16%'
-        },
-        {
-          value: false,
-          name: 'Jelly bean',
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: '0%'
-        },
-        {
-          value: false,
-          name: 'Lollipop',
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: '2%'
-        },
-        {
-          value: false,
-          name: 'Honeycomb',
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: '45%'
-        },
-        {
-          value: false,
-          name: 'Donut',
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: '22%'
-        },
-        {
-          value: false,
-          name: 'KitKat',
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: '6%'
-        }
-      ]
+      let array = []
+      for (let index = 0; index < 10; index++) {
+        array.push({
+          code: Math.ceil(Math.random() * 1000000),
+          time_key: 159 + Math.ceil(Math.random() * 10),
+          open: 6.0 + Math.ceil(Math.random() * 10),
+          close: 24 + Math.ceil(Math.random() * 10),
+          high: 4.0 + Math.ceil(Math.random() * 10),
+          low: Math.ceil(Math.random() * 10) + '%',
+          pe_ratio: Math.ceil(Math.random() * 10) + '%',
+          turnover_rate: Math.ceil(Math.random() * 10) + '%',
+          volume: 6.0 + Math.ceil(Math.random() * 10),
+          turnover: 24 + Math.ceil(Math.random() * 10),
+          change_rate: 4.0 + Math.ceil(Math.random() * 10),
+          last_close: Math.ceil(Math.random() * 10)
+        })
+      }
+      return array
     }
   }
 }
