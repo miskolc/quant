@@ -6,7 +6,7 @@
         <v-card-text>确认删除选中股票？</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="close">确定</v-btn>
+          <v-btn @click.native="close" color="info">确定</v-btn>
           <v-btn @click.native="close">取消</v-btn>
         </v-card-actions>
       </v-card>

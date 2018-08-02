@@ -8,7 +8,7 @@
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-            label="股票代码"
+            label="Code"
             :mask="mask"
             v-model="code"
             :rules="codeRules"
@@ -17,7 +17,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="commit">commit</v-btn>
+          <v-btn @click.native="commit" color="info">commit</v-btn>
           <v-btn @click.native="close">cancel</v-btn>
         </v-card-actions>
       </v-card>
@@ -43,7 +43,7 @@ export default {
   computed: {
     mask () {
       let mask = ''
-      for (let index = 0; index < 10; index++) {
+      for (let index = 0; index < 6; index++) {
         mask += '#'
       }
       return mask
