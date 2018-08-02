@@ -16,7 +16,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="commit">commit</v-btn>
+          <v-btn @click.native="commit" color="info">commit</v-btn>
           <v-btn @click.native="close">cancel</v-btn>
         </v-card-actions>
       </v-card>
