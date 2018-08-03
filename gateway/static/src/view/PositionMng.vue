@@ -1,9 +1,20 @@
 <template>
   <div>
-      <!-- <PositionSummary/> -->
     <div class="align-center mb-3">
-      <v-btn @click="OffOn">off/on</v-btn>
-      <v-btn @click="dialog=true" color="info">add</v-btn>
+      <v-layout justify-space-between align-center>
+      <v-flex xs12 md6>
+        <div class="search-input">
+          <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
+        </div>
+      </v-flex>
+      <v-flex xs12 md6>
+        <div class="handler-btn">
+          <v-btn @click="dialog=true" color="info">add</v-btn>
+          <v-btn @click="OffOn">off/on</v-btn>
+          &#x3000;&nbsp;
+        </div>
+      </v-flex>
+    </v-layout>
     </div>
       <v-expansion-panel v-model="panel" expand>
       <v-expansion-panel-content v-for="(item,i) in items" :key="i">
@@ -20,12 +31,10 @@
 </template>
 <script>
 import PositionSummary from './components/PositionMng/PositionSummary'
-import PositionTable from './components/PositionMng/PositionTable'
 import AddPositionGropDialog from './components/PositionMng/AddPositionGropDialog'
 export default {
   components: {
     PositionSummary,
-    PositionTable,
     AddPositionGropDialog
   },
   data () {

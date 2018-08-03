@@ -2,9 +2,9 @@
   <v-layout wrap>
     <v-layout justify-space-between align-center>
       <v-flex xs12 md6>
-        <div class="search-input">
+        <!-- <div class="search-input">
           <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
-        </div>
+        </div> -->
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
@@ -18,7 +18,7 @@
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
           <v-card>
             <v-badge overlap v-model="isDelete" class="card-badge" color="red">
-              <v-btn icon small slot="badge">
+              <v-btn icon small slot="badge" @click="deleteHandle(props.item)">
                 <v-icon dark small>clear</v-icon>
               </v-btn>
               <v-card-title>
@@ -60,15 +60,19 @@
         </v-flex>
       </v-data-iterator>
     </v-container>
-    <AddPositionGropDialog :dialog.sync="dialog" />
+    <AddDataIteratorDialog :dialog.sync="dialog" />
+    <DeleteDialog :dialog.sync="deleteDialog" :id.sync="id" @refresh="refresh"/>
   </v-layout>
 </template>
 
 <script>
-import AddPositionGropDialog from './AddPositionGropDialog'
+import AddDataIteratorDialog from './AddDataIteratorDialog'
+import DeleteDialog from './DeleteDialog'
+
 export default {
   components: {
-    AddPositionGropDialog
+    AddDataIteratorDialog,
+    DeleteDialog
   },
   props: {
     index: [Number, String],
@@ -85,6 +89,8 @@ export default {
   data () {
     return {
       dialog: false,
+      deleteDialog: false,
+      id: '',
       isDelete: false,
       rowsPerPageItems: [4, 8, 12],
       pagination: {
@@ -204,7 +210,13 @@ export default {
     }
   },
   methods: {
-    add () {}
+    deleteHandle (item) {
+      this.id = item.name
+      this.deleteDialog = true
+    },
+    refresh () {
+      this.isDelete = false
+    }
   }
 }
 </script>
