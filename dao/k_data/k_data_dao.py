@@ -22,7 +22,7 @@ class K_Data_Dao:
         if end is None:
             end = get_current_date()
 
-        sql = ('''select  time_key, code, open, round(close, 3)  as close, high, low, change_rate, last_close, turnover, turnover_rate, volume, pe_ratio
+        sql = ('''select  time_key, code, open, close  as close, high, low, change_rate, last_close, turnover, turnover_rate, volume, pe_ratio
                  from k_data  
                  where code=%(code)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
 
@@ -32,7 +32,7 @@ class K_Data_Dao:
         return data
 
     @exc_time
-    def get_multiple_k_data(self, code_list, start=None, end=None):
+    def get_multiple_k_data(self, code_list=None, start=None, end=None):
 
         if start is None:
             start = get_next_date(-720)
@@ -40,11 +40,19 @@ class K_Data_Dao:
         if end is None:
             end = get_current_date()
 
-        sql = ('''select  *
-                 from k_data  
-                 where code in %(code_list)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+        sql = None
+        if code_list is None:
+            sql = ('''select  *
+                     from k_data  
+                     where  time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+            codes_list = None
+        else:
 
-        codes_list = [fill_market(code) for code in code_list]
+            sql = ('''select  *
+                     from k_data  
+                     where code in %(code_list)s and time_key BETWEEN %(start)s and %(end)s order by time_key asc ''')
+
+            codes_list = [fill_market(code) for code in code_list]
 
         data = pd.read_sql(sql=sql, params={"code_list": codes_list, "start": start, "end": end}
                            , con=dataSource.mysql_quant_conn)

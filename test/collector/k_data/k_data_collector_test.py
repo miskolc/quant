@@ -22,10 +22,10 @@ class K_Data_Collector_Test(unittest.TestCase):
         collect_single(code='601899',futu_quote_ctx=self.futu_quote_ctx, start='2013-01-01', end=get_current_date())
 
     def test_collect_all_daily(self):
-        collect_all_daily(self.futu_quote_ctx)
+        collect_all_daily(self.futu_quote_ctx, start='2018-08-02', end='2018-08-02')
 
     def test_collect_all_index(self):
         collect_all_index(self.futu_quote_ctx)
 
     def test_collect_all_index_daily(self):
-        collect_all_index_daily(self.futu_quote_ctx)
+        collect_all_index_daily(self.futu_quote_ctx, start='2018-08-02', end='2018-08-02')

@@ -1,5 +1,7 @@
 import unittest
-from dao.trade.stock_dao import stock_dao
+
+from dao.basic.stock_dao import stock_dao
+
 
 class StrategyTest(unittest.TestCase):
 

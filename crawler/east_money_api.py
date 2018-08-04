@@ -98,7 +98,7 @@ class EastMoneyApi:
         line = buf.readline()
 
         df = pd.DataFrame(
-            columns=['pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy', 'total_market', 'total_assets',
+            columns=['report_date','pe', 'pb', 'eps', 'roe', 'profits_yoy', 'income_yoy', 'total_market', 'total_assets',
                      'total_liabilities', 'retained_profits'])
         dict = {"code": code}
         while line is not None and len(line) > 0:
@@ -123,6 +123,8 @@ class EastMoneyApi:
 
                 data = json.loads(line)
                 # 基本每股收益
+                dict['report_date'] = data[0]["ReportDate"]
+                # 基本每股收益
                 dict['eps'] = data[0]["BasicEPS"]
                 # 净资产收益率
                 dict['roe'] = data[0]["WeightedYieldOnNetAssets"]
@@ -140,8 +142,7 @@ class EastMoneyApi:
                 # 净利润
                 dict['retained_profits'] = data[0]["retainedProfits"]
 
-            if dict.get("pe") is not None and dict.get("esp") is not None:
-                break
+
 
         df = df.append(dict, ignore_index=True)
 

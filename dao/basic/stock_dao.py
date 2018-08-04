@@ -16,5 +16,11 @@ class Stock_Dao():
 
             return copy.deepcopy(stock_dbs)
 
+    @exc_time
+    def query_all(self):
+        with dataSource.session_ctx() as session:
+            stock_dbs = session.query(Stock).all()
+
+            return copy.deepcopy(stock_dbs)
 
 stock_dao = Stock_Dao()

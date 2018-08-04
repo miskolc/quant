@@ -3,7 +3,7 @@
 
 from common_tools.decorators import exc_time
 from crawler.east_money_api import east_money_api
-from dao.basic.stock_pool_dao import stock_pool_dao
+from dao.basic.stock_dao import stock_dao
 from dao.basic.stock_basic_dao import stock_basic_dao
 from dao.data_source import dataSource
 from log.quant_logging import logger
@@ -23,13 +23,12 @@ from log.quant_logging import logger
 def collect_stock_basic():
     stock_basic_dao.truncate()
 
-    df_pool = stock_pool_dao.get_list()
-    for index, row in df_pool.iterrows():
-        code = row['code']
-        df = east_money_api.get_stock_basic(code)
+    stock_list = stock_dao.query_all()
+    for stock in stock_list:
         try:
-
+            df = east_money_api.get_stock_basic(stock.code)
+            df = df.fillna(0)
             df.to_sql('stock_basic', dataSource.mysql_quant_engine, if_exists='append', index=False)
         except Exception as e:
 
-            logger.error("code:%s, error:%s" %(code, repr(e)))
+            logger.error("code:%s, error:%s" %(stock.code, repr(e)))

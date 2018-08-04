@@ -1,4 +1,4 @@
-from dao.trade.stock_dao import stock_dao
+from dao.basic.stock_dao import stock_dao
 from gateway.common.base_handler import BaseHandler
 from gateway.errors import ResourceNotFoundException
 

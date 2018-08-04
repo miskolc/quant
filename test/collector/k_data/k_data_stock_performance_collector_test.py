@@ -1,6 +1,6 @@
 import unittest
 
-from collector.k_data.k_data_stock_performance_collector import collect_quarter, collect_quarter_all
+#from collector.k_data.k_data_stock_performance_collector import collect_quarter, collect_quarter_all
 from test import before_run
 import tushare as ts
 
@@ -10,15 +10,19 @@ class Stock_Performance_Classified_Test(unittest.TestCase):
         before_run()
 
     def test_collect_quarter_all(self):
-        collect_quarter_all('2018-01-01', '2018-03-31', 2017, 4)
+        #collect_quarter_all('2018-01-01', '2018-03-31', 2017, 4)
+        pass
 
 
     def collect_single_daily(self):
-        data_report = ts.get_report_data(2018, 1)
-        collect_quarter(data_report, '600000', '2018-06-12', '2018-06-12')
+        data_report = ts.get_report_data(2018, 2)
+        data_report.to_csv('result.csv')
+        #collect_quarter(data_report, '600000', '2018-06-12', '2018-06-12')
+        print(data_report)
 
     def test_collect_quarter(self):
-        collect_quarter(code='600000', start='2018-04-01', end='2018-06-30', year=2018, quarter=1)
+        pass
+        #collect_quarter(code='600000', start='2018-04-01', end='2018-06-30', year=2018, quarter=1)
 
         '''
         collect_quarter_all(2017, 4, '2018-01-01', '2018-03-31')

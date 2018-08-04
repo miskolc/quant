@@ -3,7 +3,7 @@ from sklearn import linear_model
 
 from common_tools.datetime_utils import get_next_date, get_current_date
 from config import default_config
-from dao.basic.stock_industry_dao import stock_industry_dao
+from dao.basic.stock_pool_dao import stock_pool_dao
 from dao.k_data import fill_market
 from dao.k_data.k_data_dao import k_data_dao
 from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
@@ -34,7 +34,7 @@ import pandas as pd
 
 
 def cal_stock_pool():
-    df_poll = stock_industry_dao.get_stock_code_list()
+    df_poll = stock_pool_dao.get_list()
     code_list = list(df_poll['code'].values)
     w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end=get_current_date())
     k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-720), end=get_current_date())
@@ -53,12 +53,12 @@ def cal_stock_pool():
 
 def macd_predict(data, predict_x):
     max_len = len(data.values) - 1
-    diff_lm = linear_model.LinearRegression()
+    diff_lm = linear_model.LinearRegression(fit_intercept=False)
     X = data.values[0:max_len].reshape(-1, 1)
     Y = data.shift(-1).dropna().values
     diff_lm.fit(X, Y)
-    # print(diff_lm.coef_)
-    # print(diff_lm.intercept_)
+    #print(diff_lm.coef_)
+    #print(diff_lm.intercept_)
 
     predict_y = diff_lm.predict(predict_x)
 
@@ -100,51 +100,48 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
         k_diff = k_data['diff'].values[-1]
         k_dea = k_data['dea'].values[-1]
-        k_last5_diff = k_data['diff'].tail(5)
-        k_last5_dea = k_data['dea'].tail(5)
+        k_last3_diff = k_data['diff'].tail(3)
+        k_last3_dea = k_data['dea'].tail(3)
 
         pre_diff = k_data['diff'].values[-2]
         pre_dea = k_data['dea'].values[-2]
         macd = w_data['macd'].values[-1]
 
-
+        '''
         if k_close < k_ma145:
             logger.debug("code:%s, close price less than ma145" % code)
             return False
-   
+  
 
         if k_turnover7 < 75000000:
             logger.debug("code:%s, turnover less than 75000000" % code)
             return False
-
+        '''
 
         if round(w_volume / w_pre_volume, 1) < 1.3:
             logger.debug("code:%s, volume  less than pre_volume * 1.3" % code)
             return False
 
         # 通过机器学习预测, 下一个diff, 和 下一个dea
-        k_next_diff = macd_predict(k_last5_diff, k_diff)[0]
-        k_next_dea = macd_predict(k_last5_dea, k_dea)[0]
+        k_next_diff = macd_predict(k_last3_diff, k_diff)[0]
+        k_next_dea = macd_predict(k_last3_dea, k_dea)[0]
 
         w_next_diff = macd_predict(w_last3_diff, w_diff)[0]
         w_next_dea = macd_predict(w_last3_dea, w_dea)[0]
 
+        if w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea:
+            return True
+
+        if w_dea > w_diff > -0.35 and w_next_diff > w_next_dea:
+            return True
+
 
         if pre_diff < pre_dea and k_diff > -0.35 and k_diff > k_dea:
 
-            if w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea:
-                return True
-            elif  w_dea > w_diff > -0.35 and w_next_diff > w_next_dea:
-                return True
-
             return True
 
-        if k_dea > k_diff > -0.35 and k_next_diff > k_next_dea:
 
-            if w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea:
-                return True
-            elif w_dea > w_diff > -0.35 and w_next_diff > w_next_dea:
-                return True
+        if k_dea > k_diff > -0.35 and k_next_diff > k_next_dea:
 
             return True
 
@@ -180,10 +177,11 @@ if __name__ == '__main__':
     '''
     # BK0712
 
-    code_list = ['600372']
-    w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end='2018-07-20')
-    k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-365), end='2018-07-20')
+    code_list = ['000895']
+    w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end=get_current_date())
+    k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-365), end=get_current_date())
     # k_data_list = k_data_list.set_index('code', inplace=True, drop=False)
-    rs = cal_single_stock('600372', k_data_list=k_data_list, w_data_list=w_data_list)
+    rs = cal_single_stock('000895', k_data_list=k_data_list, w_data_list=w_data_list)
     print(rs)
-   '''
+
+    '''
