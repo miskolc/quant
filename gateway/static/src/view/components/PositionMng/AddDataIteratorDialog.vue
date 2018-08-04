@@ -15,10 +15,16 @@
                 },{
                   text:'admin',
                   value:2
-                }]" :rules="selectRules" label="Select" required/>
+                }]"
+                :rules="selectRules"
+                label="Target" required/>
               </v-flex>
               <v-flex xs12>
-                <v-text-field label="Name" v-model="form.name" :rules="nameRules" required/>
+              <v-text-field
+                label="Cone"
+                v-model="form.code"
+                :rules="nameRules"
+                required/>
               </v-flex>
             </v-layout>
           </v-form>
@@ -38,21 +44,22 @@ export default {
   data () {
     return {
       form: {
-        name: ''
+        code: ''
       },
       valid: true,
       selectRules: [
-        v => !!v || `Select is required`
+        v => !!v || `Target is required`
       ],
       nameRules: [
-        v => !!v || `name is required`,
+        v => !!v || `Cone is required`,
         v => (v && v.length <= 6) || `name must be less than 6 characters`
       ],
       code: ''
     }
   },
   props: {
-    dialog: Boolean
+    dialog: Boolean,
+    isEdit: Boolean
   },
   methods: {
     commit () {
