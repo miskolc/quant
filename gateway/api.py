@@ -12,6 +12,7 @@ sys.path.append(ROOT_DIR)
 from gateway.handler.stock_handler import StockHandler
 import gateway.handler.position_handler as position
 import gateway.handler.strategy_handler as strategy
+import gateway.handler.target_handler as target
 
 import falcon
 from gateway.handler.index_handler import IndexHandler
@@ -30,8 +31,12 @@ api.add_static_route('/static/fonts', CURRENT_DIR + '/static/dist/static/fonts')
 
 api.add_route('/stock/{code}',StockHandler())
 api.add_route('/strategy/search', strategy.StrategySearchHandler())
+
+api.add_route('/position/{strategy_code}/{code}', position.PositionHandler())
 api.add_route('/position', position.Collection())
-api.add_route('/position/{code}', position.PositionItemHandler())
 api.add_route('/position/search', position.PositionSearchHandler())
+
+api.add_route('/target/{strategy_code}/{code}', target.TargetHandler())
+api.add_route('/target/search', target.TargetSearchHandler())
 
 api.add_error_handler(AppError, AppError.handle)

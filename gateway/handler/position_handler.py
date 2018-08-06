@@ -79,11 +79,6 @@ def validate_position_update(req, res, resource, params):
         raise InvalidRequestException(v.errors)
 
 
-class PositionHandler(BaseHandler):
-    def on_get(self, req, resp):
-        pos_result = position_dao.query_by_code('601800')
-        self.on_success(resp=resp, data=pos_result)
-
 
 class Collection(BaseHandler):
     @falcon.before(validate_position_create)
@@ -119,13 +114,13 @@ class Collection(BaseHandler):
 
         self.on_success(res, None)
 
-class PositionItemHandler(BaseHandler):
+class PositionHandler(BaseHandler):
     """
-    Handle for endpoint: /position/{code}
+    Handle for endpoint: /position/{strategy_code}/{code}
     """
 
-    def on_get(self, req, resp, code):
-        pos_result = position_dao.query_by_code(code)
+    def on_get(self, req, resp, strategy_code,code):
+        pos_result = position_dao.query_by_code(strategy_code=strategy_code, code=code)
 
         if pos_result is None:
             raise ResourceNotFoundException("Can not found position.")
@@ -135,7 +130,7 @@ class PositionItemHandler(BaseHandler):
 
 class PositionSearchHandler(BaseHandler):
     """
-    Handle for endpoint: /position/{code}
+    Handle for endpoint: /position/search
     """
 
     def on_post(self, req, resp):
