@@ -50,10 +50,10 @@
             </v-btn>
           </td>
         </tr>
-</template>
-  </v-data-table>
-  <AddOrUpdateCustomeDialog :dialog.sync="customeDialog"/>
-  <DeleteDialog :dialog.sync="deleteDialog" :ids.sync="ids" @refresh="refresh"/>
+      </template>
+    </v-data-table>
+    <AddOrUpdateCustomeDialog :dialog.sync="customeDialog"/>
+    <DeleteDialog :dialog.sync="deleteDialog" :ids.sync="ids" @refresh="refresh"/>
   </div>
 </template>
 
