@@ -15,3 +15,7 @@ class Target(Base):
     strategy_code = Column(String, primary_key=True)
     # 股票名称
     name = Column(String)
+    # 价格
+    price = Column(Float)
+    # 买入点
+    pointcut = Column(Float)

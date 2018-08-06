@@ -38,5 +38,6 @@ api.add_route('/position/search', position.PositionSearchHandler())
 
 api.add_route('/target/{strategy_code}/{code}', target.TargetHandler())
 api.add_route('/target/search', target.TargetSearchHandler())
+api.add_route('/target', target.Collection())
 
 api.add_error_handler(AppError, AppError.handle)
