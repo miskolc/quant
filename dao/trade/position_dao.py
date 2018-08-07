@@ -23,10 +23,10 @@ class Position_Dao():
             session.delete(position)
 
     @exc_time
-    def query_by_code(self, strategy_code, code):
+    def query_by_id(self, id):
 
         with dataSource.session_ctx() as session:
-            position_dbs = session.query(Position).filter(Position.strategy_code == strategy_code , Position.code == code).one()
+            position_dbs = session.query(Position).filter(Position.id == id).one()
 
             return copy.deepcopy(position_dbs)
 

@@ -13,9 +13,7 @@ from collections import namedtuple
 FIELDS = {
     "id": {
         'type': 'integer',
-        'required': True,
-        'minlength': 6,
-        'maxlength': 6
+        'required': True
     },
     "code": {
         'type': 'string',

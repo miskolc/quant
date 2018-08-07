@@ -12,6 +12,10 @@ from cerberus import Validator
 from datetime import datetime
 
 FIELDS = {
+    "id": {
+        'type': 'integer',
+        'required': True
+    },
     "code": {
         'type': 'string',
         'required': True,
@@ -65,6 +69,7 @@ def validate_position_create(req, res, resource, params):
 
 def validate_position_update(req, res, resource, params):
     schema = {
+        'id': FIELDS['id'],
         'code': FIELDS['code'],
         'name': FIELDS['name'],
         'strategy_code': FIELDS['strategy_code'],
@@ -101,7 +106,7 @@ class Collection(BaseHandler):
     @falcon.before(validate_position_update)
     def on_put(self, req, res):
         position_req = req.context['data']
-        position = position_dao.query_by_code(strategy_code=position_req["strategy_code"], code=position_req["code"])
+        position = position_dao.query_by_id(position_req["id"])
 
         if position is None:
             raise ResourceNotFoundException("Can not found position.")
@@ -116,16 +121,26 @@ class Collection(BaseHandler):
 
 class PositionHandler(BaseHandler):
     """
-    Handle for endpoint: /position/{strategy_code}/{code}
+    Handle for endpoint: /position/{id}
     """
 
-    def on_get(self, req, resp, strategy_code,code):
-        pos_result = position_dao.query_by_code(strategy_code=strategy_code, code=code)
+    def on_get(self, req, resp,id):
+        pos_result = position_dao.query_by_id(id)
 
         if pos_result is None:
             raise ResourceNotFoundException("Can not found position.")
 
         self.on_success(resp=resp, data=pos_result.to_dict())
+
+
+    def on_delete(self, req, resp, id):
+        pos_result = position_dao.query_by_id(id)
+        if pos_result is None:
+            raise ResourceNotFoundException("Can not found target.")
+
+            position_dao.delete(pos_result)
+
+        self.on_success(resp)
 
 
 class PositionSearchHandler(BaseHandler):
