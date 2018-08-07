@@ -22,11 +22,10 @@ class Position(Base):
     shares = Column(Integer)
     # 盈亏
     profit = Column(Float)
-
-
-    @hybrid_property
-    def total_market(self):
-        return round(self.price * self.shares,2)
+    # 市值
+    worth = Column(Float)
+    # 盈亏金额
+    profit_value = Column(Float)
 
     '''
     def __init__(self, code, price, shares, total, trade_fee , create_time):

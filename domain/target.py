@@ -9,10 +9,12 @@ from domain.base import Base
 
 
 class Target(Base):
+
+    id = Column(Integer, primary_key=True)
     # 股票代码
-    code = Column(String, primary_key=True)
+    code = Column(String)
     # 策略code
-    strategy_code = Column(String, primary_key=True)
+    strategy_code = Column(String)
     # 股票名称
     name = Column(String)
     # 价格

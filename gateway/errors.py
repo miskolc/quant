@@ -1,4 +1,8 @@
+import traceback
+
 import falcon
+
+from log.quant_logging import logger
 
 RESOURCE_NOT_FOUND_EXCEPTION = {
     'status': falcon.HTTP_404,
@@ -41,12 +45,19 @@ class AppError(Exception):
 
     @staticmethod
     def handle(exception, req, res, error=None):
-        res.status = exception.status
-        error = {'code': exception.code, 'message': exception.title}
-        if exception.description:
-            error['description'] = exception.description
-        res.body = falcon.json.dumps({'error': error})
 
+        if isinstance(exception, AppError):
+            res.status = exception.status
+            error = {'code': exception.code, 'message': exception.title}
+            if exception.description:
+                error['description'] = exception.description
+            res.body = falcon.json.dumps({'error': error})
+        else:
+            error_msg = traceback.format_exc()
+            error = {'code': ERR_UNKNOWN['code'], 'message': error_msg}
+            res.status = ERR_UNKNOWN['status']
+            res.body = falcon.json.dumps({'error': error})
+            logger.error(error_msg)
 
 class ResourceNotFoundException(AppError):
     def __init__(self, description=None):

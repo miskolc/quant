@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, MetaData
 from config import default_config
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
+from log.quant_logging import logger
 
 class DataSource(object):
 
@@ -50,6 +51,7 @@ class DataSource(object):
             session.commit()
         except Exception as ex:
             session.rollback()
+            raise ex
         finally:
             session.close()
 
@@ -58,7 +60,7 @@ dataSource = DataSource()
 if default_config.DATABASE_QUANT_URI:
     # 使用单例模式保存数据库engine
     mysql_quant_engine = create_engine(default_config.DATABASE_QUANT_URI, encoding='utf8',
-                                       convert_unicode=True, pool_size=50, pool_recycle=1200)
+                                       convert_unicode=True, pool_size=50, pool_recycle=1200, echo=True)
     dataSource.mysql_quant_engine = mysql_quant_engine
     dataSource.mysql_quant_conn = mysql_quant_engine.connect()
     dataSource.mysql_quant_metadata = MetaData(dataSource.mysql_quant_conn)

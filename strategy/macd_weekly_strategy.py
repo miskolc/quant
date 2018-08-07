@@ -53,7 +53,7 @@ def cal_stock_pool():
 
 def macd_predict(data, predict_x):
     max_len = len(data.values) - 1
-    diff_lm = linear_model.LinearRegression(fit_intercept=False)
+    diff_lm = linear_model.LinearRegression()
     X = data.values[0:max_len].reshape(-1, 1)
     Y = data.shift(-1).dropna().values
     diff_lm.fit(X, Y)
@@ -85,8 +85,8 @@ def cal_single_stock(code, k_data_list, w_data_list):
         w_pre_macd = w_data['macd'].values[-1]
         w_pre_diff = w_data['diff'].values[-1]
         w_pre_dea = w_data['dea'].values[-1]
-        w_last3_diff = w_data['diff'].tail(3)
-        w_last3_dea = w_data['dea'].tail(3)
+        w_last2_diff = w_data['diff'].tail(80)
+        w_last2_dea = w_data['dea'].tail(80)
 
         w_macd = w_data['macd'].values[-1]
         w_diff = w_data['diff'].values[-1]
@@ -100,8 +100,8 @@ def cal_single_stock(code, k_data_list, w_data_list):
 
         k_diff = k_data['diff'].values[-1]
         k_dea = k_data['dea'].values[-1]
-        k_last3_diff = k_data['diff'].tail(3)
-        k_last3_dea = k_data['dea'].tail(3)
+        k_last3_diff = k_data['diff'].tail(500)
+        k_last3_dea = k_data['dea'].tail(500)
 
         pre_diff = k_data['diff'].values[-2]
         pre_dea = k_data['dea'].values[-2]
@@ -116,21 +116,22 @@ def cal_single_stock(code, k_data_list, w_data_list):
         if k_turnover7 < 75000000:
             logger.debug("code:%s, turnover less than 75000000" % code)
             return False
-        '''
+       
 
         if round(w_volume / w_pre_volume, 1) < 1.3:
             logger.debug("code:%s, volume  less than pre_volume * 1.3" % code)
             return False
-
+        0'''
         # 通过机器学习预测, 下一个diff, 和 下一个dea
         k_next_diff = macd_predict(k_last3_diff, k_diff)[0]
         k_next_dea = macd_predict(k_last3_dea, k_dea)[0]
 
-        w_next_diff = macd_predict(w_last3_diff, w_diff)[0]
-        w_next_dea = macd_predict(w_last3_dea, w_dea)[0]
+        w_next_diff = macd_predict(w_last2_diff, w_diff)[0]
+        w_next_dea = macd_predict(w_last2_dea, w_dea)[0]
 
         if w_pre_diff < w_pre_dea and w_macd > -0.35 and w_diff > w_dea:
             return True
+
 
         if w_dea > w_diff > -0.35 and w_next_diff > w_next_dea:
             return True
@@ -177,11 +178,10 @@ if __name__ == '__main__':
     '''
     # BK0712
 
-    code_list = ['000895']
+    code_list = ['000661']
     w_data_list = k_data_weekly_dao.get_multiple_k_data(code_list, start='2013-01-01', end=get_current_date())
     k_data_list = k_data_dao.get_multiple_k_data(code_list=code_list, start=get_next_date(-365), end=get_current_date())
     # k_data_list = k_data_list.set_index('code', inplace=True, drop=False)
-    rs = cal_single_stock('000895', k_data_list=k_data_list, w_data_list=w_data_list)
+    rs = cal_single_stock('000661', k_data_list=k_data_list, w_data_list=w_data_list)
     print(rs)
-
     '''

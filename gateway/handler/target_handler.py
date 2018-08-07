@@ -1,6 +1,7 @@
 import falcon
 from cerberus import Validator
 
+from dao.futu_opend import futu_opend
 from dao.trade.strategy_dao import strategy_dao
 from dao.trade.target_dao import target_dao
 from domain.target import Target
@@ -10,6 +11,12 @@ from datetime import datetime
 from collections import namedtuple
 
 FIELDS = {
+    "id": {
+        'type': 'integer',
+        'required': True,
+        'minlength': 6,
+        'maxlength': 6
+    },
     "code": {
         'type': 'string',
         'required': True,
@@ -57,6 +64,7 @@ def validate_target_create(req, res, resource, params):
 
 def validate_target_update(req, res, resource, params):
     schema = {
+        'id': FIELDS['id'],
         'code': FIELDS['code'],
         'name': FIELDS['name'],
         'strategy_code': FIELDS['strategy_code'],
@@ -70,19 +78,26 @@ def validate_target_update(req, res, resource, params):
         raise InvalidRequestException(v.errors)
 
 
-
 class TargetHandler(BaseHandler):
     """
-    Handle for endpoint: /target/{code}
+    Handle for endpoint: /target/{id}
     """
 
-    def on_get(self, req, resp, code):
-        target_result = target_dao.query_by_code('601800')
+    def on_get(self, req, resp, id):
+        target_result = target_dao.query_by_id(id)
         if target_result is None:
-            raise ResourceNotFoundException("Can not found position.")
+            raise ResourceNotFoundException("Can not found target.")
 
         self.on_success(resp=resp, data=target_result.to_dict())
 
+    def on_delete(self, req, resp, id):
+        target_result = target_dao.query_by_id(id)
+        if target_result is None:
+            raise ResourceNotFoundException("Can not found target.")
+
+        target_dao.delete(target_result)
+
+        self.on_success(resp)
 
 class TargetSearchHandler(BaseHandler):
     """
@@ -90,7 +105,7 @@ class TargetSearchHandler(BaseHandler):
     """
 
     def on_post(self, req, resp):
-        #search_req = req.context['data']
+        # search_req = req.context['data']
 
         target_dbs = target_dao.query_all()
 
@@ -99,12 +114,13 @@ class TargetSearchHandler(BaseHandler):
 
         strategy_dbs = strategy_dao.query_all()
 
-        group = {"list":[]}
+        group = {"list": []}
         for strategy in strategy_dbs:
             target_list = [t.to_dict() for t in target_dbs if t.strategy_code == strategy.code]
 
-            if len(target_list) >0 :
-                group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,"target_list": target_list}
+            if len(target_list) > 0:
+                group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
+                              "target_list": target_list}
 
                 group["list"].append(group_item)
 
@@ -112,7 +128,6 @@ class TargetSearchHandler(BaseHandler):
 
 
 class Collection(BaseHandler):
-
     @falcon.before(validate_target_create)
     def on_post(self, req, res):
         target_req = req.context['data']
@@ -124,6 +139,9 @@ class Collection(BaseHandler):
             target.pointcut = target_req["pointcut"]
 
             target_dao.add(target)
+            # 订阅
+            futu_opend.subscribe(target_req["code"])
+
         else:
             raise InvalidRequestException(target_req)
 
@@ -133,7 +151,7 @@ class Collection(BaseHandler):
     def on_put(self, req, res):
         target_req = req.context['data']
 
-        target = target_dao.query_by_code(strategy_code=target_req["strategy_code"], code=target_req["code"])
+        target = target_dao.query_by_id(id=target_req["id"])
 
         if target is None:
             raise ResourceNotFoundException("Can not found target.")

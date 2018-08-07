@@ -38,6 +38,12 @@ class Position_Dao():
 
             return copy.deepcopy(position_dbs)
 
+    @exc_time
+    def query_all(self):
 
+        with dataSource.session_ctx() as session:
+            position_dbs = session.query(Position).all()
+
+            return copy.deepcopy(position_dbs)
 
 position_dao = Position_Dao()
