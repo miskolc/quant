@@ -2,6 +2,7 @@ from datetime import datetime
 
 import falcon
 from cerberus import Validator
+from futuquant import RET_OK
 
 from dao.futu_opend import futu_opend
 from dao.k_data import fill_market
@@ -40,7 +41,7 @@ FIELDS = {
     },
     "pointcut": {
         'type': 'float',
-        'required': False,
+        'required': True,
         'nullable': True,
         'min': 0
     }
@@ -125,11 +126,10 @@ class TargetSearchHandler(BaseHandler):
         for strategy in strategy_dbs:
             target_list = [t.to_dict() for t in target_dbs if t.strategy_code == strategy.code]
 
-            if len(target_list) > 0:
-                group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
-                              "target_list": target_list}
+            group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
+                          "target_list": target_list}
 
-                group["list"].append(group_item)
+            group["list"].append(group_item)
 
         self.on_success(resp=resp, data=group)
 
@@ -152,7 +152,8 @@ class Collection(BaseHandler):
             # 订阅
             futu_opend.subscribe(fill_market(target_req["code"]))
             state, data = futu_opend.quote_ctx.get_stock_quote(code_list=[fill_market(target_req["code"])])
-            target.price = data['last_price'].values[0]
+            if state == RET_OK:
+                target.price = data['last_price'].values[0]
             target_dao.add(target)
 
         else:
@@ -169,16 +170,13 @@ class Collection(BaseHandler):
         if target is None:
             raise ResourceNotFoundException("Can not found target.")
 
-        if 'pointcut' in target_req:
-            target.pointcut = target_req["pointcut"]
-
-        if 'price' in target_req:
-            target.price = target_req["price"]
+        target.pointcut = target_req["pointcut"]
 
         code = fill_market(target.code)
         futu_opend.subscribe(code)
         state, data = futu_opend.quote_ctx.get_stock_quote(code_list=[code])
-        target.price = data['last_price'].values[0]
+        if state == RET_OK:
+            target.price = data['last_price'].values[0]
 
         target.update_time = datetime.now()
         target_dao.update(target)
