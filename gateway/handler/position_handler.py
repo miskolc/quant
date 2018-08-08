@@ -4,6 +4,7 @@ import sys
 
 import falcon
 
+from dao.trade.strategy_dao import strategy_dao
 from domain.position import Position
 from gateway.common.base_handler import BaseHandler
 from gateway.errors import ResourceNotFoundException, InvalidRequestException
@@ -149,11 +150,20 @@ class PositionSearchHandler(BaseHandler):
     """
 
     def on_post(self, req, resp):
-        search_req = req.context['data']
 
-        position_dbs = position_dao.query_by_strategy_code(search_req['strategy_code'])
+        position_dbs = position_dao.query_all()
 
         if position_dbs is None:
             raise ResourceNotFoundException("Can not found position list.")
 
-        self.on_success(resp=resp, data=position_dbs)
+        strategy_dbs = strategy_dao.query_all()
+        group = {"list": []}
+        for strategy in strategy_dbs:
+            position_list = [t.to_dict() for t in position_dbs if t.strategy_code == strategy.code]
+            if len(position_list) > 0:
+                group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
+                              "position_list": position_list}
+
+                group["list"].append(group_item)
+
+        self.on_success(resp=resp, data=group)
