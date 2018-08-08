@@ -29,15 +29,15 @@ api.add_static_route('/static/js', CURRENT_DIR + '/static/dist/static/js')
 api.add_static_route('/static/css', CURRENT_DIR + '/static/dist/static/css')
 api.add_static_route('/static/fonts', CURRENT_DIR + '/static/dist/static/fonts')
 
-api.add_route('/stock/{code}',StockHandler())
-api.add_route('/strategy/search', strategy.StrategySearchHandler())
+api.add_route('/api/stock/{code}',StockHandler())
+api.add_route('/api/strategy/search', strategy.StrategySearchHandler())
 
-api.add_route('/position/{strategy_code}/{code}', position.PositionHandler())
-api.add_route('/position', position.Collection())
-api.add_route('/position/search', position.PositionSearchHandler())
+api.add_route('/api/position/{strategy_code}/{code}', position.PositionHandler())
+api.add_route('/api/position', position.Collection())
+api.add_route('/api/position/search', position.PositionSearchHandler())
 
-api.add_route('/target/{id}', target.TargetHandler())
-api.add_route('/target/search', target.TargetSearchHandler())
-api.add_route('/target', target.Collection())
+api.add_route('/api/target/{id}', target.TargetHandler())
+api.add_route('/api/target/search', target.TargetSearchHandler())
+api.add_route('/api/target', target.Collection())
 
 api.add_error_handler(Exception, AppError.handle)
