@@ -1,6 +1,7 @@
 import traceback
 
 import falcon
+from sqlalchemy.orm.exc import NoResultFound
 
 from log.quant_logging import logger
 
@@ -51,6 +52,14 @@ class AppError(Exception):
             error = {'code': exception.code, 'message': exception.title}
             if exception.description:
                 error['description'] = exception.description
+            res.body = falcon.json.dumps({'error': error})
+        elif isinstance(exception, falcon.HTTPNotFound):
+            error = {'code': RESOURCE_NOT_FOUND_EXCEPTION['code'], 'message': RESOURCE_NOT_FOUND_EXCEPTION['title']}
+            res.status = RESOURCE_NOT_FOUND_EXCEPTION['status']
+            res.body = falcon.json.dumps({'error': error})
+        elif isinstance(exception, NoResultFound):
+            error = {'code': RESOURCE_NOT_FOUND_EXCEPTION['code'], 'message': RESOURCE_NOT_FOUND_EXCEPTION['title']}
+            res.status = RESOURCE_NOT_FOUND_EXCEPTION['status']
             res.body = falcon.json.dumps({'error': error})
         else:
             error_msg = traceback.format_exc()
