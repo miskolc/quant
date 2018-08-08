@@ -32,7 +32,7 @@ api.add_static_route('/static/fonts', CURRENT_DIR + '/static/dist/static/fonts')
 api.add_route('/api/stock/{code}',StockHandler())
 api.add_route('/api/strategy/search', strategy.StrategySearchHandler())
 
-api.add_route('/api/position/{strategy_code}/{code}', position.PositionHandler())
+api.add_route('/api/position/{id}', position.PositionHandler())
 api.add_route('/api/position', position.Collection())
 api.add_route('/api/position/search', position.PositionSearchHandler())
 
