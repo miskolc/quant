@@ -37,6 +37,7 @@ api.add_route('/api/position', position.Collection())
 api.add_route('/api/position/search', position.PositionSearchHandler())
 
 api.add_route('/api/target/{id}', target.TargetHandler())
+api.add_route('/api/target/delete', target.TargetDeleteHandler())
 api.add_route('/api/target/search', target.TargetSearchHandler())
 api.add_route('/api/target', target.Collection())
 

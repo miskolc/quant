@@ -31,12 +31,19 @@ class Target_Dao():
         with dataSource.session_ctx() as session:
             session.delete(target)
 
+    @exc_time
+    def query_by_code(self, strategy_code, code):
+        with dataSource.session_ctx() as session:
+            target_dbs = session.query(Target).filter(Target.strategy_code == strategy_code,
+                                                        Target.code == code).first()
+
+            return copy.deepcopy(target_dbs)
 
     @exc_time
     def query_by_id(self, id):
 
         with dataSource.session_ctx() as session:
-            position_dbs = session.query(Target).filter(Target.id == id).one()
+            position_dbs = session.query(Target).filter(Target.id == id).first()
 
             return copy.deepcopy(position_dbs)
 
