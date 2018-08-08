@@ -8,13 +8,13 @@
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn color="info" @click="dialog=true">add</v-btn>
-          <v-btn  @click="isDelete=!isDelete">delete</v-btn>
+          <v-btn color="info" @click="dialog=true">新增</v-btn>
+          <v-btn  @click="isDelete=!isDelete">删除</v-btn>
         </div>
       </v-flex>
     </v-layout>
     <v-container fluid grid-list-md>
-      <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
+      <v-data-iterator loading hide-actions :items="dataSource"  content-tag="v-layout" row wrap>
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
           <v-card>
             <v-badge overlap v-model="isDelete" class="card-badge" color="red">
@@ -22,38 +22,50 @@
                 <v-icon dark small>clear</v-icon>
               </v-btn>
               <v-card-title>
-                <h4>{{ props.item.name }}</h4>
+                <h4>{{ props.item.code }}</h4>
               </v-card-title>
             </v-badge>
             <v-divider></v-divider>
             <v-list dense>
               <v-list-tile>
-                <v-list-tile-content>Calories:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
+                <v-list-tile-content>名称:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.name }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Fat:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
+                <v-list-tile-content>当前价格:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price | toFixed }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Carbs:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
+                <v-list-tile-content>买入价:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price_in }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Protein:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
+                <v-list-tile-content>利润:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Sodium:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
+                <v-list-tile-content>profit_value:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit_value }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Calcium:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
+                <v-list-tile-content>股票数量:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.shares }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Iron:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
+                <v-list-tile-content>strategy_code:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.strategy_code }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>价值:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.worth }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>更新时间:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.update_time }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>创建时间:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.create_time }}</v-list-tile-content>
               </v-list-tile>
             </v-list>
           </v-card>
@@ -76,7 +88,8 @@ export default {
   },
   props: {
     index: [Number, String],
-    panel: Array
+    panel: Array,
+    dataSource: Array
   },
   watch: {
     panel: {

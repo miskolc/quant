@@ -4,12 +4,12 @@
       <v-layout justify-space-between align-center>
       <v-flex xs12 md6>
         <div class="search-input">
-          <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
+          <v-text-field label="代码、名称" prepend-icon="search" clearable clear-icon="cancel" single-line/>
         </div>
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn @click="dialog=true" color="info">add</v-btn>
+          <v-btn @click="dialog=true" color="info">新增</v-btn>
           <v-btn @click="OffOn">off/on</v-btn>
           &#x3000;&nbsp;
         </div>
@@ -17,11 +17,13 @@
     </v-layout>
     </div>
       <v-expansion-panel v-model="panel" expand>
-      <v-expansion-panel-content v-for="(item,i) in items" :key="i">
-        <div slot="header">Item{{item}} <span class="panel-tag">tag{{item}}</span></div>
+      <v-expansion-panel-content v-for="item in positionList" :key="item.strategy_code">
+        <div slot="header">{{item.strategy_name}}
+          <!-- <span class="panel-tag">{{item.strategy_code}}</span> -->
+        </div>
         <v-card dark>
           <v-card-text style="background-color:#212121">
-            <PositionSummary :index="i" :panel="panel"/>
+            <PositionSummary :index="i" :panel="panel" :dataSource="item.position_list"/>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -44,6 +46,13 @@ export default {
       dialog: false
     }
   },
+  computed: {
+    positionList () {
+      const {list = []} = this.$store.getters['position/positionSearch']
+      return list
+    }
+
+  },
   methods: {
     OffOn () {
       if (this.panel.length) {
@@ -51,7 +60,13 @@ export default {
       } else {
         this.panel = [...Array(this.items).keys()].map(_ => true)
       }
+    },
+    async positionSearch () {
+      await this.$store.dispatch('position/positionSearch')
     }
+  },
+  async mounted () {
+    await this.positionSearch()
   }
 }
 </script>

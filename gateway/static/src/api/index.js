@@ -10,16 +10,6 @@ api.interceptors.response.use(
   error => {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
-          alert('登录过期,请重新登录')
-          // if (router.currentRoute.fullPath.indexOf('redirect') !== -1) return // 处理多次请求，redirect重复问题
-          // router.replace({
-          //   path: '/login',
-          //   query: {
-          //     redirect: router.currentRoute.fullPath
-          //   }
-          // })
-          break
         case 500:
           alert('系统错误，请联系管理员')
           break
