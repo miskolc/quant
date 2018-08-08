@@ -1,12 +1,14 @@
 import os
 import sys
 
-from dao.futu_opend import futu_opend
-from dao.trade.target_dao import target_dao
+
 
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
+
+from dao.futu_opend import futu_opend
+from dao.trade.target_dao import target_dao
 
 # Append project path to system path
 from dao.k_data import fill_market
