@@ -2,22 +2,22 @@
 import os
 import sys
 
-from gateway.errors import AppError
-
-
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
+
+import falcon
 
 from gateway.handler.stock_handler import StockHandler
 import gateway.handler.position_handler as position
 import gateway.handler.strategy_handler as strategy
 import gateway.handler.target_handler as target
-
-import falcon
 from gateway.handler.index_handler import IndexHandler
 from gateway.middleware.jason_validator import RequireJSON
 from gateway.middleware.json_translater import JSONTranslator
+from gateway.errors import AppError
+
+
 
 # debug script: gunicorn -b 127.0.0.1:8000 --reload api:api
 
