@@ -14,6 +14,8 @@
   </v-layout>
 </template>
 <script>
+import {errormsg} from '@utils/filters.js'
+
 export default {
   props: {
     dialog: Boolean,
@@ -32,8 +34,7 @@ export default {
         this.$emit('refresh')
         this.close()
       } catch (error) {
-        const {message, description} = error.error
-        this.$message.error(description || message)
+        this.$message.error(errormsg(error.error))
       }
     },
     close () {

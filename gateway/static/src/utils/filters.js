@@ -30,3 +30,19 @@ export const toFixed = (val, num = 2) => {
   if (!val) return '—'
   return Number(val).toFixed(num)
 }
+
+export const errormsg = (error) => {
+  const type = Object.prototype.toString
+  const {message, description} = error
+  let descArr = []
+  let msg = message
+  if (type.call(description) === '[object Object]') {
+    Object.keys(description).forEach(key => {
+      descArr.push(description[key])
+    })
+    msg = descArr[0][0]
+  } else {
+    msg = description || message
+  }
+  return msg
+}
