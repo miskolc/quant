@@ -17,6 +17,14 @@ const actions = {
       throw error
     }
   },
+  async stockCode ({commit}, code) {
+    try {
+      const {data} = await api.stockCode({code})
+      return data
+    } catch (error) {
+      throw error
+    }
+  },
   async positionAdd ({commit}, params = {}) {
     try {
       const {data} = await api.positionAdd(params)
@@ -27,6 +35,7 @@ const actions = {
   },
 
   async positionUpdate ({commit}, params = {}) {
+    console.log(params)
     try {
       const {data} = await api.positionUpdate(params)
       return data

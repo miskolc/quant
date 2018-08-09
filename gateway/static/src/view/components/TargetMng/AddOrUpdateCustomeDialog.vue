@@ -19,8 +19,7 @@
             <v-text-field
               label="名称"
               v-model="form.name"
-              disabled
-              v-if="form.name"/>
+              disabled/>
             <v-text-field
               label="买入点"
               v-model="form.pointcut"
@@ -30,8 +29,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="commit" color="info">commit</v-btn>
-          <v-btn @click.native="close">cancel</v-btn>
+          <v-btn @click.native="commit" color="info">{{isEdit?'编辑':'新增'}}</v-btn>
+          <v-btn @click.native="close">取消</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -80,8 +79,10 @@ export default {
     }
   },
   watch: {
-    dialog () {
+    dialog (n, o) {
       this.codeError = ''
+      let { strategyCode } = this
+      this.form.strategy_code = strategyCode
     },
     detail: {
       handler (n, o) {
@@ -103,10 +104,12 @@ export default {
       const {code} = this.form
       if (!code) {
         this.codeError = '代码是必填字段'
+        this.form.name = ''
         return
       }
       if (code.length < 6) {
         this.codeError = '代码必须为6位数字'
+        this.form.name = ''
         return
       }
       try {
@@ -119,11 +122,11 @@ export default {
     },
     async commit () {
       this.codeCheck()
-      if (this.codeError) return false
       if (this.$refs.form.validate()) {
+        if (this.codeError) return false
         let params = {...this.form}
         params.strategy_code = this.strategyCode
-        params.pointcut = Number(params.pointcut) || 0
+        params.pointcut = Number(params.pointcut) || null
         if (!this.isEdit) return this.addCustome(params)
         this.updateCustome(params)
       }
@@ -132,7 +135,7 @@ export default {
       try {
         await this.$store.dispatch('target/targetAdd', params)
         this.$emit('refresh')
-        this.$message.success('successfully')
+        this.$message.success('create successfully')
         this.close()
       } catch (error) {
         const {message, description} = error.error
@@ -144,7 +147,7 @@ export default {
       const {pointcut} = params
       try {
         await this.$store.dispatch('target/targetUpdate', {id, pointcut})
-        this.$message.success('successfully')
+        this.$message.success('update successfully')
         this.$emit('refresh')
         this.close()
       } catch (error) {

@@ -27,6 +27,6 @@ export const dtime = (datetime, format = 'yyyy-MM-dd') => {
   })
 }
 export const toFixed = (val, num = 2) => {
-  if (!val) return 0
+  if (!val) return '—'
   return Number(val).toFixed(num)
 }

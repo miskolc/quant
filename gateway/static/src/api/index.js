@@ -1,4 +1,6 @@
 import axios from 'axios'
+import Message from '@components/Message'
+
 // import router from '@router/router'
 // axios.options.headers = {'content-type': 'application/json;charset=UTF-8'}
 // axios.defaults.timeout = 180000
@@ -11,16 +13,16 @@ api.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 500:
-          alert('系统错误，请联系管理员')
+          Message.error('系统错误，请联系管理员')
           break
         case 502:
-          alert('系统正在重启...')
+          Message.error('系统正在重启...')
           break
         case 503:
-          alert('服务暂时不可用...')
+          Message.error('服务暂时不可用...')
           break
         case 504:
-          alert('请求超时，请检查网络...')
+          Message.error('请求超时，请检查网络...')
           break
       }
       return Promise.reject(error.response ? Object.assign(error.response.data,

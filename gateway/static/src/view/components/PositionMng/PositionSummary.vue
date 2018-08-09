@@ -5,7 +5,7 @@
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn color="info" @click="dialog=true">新增</v-btn>
+          <v-btn color="info" @click="addHandle">新增</v-btn>
           <v-btn  @click="isHandle=!isHandle">操作</v-btn>
         </div>
       </v-flex>
@@ -31,7 +31,7 @@
             <v-list dense>
               <v-list-tile>
                 <v-list-tile-content>名称:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.name }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.name || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>当前价格:</v-list-tile-content>
@@ -39,43 +39,47 @@
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>买入价:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.price_in }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price_in || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>盈亏比例:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.profit }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>盈亏金额:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.profit_value }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit_value || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>股数:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.shares }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.shares || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>策略码:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.strategy_code }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.strategy_code || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>总资产:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.worth }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.worth || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>更新时间:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.update_time }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.update_time || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>创建时间:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.create_time }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.create_time || '—' }}</v-list-tile-content>
               </v-list-tile>
             </v-list>
           </v-card>
         </v-flex>
       </v-data-iterator>
     </v-container>
-    <AddDataIteratorDialog :dialog.sync="dialog" @refresh="refresh"/>
-    <DeleteDialog :dialog.sync="deleteDialog" :id.sync="id" @refresh="refresh"/>
+    <AddDataIteratorDialog :isEdit="isEdit"
+    :dialog.sync="dialog"
+    @refresh="refresh"
+    :detail="currentItem"
+    :strategyCode="strategyCode"/>
+    <DeleteDialog :dialog.sync="deleteDialog" :id.sync="currentItem.id" @refresh="refresh"/>
   </v-layout>
 </template>
 
@@ -106,16 +110,24 @@ export default {
     return {
       dialog: false,
       deleteDialog: false,
-      id: '',
-      isHandle: false
+      currentId: '',
+      isHandle: false,
+      currentItem: {},
+      isEdit: false
     }
   },
   methods: {
+    addHandle () {
+      this.isEdit = false
+      this.dialog = true
+    },
     updateHandle (item) {
+      this.isEdit = true
+      this.currentItem = item
       this.dialog = true
     },
     deleteHandle (item) {
-      this.id = item.id
+      this.currentItem = item
       this.deleteDialog = true
     },
     async refresh () {
