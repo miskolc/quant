@@ -6,7 +6,7 @@ from gateway.errors import ResourceNotFoundException
 class StrategySearchHandler(BaseHandler):
 
     """
-        Handle for endpoint: /strategy/search
+        Handle for endpoint: /api/strategy/search
     """
 
     def on_post(self, req, resp):

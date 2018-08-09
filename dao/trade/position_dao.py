@@ -26,7 +26,7 @@ class Position_Dao():
     def query_by_id(self, id):
 
         with dataSource.session_ctx() as session:
-            position_dbs = session.query(Position).filter(Position.id == id).one()
+            position_dbs = session.query(Position).filter(Position.id == id).first()
 
             return copy.deepcopy(position_dbs)
 
@@ -35,6 +35,14 @@ class Position_Dao():
 
         with dataSource.session_ctx() as session:
             position_dbs = session.query(Position).filter(Position.strategy_code == strategy_code).all()
+
+            return copy.deepcopy(position_dbs)
+
+    @exc_time
+    def query_by_code(self, strategy_code, code):
+        with dataSource.session_ctx() as session:
+            position_dbs = session.query(Position).filter(Position.strategy_code == strategy_code,
+                                                          Position.code == code).first()
 
             return copy.deepcopy(position_dbs)
 

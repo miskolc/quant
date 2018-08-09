@@ -35,11 +35,6 @@ FIELDS = {
         'minlength': 6,
         'maxlength': 32
     },
-    "price": {
-        'type': 'float',
-        'required': False,
-        'min': 0
-    },
     "price_in": {
         'type': 'float',
         'required': True,
@@ -71,11 +66,7 @@ def validate_position_create(req, res, resource, params):
 def validate_position_update(req, res, resource, params):
     schema = {
         'id': FIELDS['id'],
-        'code': FIELDS['code'],
-        'name': FIELDS['name'],
-        'strategy_code': FIELDS['strategy_code'],
         'price_in': FIELDS['price_in'],
-        'price': FIELDS['price_in'],
         'shares': FIELDS['shares']
     }
 
@@ -112,7 +103,6 @@ class Collection(BaseHandler):
             raise ResourceNotFoundException("Can not found position.")
 
         position.price_in = position_req["price_in"]
-        position.price = position_req["price"]
         position.shares = position_req["shares"]
         position.update_time = datetime.now()
         position_dao.update(position)
