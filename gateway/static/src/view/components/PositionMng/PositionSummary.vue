@@ -11,7 +11,7 @@
       </v-flex>
     </v-layout>
     <v-container fluid grid-list-md>
-      <v-data-iterator loading hide-actions :items="dataSource"  content-tag="v-layout" row wrap>
+      <v-data-iterator :loading="loading" hide-actions :items="dataSource"  content-tag="v-layout" row wrap>
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
           <v-card class="iterator-card">
            <v-fade-transition>
@@ -74,11 +74,12 @@
         </v-flex>
       </v-data-iterator>
     </v-container>
-    <AddDataIteratorDialog :isEdit="isEdit"
-    :dialog.sync="dialog"
-    @refresh="refresh"
-    :detail="currentItem"
-    :strategyCode="strategyCode"/>
+    <AddDataIteratorDialog
+      :isEdit="isEdit"
+      :dialog.sync="dialog"
+      @refresh="refresh"
+      :detail="currentItem"
+      :strategyCode="strategyCode"/>
     <DeleteDialog :dialog.sync="deleteDialog" :id.sync="currentItem.id" @refresh="refresh"/>
   </v-layout>
 </template>
@@ -96,7 +97,8 @@ export default {
     index: [Number, String],
     panel: Array,
     dataSource: Array,
-    strategyCode: String
+    strategyCode: String,
+    loading: Boolean
   },
   watch: {
     panel: {
