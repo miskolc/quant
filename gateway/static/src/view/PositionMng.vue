@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="align-center mb-3">
+    <div class="align-center mb-3" >
       <v-layout justify-space-between align-center>
       <v-flex xs12 md6>
         <div class="search-input">
@@ -23,7 +23,7 @@
         </div>
         <v-card dark>
           <v-card-text style="background-color:#212121">
-            <PositionSummary :index="i" :panel="panel" :dataSource="item.position_list" :strategyCode="item.strategy_code"/>
+            <PositionSummary :index="i" :panel="panel" :loading="loading" :dataSource="item.position_list" :strategyCode="item.strategy_code"/>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -53,7 +53,8 @@ export default {
       dialog: false,
       search: '',
       timer: null,
-      automaticTimer: null
+      automaticTimer: null,
+      loading: false
     }
   },
   computed: {
@@ -103,7 +104,9 @@ export default {
       }
     },
     async positionSearch () {
+      this.loading = true
       await this.$store.dispatch('position/positionSearch')
+      this.loading = false
     }
   },
   async mounted () {
