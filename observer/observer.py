@@ -1,8 +1,6 @@
 import os
 import sys
 
-
-
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
@@ -16,6 +14,11 @@ from dao.trade.position_dao import position_dao
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
+
+
+def monitor():
+    monitor_targets()
+    monitor_positions()
 
 
 def monitor_positions():
@@ -59,8 +62,6 @@ def monitor_targets():
             target_dao.update(target)
 
 
-
-
 def subscribe_positions():
     positions = position_dao.query_all()
     codes = [fill_market(p.code) for p in positions]
@@ -78,14 +79,13 @@ def subscribe_refresh():
     subscribe_positions()
     subscribe_targets()
 
+
 if __name__ == '__main__':
     subscribe_positions()
     subscribe_targets()
 
-
     scheduler = BlockingScheduler()
-    scheduler.add_job(monitor_positions, 'cron', day_of_week='0-4', hour='9-15', second='*/10')
-    scheduler.add_job(monitor_targets, 'cron', day_of_week='0-4', hour='9-15', second='*/10')
+    scheduler.add_job(monitor, 'cron', day_of_week='0-4', hour='9-15', second='*/10')
+
     scheduler.add_job(subscribe_refresh, 'cron', day_of_week='0-4', hour='23')
     scheduler.start()
-

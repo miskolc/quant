@@ -85,7 +85,6 @@ def validate_position_update(req, res, resource, params):
         raise InvalidRequestException(v.errors)
 
 
-
 class Collection(BaseHandler):
     @falcon.before(validate_position_create)
     def on_post(self, req, res):
@@ -120,12 +119,13 @@ class Collection(BaseHandler):
 
         self.on_success(res, None)
 
+
 class PositionHandler(BaseHandler):
     """
     Handle for endpoint: /position/{id}
     """
 
-    def on_get(self, req, resp,id):
+    def on_get(self, req, resp, id):
         pos_result = position_dao.query_by_id(id)
 
         if pos_result is None:
@@ -133,13 +133,12 @@ class PositionHandler(BaseHandler):
 
         self.on_success(resp=resp, data=pos_result.to_dict())
 
-
     def on_delete(self, req, resp, id):
         pos_result = position_dao.query_by_id(id)
         if pos_result is None:
-            raise ResourceNotFoundException("Can not found target.")
+            raise ResourceNotFoundException("Can not found position.")
 
-            position_dao.delete(pos_result)
+        position_dao.delete(pos_result)
 
         self.on_success(resp)
 
