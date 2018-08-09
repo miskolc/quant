@@ -65,6 +65,8 @@ export default {
     commit () {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
+        this.$emit('refresh')
+        this.close()
         !this.isEdit && this.addCustome()
         this.isEdit && this.updateCustome()
       }

@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="dataResult"
+      :items="dataSource"
       hide-actions
       :loading="loading"
       class="elevation-1"
@@ -30,17 +30,7 @@ export default {
   },
   props: {
     dataSource: Array,
-    loading: Boolean,
-    search: String
-  },
-  computed: {
-    dataResult () {
-      let dataSource = this.dataSource || []
-      if (!this.search) return dataSource
-      return dataSource.filter(item => {
-        return item.code.includes(this.search) || item.name.includes(this.search)
-      })
-    }
+    loading: Boolean
   }
 }
 </script>

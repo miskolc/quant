@@ -12,7 +12,7 @@
     </v-layout>
     <v-data-table v-model="selected"
       :headers="headers"
-      :items="dataResult"
+      :items="dataSource"
       :loading="loading"
       hide-actions
       select-all
@@ -64,7 +64,6 @@ export default {
   props: {
     dataSource: Array,
     loading: Boolean,
-    search: String,
     strategyCode: String
   },
   data () {
@@ -83,15 +82,6 @@ export default {
         { text: '操作', sortable: false }
       ],
       isEdit: false
-    }
-  },
-  computed: {
-    dataResult () {
-      let dataSource = this.dataSource || []
-      if (!this.search) return dataSource
-      return dataSource.filter(item => {
-        return item.code.includes(this.search) || item.name.includes(this.search)
-      })
     }
   },
   methods: {

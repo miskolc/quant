@@ -6,7 +6,7 @@
         <v-card-text>确认删除选中股票？</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="close" color="info">确定</v-btn>
+          <v-btn @click.native="commit" color="info">确定</v-btn>
           <v-btn @click.native="close">取消</v-btn>
         </v-card-actions>
       </v-card>
@@ -20,9 +20,19 @@ export default {
     id: [String, Number]
   },
   methods: {
+    async commit () {
+      try {
+        await this.$store.dispatch('position/positionDelete', this.id)
+        this.$message.success('delete successfully')
+        this.$emit('refresh')
+        this.close()
+      } catch (error) {
+        const {message, description} = error.error
+        this.$message.error(description || message)
+      }
+    },
     close () {
       this.$emit('update:dialog', false)
-      this.$emit('refresh')
     }
   }
 }

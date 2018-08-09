@@ -16,8 +16,10 @@
     </v-layout>
     </div>
     <v-expansion-panel v-model="panel" expand v-if="!isEmty">
-      <v-expansion-panel-content v-for="item in targetList" :key="item.strategy_code" v-if="!search || (search&&showPanel(item.target_list))">
-        <div slot="header">{{item.strategy_name}}</div>
+      <v-expansion-panel-content v-for="item in targetList" :key="item.strategy_code" v-if="item.target_list.length>0 || item.strategy_code=='custom'">
+        <div slot="header">{{item.strategy_name}}
+          <span class="panel-tag">{{item.strategy_code}}</span>
+        </div>
         <v-card dark>
           <v-card-text style="background-color:#212121" >
             <CustomeTable v-if="item.strategy_code=='custom'"
@@ -55,7 +57,8 @@ export default {
       customeDialog: false,
       search: '',
       loading: false,
-      timer: null
+      timer: null,
+      automaticTimer: null
     }
   },
   watch: {
@@ -70,27 +73,29 @@ export default {
   },
   computed: {
     targetList () {
-      const {list = []} = this.$store.getters['target/targetSearch']
+      let {list = []} = this.$store.getters['target/targetSearch']
+
+      let targetList = []
       list.forEach(target => {
-        target['target_list'].forEach(item => {
-          item.show = false
+        let newTarget = {...{}, ...target}
+        newTarget.target_list = []
+        target['target_list'].forEach((item, index) => {
           if (!this.search) {
-            item.show = true
+            newTarget.target_list.push(item)
           } else {
             if (item.code.includes(this.search) || item.name.includes(this.search)) {
-              item.show = true
+              newTarget.target_list.push(item)
             }
           }
         })
+        targetList.push(newTarget)
       })
-      return list
+      return targetList
     },
     isEmty () {
       let isEmty = true
       this.targetList.forEach(target => {
-        target['target_list'].forEach(item => {
-          if (item.show) isEmty = false
-        })
+        if (target['target_list'].length > 0) isEmty = false
       })
       return isEmty
     }
@@ -118,6 +123,12 @@ export default {
   },
   async mounted () {
     await this.targetSearch()
+    this.automaticTimer = setInterval(async () => {
+      await this.targetSearch()
+    }, 1000 * 10)
+  },
+  beforeDestroy () {
+    clearInterval(this.automaticTimer)
   }
 }
 </script>

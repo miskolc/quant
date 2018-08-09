@@ -28,7 +28,7 @@ export default {
           idlist.push(item.id)
         })
         await this.$store.dispatch('target/targetDelete', idlist)
-        this.$message.success('successfully')
+        this.$message.success('delete successfully')
         this.$emit('refresh')
         this.close()
       } catch (error) {
