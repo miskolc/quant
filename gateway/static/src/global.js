@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import 'normalize.css'
 import * as filters from '@utils/filters'
-// import 'element-ui/lib/theme-chalk/index.css'
-// import {Loading} from 'element-ui'
+import Message from '@components/Message'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import '@style/index.less'
@@ -14,6 +13,5 @@ for (let key in filters) {
 }
 
 Vue.use(Vuetify)
-// Vue.use(Loading.directive)
 
-// Vue.prototype.$loading = Loading.service
+Vue.prototype.$message = Message

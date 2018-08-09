@@ -2,66 +2,84 @@
   <v-layout wrap>
     <v-layout justify-space-between align-center>
       <v-flex xs12 md6>
-        <!-- <div class="search-input">
-          <v-text-field label="Search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
-        </div> -->
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn color="info" @click="dialog=true">add</v-btn>
-          <v-btn  @click="isDelete=!isDelete">delete</v-btn>
+          <v-btn color="info" @click="addHandle">新增</v-btn>
+          <v-btn  @click="isHandle=!isHandle">操作</v-btn>
         </div>
       </v-flex>
     </v-layout>
     <v-container fluid grid-list-md>
-      <v-data-iterator :items="items" :rows-per-page-items="rowsPerPageItems" :pagination.sync="pagination" content-tag="v-layout" row wrap>
+      <v-data-iterator loading hide-actions :items="dataSource"  content-tag="v-layout" row wrap>
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg3>
-          <v-card>
-            <v-badge overlap v-model="isDelete" class="card-badge" color="red">
-              <v-btn icon small slot="badge" @click="deleteHandle(props.item)">
-                <v-icon dark small>clear</v-icon>
-              </v-btn>
+          <v-card class="iterator-card">
+           <v-fade-transition>
+            <span class="iterator-card__handle" v-if="isHandle">
+                <v-btn icon small color="white" light @click="updateHandle(props.item)">
+                  <v-icon dark small >edit</v-icon>
+                </v-btn>
+                <v-btn icon small color="red" @click="deleteHandle(props.item)">
+                  <v-icon dark small>clear</v-icon>
+                </v-btn>
+              </span>
+            </v-fade-transition>
               <v-card-title>
-                <h4>{{ props.item.name }}</h4>
+                <h4>{{ props.item.code }}</h4>
               </v-card-title>
-            </v-badge>
             <v-divider></v-divider>
             <v-list dense>
               <v-list-tile>
-                <v-list-tile-content>Calories:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
+                <v-list-tile-content>名称:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.name || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Fat:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
+                <v-list-tile-content>当前价格:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price | toFixed }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Carbs:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
+                <v-list-tile-content>买入价:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price_in || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Protein:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
+                <v-list-tile-content>盈亏比例:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Sodium:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
+                <v-list-tile-content>盈亏金额:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.profit_value || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Calcium:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
+                <v-list-tile-content>股数:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.shares || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>Iron:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
+                <v-list-tile-content>策略码:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.strategy_code || '—' }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>总资产:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.worth || '—' }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>更新时间:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.update_time || '—' }}</v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content>创建时间:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.create_time || '—' }}</v-list-tile-content>
               </v-list-tile>
             </v-list>
           </v-card>
         </v-flex>
       </v-data-iterator>
     </v-container>
-    <AddDataIteratorDialog :dialog.sync="dialog" />
-    <DeleteDialog :dialog.sync="deleteDialog" :id.sync="id" @refresh="refresh"/>
+    <AddDataIteratorDialog :isEdit="isEdit"
+    :dialog.sync="dialog"
+    @refresh="refresh"
+    :detail="currentItem"
+    :strategyCode="strategyCode"/>
+    <DeleteDialog :dialog.sync="deleteDialog" :id.sync="currentItem.id" @refresh="refresh"/>
   </v-layout>
 </template>
 
@@ -76,12 +94,14 @@ export default {
   },
   props: {
     index: [Number, String],
-    panel: Array
+    panel: Array,
+    dataSource: Array,
+    strategyCode: String
   },
   watch: {
     panel: {
       handler (n, o) {
-        if (!this.panel[this.index]) this.isDelete = false
+        if (!this.panel[this.index]) this.isHandle = false
       },
       deep: true
     }
@@ -90,132 +110,29 @@ export default {
     return {
       dialog: false,
       deleteDialog: false,
-      id: '',
-      isDelete: false,
-      rowsPerPageItems: [4, 8, 12],
-      pagination: {
-        rowsPerPage: 4
-      },
-      items: [{
-        value: false,
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        sodium: 87,
-        calcium: '14%',
-        iron: '1%'
-      },
-      {
-        value: false,
-        name: 'Ice cream sandwich',
-        calories: 237,
-        fat: 9.0,
-        carbs: 37,
-        protein: 4.3,
-        sodium: 129,
-        calcium: '8%',
-        iron: '1%'
-      },
-      {
-        value: false,
-        name: 'Eclair',
-        calories: 262,
-        fat: 16.0,
-        carbs: 23,
-        protein: 6.0,
-        sodium: 337,
-        calcium: '6%',
-        iron: '7%'
-      },
-      {
-        value: false,
-        name: 'Cupcake',
-        calories: 305,
-        fat: 3.7,
-        carbs: 67,
-        protein: 4.3,
-        sodium: 413,
-        calcium: '3%',
-        iron: '8%'
-      },
-      {
-        value: false,
-        name: 'Gingerbread',
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        sodium: 327,
-        calcium: '7%',
-        iron: '16%'
-      },
-      {
-        value: false,
-        name: 'Jelly bean',
-        calories: 375,
-        fat: 0.0,
-        carbs: 94,
-        protein: 0.0,
-        sodium: 50,
-        calcium: '0%',
-        iron: '0%'
-      },
-      {
-        value: false,
-        name: 'Lollipop',
-        calories: 392,
-        fat: 0.2,
-        carbs: 98,
-        protein: 0,
-        sodium: 38,
-        calcium: '0%',
-        iron: '2%'
-      },
-      {
-        value: false,
-        name: 'Honeycomb',
-        calories: 408,
-        fat: 3.2,
-        carbs: 87,
-        protein: 6.5,
-        sodium: 562,
-        calcium: '0%',
-        iron: '45%'
-      },
-      {
-        value: false,
-        name: 'Donut',
-        calories: 452,
-        fat: 25.0,
-        carbs: 51,
-        protein: 4.9,
-        sodium: 326,
-        calcium: '2%',
-        iron: '22%'
-      },
-      {
-        value: false,
-        name: 'KitKat',
-        calories: 518,
-        fat: 26.0,
-        carbs: 65,
-        protein: 7,
-        sodium: 54,
-        calcium: '12%',
-        iron: '6%'
-      }
-      ]
+      currentId: '',
+      isHandle: false,
+      currentItem: {},
+      isEdit: false
     }
   },
   methods: {
+    addHandle () {
+      this.isEdit = false
+      this.dialog = true
+    },
+    updateHandle (item) {
+      this.isEdit = true
+      this.currentItem = item
+      this.dialog = true
+    },
     deleteHandle (item) {
-      this.id = item.name
+      this.currentItem = item
       this.deleteDialog = true
     },
-    refresh () {
-      this.isDelete = false
+    async refresh () {
+      this.isHandle = false
+      await this.$store.dispatch('position/positionSearch')
     }
   }
 }
@@ -223,5 +140,17 @@ export default {
 <style lang="less">
 .card-badge{
   width: 99%;
+}
+.iterator-card{
+  position: relative;
+  &__handle{
+    position: absolute;
+    top: -18px;
+    right: -4px;
+    .v-btn--icon.v-btn--small{
+      width: 24px;
+      height: 24px;
+    }
+  }
 }
 </style>

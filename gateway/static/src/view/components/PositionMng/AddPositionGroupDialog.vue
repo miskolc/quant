@@ -3,7 +3,7 @@
     <v-dialog v-model="dialog" persistent max-width="400px">
       <v-card>
         <v-card-title>
-          <span class="headline">position</span>
+          <span class="headline">position group</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
@@ -58,6 +58,8 @@ export default {
     commit () {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
+        this.$emit('refresh')
+        this.close()
         !this.isEdit && this.addCustome()
         this.isEdit && this.updateCustome()
       }

@@ -52,9 +52,9 @@
           </v-list-group>
           <v-list-tile  v-else :key="item.text" @click="skipPage(item.path)"
               :color="menuActive(item.path)">
-            <v-list-tile-action>
+            <!-- <v-list-tile-action>
               <v-icon :color="menuActive(item.path)">{{ item.icon }}</v-icon>
-            </v-list-tile-action>
+            </v-list-tile-action> -->
             <v-list-tile-content>
               <v-list-tile-title>
                 {{ item.text }}
@@ -127,3 +127,8 @@ export default {
   }
 }
 </script>
+<style lang="less">
+.v-navigation-drawer{
+  padding-top: 60px;
+}
+</style>
