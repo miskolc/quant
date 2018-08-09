@@ -85,7 +85,7 @@ if __name__ == '__main__':
     subscribe_targets()
 
     scheduler = BlockingScheduler()
-    scheduler.add_job(monitor, 'cron', day_of_week='0-4', hour='9-15', second='*/10')
+    scheduler.add_job(monitor, 'cron', day_of_week='0-4', hour='9-15', second='*/5')
 
     scheduler.add_job(subscribe_refresh, 'cron', day_of_week='0-4', hour='23')
     scheduler.start()

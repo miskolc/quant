@@ -167,10 +167,10 @@ class PositionSearchHandler(BaseHandler):
         group = {"list": []}
         for strategy in strategy_dbs:
             position_list = [t.to_dict() for t in position_dbs if t.strategy_code == strategy.code]
-            if len(position_list) > 0:
-                group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
-                              "position_list": position_list}
 
-                group["list"].append(group_item)
+            group_item = {"strategy_code": strategy.code, "strategy_name": strategy.name,
+                          "position_list": position_list}
+
+            group["list"].append(group_item)
 
         self.on_success(resp=resp, data=group)
