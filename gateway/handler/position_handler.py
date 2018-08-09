@@ -3,7 +3,10 @@ import os
 import sys
 
 import falcon
+from futuquant import RET_OK
 
+from dao.futu_opend import futu_opend
+from dao.k_data import fill_market
 from dao.trade.strategy_dao import strategy_dao
 from domain.position import Position
 from gateway.common.base_handler import BaseHandler
@@ -88,6 +91,15 @@ class Collection(BaseHandler):
             position.price_in = position_req["price_in"]
             position.shares = position_req["shares"]
 
+            position_est = position_dao.query_by_code(strategy_code=position.strategy_code, code=position.code)
+            if position_est is not None:
+                raise InvalidRequestException("stock has already exists")
+
+            futu_opend.subscribe(fill_market(position_req["code"]))
+            state, data = futu_opend.quote_ctx.get_stock_quote(code_list=[fill_market(position_req["code"])])
+            if state == RET_OK:
+                position.price = data['last_price'].values[0]
+
             position_dao.add(position)
         else:
             raise InvalidRequestException(position_req)
@@ -105,6 +117,12 @@ class Collection(BaseHandler):
         position.price_in = position_req["price_in"]
         position.shares = position_req["shares"]
         position.update_time = datetime.now()
+
+        futu_opend.subscribe(fill_market(position.code))
+        state, data = futu_opend.quote_ctx.get_stock_quote(code_list=[fill_market(position.code)])
+        if state == RET_OK:
+            position.price = data['last_price'].values[0]
+
         position_dao.update(position)
 
         self.on_success(res, None)
