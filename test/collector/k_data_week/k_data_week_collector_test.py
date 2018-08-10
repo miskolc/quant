@@ -1,6 +1,6 @@
 import unittest
 
-from collector.k_data_week.k_data_week_collector import collect_all, collect_all_weekly
+from collector.k_data_week.k_data_weekly_collector import collect_all, collect_all_weekly
 import futuquant as ft
 
 from common_tools.datetime_utils import get_current_date

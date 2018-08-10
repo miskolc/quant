@@ -1,6 +1,10 @@
 # -*- coding: UTF-8 -*-
 # greg.chen - 2018/5/19
-from common_tools.datetime_utils import get_current_date
+import datetime
+
+from sqlalchemy import text
+
+from common_tools.datetime_utils import get_current_date, DATE_FORMAT
 from common_tools.decorators import exc_time
 from dao import dataSource
 import pandas as pd
@@ -45,6 +49,17 @@ class K_Data_Weekly_Dao:
                            , con=dataSource.mysql_quant_conn)
 
         return data
+
+
+    @exc_time
+    def delete_current_week_k_data(self):
+        today = datetime.date.today()
+        monday = today + datetime.timedelta(days=-today.weekday(), weeks=0)
+        monday = monday.strftime(DATE_FORMAT)
+
+        sql = text('delete from k_data_weekly where time_key=:time_key')
+        dataSource.mysql_quant_conn.execute(sql, time_key=monday)
+
 
     '''
     @exc_time

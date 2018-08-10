@@ -4,6 +4,8 @@
 import os
 import sys
 
+from collector.k_data_week import k_data_weekly_collector
+
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
@@ -28,6 +30,9 @@ if __name__ == '__main__':
     scheduler.add_job(k_data_collector.collect_all_daily, 'cron', day_of_week='0-4', hour=16, minute=30,
                       args=[futu_quote_ctx])
     scheduler.add_job(k_data_collector.collect_all_index_daily, 'cron', day_of_week='0-4', hour=16, minute=30,
+                      args=[futu_quote_ctx])
+
+    scheduler.add_job(k_data_weekly_collector.collect_all_weekly, 'cron', day_of_week='0-4', hour=16, minute=35,
                       args=[futu_quote_ctx])
 
     scheduler.start()

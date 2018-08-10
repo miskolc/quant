@@ -1,6 +1,8 @@
 import os
 import sys
 
+from futuquant import StockQuoteHandlerBase, RET_OK, RET_ERROR
+
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 ROOT_DIR = os.path.dirname(CURRENT_DIR)
 sys.path.append(ROOT_DIR)
@@ -80,12 +82,31 @@ def subscribe_refresh():
     subscribe_targets()
 
 
+class StockQuoteTest(StockQuoteHandlerBase):
+    def on_recv_rsp(self, rsp_str):
+        ret_code, data = super(StockQuoteTest, self).on_recv_rsp(rsp_str)
+        if ret_code != RET_OK:
+            print("StockQuoteTest: error, msg: %s" % data)
+            return RET_ERROR, data
+
+        print("StockQuoteTest ", data)  # StockQuoteTest自己的处理逻辑
+
+        return RET_OK, data
+
+
 if __name__ == '__main__':
     subscribe_positions()
     subscribe_targets()
+
+    handler = StockQuoteTest()
+    futu_opend.quote_ctx.set_handler(handler)
+
+    '''
+
 
     scheduler = BlockingScheduler()
     scheduler.add_job(monitor, 'cron', day_of_week='0-4', hour='9-15', second='*/5')
 
     scheduler.add_job(subscribe_refresh, 'cron', day_of_week='0-4', hour='23')
     scheduler.start()
+    '''

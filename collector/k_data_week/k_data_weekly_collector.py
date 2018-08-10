@@ -7,6 +7,7 @@ from common_tools.datetime_utils import get_current_date, get_next_date
 from dao.basic.trade_date_dao import trade_date_dao
 from dao.data_source import dataSource
 from dao.k_data import fill_market
+from dao.k_data_weekly.k_data_weekly_dao import k_data_weekly_dao
 from log.quant_logging import logger
 from dao.basic.stock_industry_dao import stock_industry_dao
 
@@ -48,6 +49,7 @@ def collect_all(futu_quote_ctx):
 # 抓取沪深每天K_data_daily数据
 @exc_time
 def collect_all_weekly(futu_quote_ctx):
+    k_data_weekly_dao.delete_current_week_k_data()
 
     df_industry = stock_industry_dao.get_stock_code_list()
     for index,row in df_industry.iterrows():
