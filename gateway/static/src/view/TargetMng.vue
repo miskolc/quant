@@ -125,7 +125,7 @@ export default {
     await this.targetSearch()
     this.automaticTimer = setInterval(async () => {
       await this.targetSearch()
-    }, 1000 * 10)
+    }, 1000 * 5)
   },
   beforeDestroy () {
     clearInterval(this.automaticTimer)

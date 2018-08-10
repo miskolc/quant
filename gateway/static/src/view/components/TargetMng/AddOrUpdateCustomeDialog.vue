@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import {errormsg} from '@utils/filters.js'
 export default {
   data () {
     return {
@@ -138,8 +139,7 @@ export default {
         this.$message.success('create successfully')
         this.close()
       } catch (error) {
-        const {message, description} = error.error
-        this.$message.error(description || message)
+        this.$message.error(errormsg(error.error))
       }
     },
     async updateCustome (params) {
@@ -151,8 +151,7 @@ export default {
         this.$emit('refresh')
         this.close()
       } catch (error) {
-        const {message, description} = error.error
-        this.$message.error(description || message)
+        this.$message.error(errormsg(error.error))
       }
     },
 

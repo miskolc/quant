@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import {errormsg} from '@utils/filters.js'
 export default {
   data () {
     return {
@@ -138,7 +139,6 @@ export default {
     },
     commit () {
       this.codeCheck()
-      console.log(this.$refs.form.validate())
       if (this.$refs.form.validate()) {
         if (this.codeError) return false
         this.$emit('refresh')
@@ -164,13 +164,16 @@ export default {
     async updatePosition (params) {
       const {id} = this.detail
       try {
-        await this.$store.dispatch('position/positionUpdate', {id, ...params})
+        await this.$store.dispatch('position/positionUpdate', {
+          id,
+          price_in: params.price_in,
+          shares: params.shares
+        })
         this.$message.success('update successfully')
         this.$emit('refresh')
         this.close()
       } catch (error) {
-        const {message, description} = error.error
-        this.$message.error(description || message)
+        this.$message.error(errormsg(error.error))
       }
     },
     close () {

@@ -74,7 +74,7 @@
         </v-flex>
       </v-data-iterator>
     </v-container>
-    <AddDataIteratorDialog
+    <AddOrUpdateDataIteratorDialog
       :isEdit="isEdit"
       :dialog.sync="dialog"
       @refresh="refresh"
@@ -85,12 +85,12 @@
 </template>
 
 <script>
-import AddDataIteratorDialog from './AddDataIteratorDialog'
+import AddOrUpdateDataIteratorDialog from './AddOrUpdateDataIteratorDialog'
 import DeleteDialog from './DeleteDialog'
 
 export default {
   components: {
-    AddDataIteratorDialog,
+    AddOrUpdateDataIteratorDialog,
     DeleteDialog
   },
   props: {

@@ -113,7 +113,7 @@ export default {
     await this.positionSearch()
     this.automaticTimer = setInterval(async () => {
       await this.positionSearch()
-    }, 1000 * 10)
+    }, 1000 * 5)
   },
   beforeDestroy () {
     clearInterval(this.automaticTimer)
