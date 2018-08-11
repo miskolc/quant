@@ -8,7 +8,7 @@
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-              label="代码"
+              label="code"
               :mask="mask"
               v-model="form.code"
               :error-messages="codeError"
@@ -17,17 +17,17 @@
               @blur="codeCheck"
               required/>
             <v-text-field
-              label="名称"
+              label="name"
               v-model="form.name"
               disabled
               v-if="form.name"/>
             <v-text-field
-              label="买入价"
+              label="price in"
               v-model="form.price_in"
               :rules="rules.price_in"
               required/>
               <v-text-field
-              label="股票数量"
+              label="shares"
               v-model="form.shares"
               :rules="rules.shares"
               required/>
@@ -35,8 +35,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="commit" color="info">{{isEdit?'编辑':'新增'}}</v-btn>
-          <v-btn @click.native="close">取消</v-btn>
+          <v-btn @click.native="commit" color="info">{{isEdit?'edit':'new'}}</v-btn>
+          <v-btn @click.native="close">cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -60,9 +60,9 @@ export default {
         price_in: [
           v => {
             const reg = /^[0-9]+([.]{1}[0-9]{1,3})?$/
-            if (!v) return '买入价是必填字段'
+            if (!v) return 'price in is required'
             if (!reg.test(v)) {
-              return '请输入正整数或者两位小数'
+              return 'please enter a positive integer or two decimal places'
             }
             return true
           }
@@ -70,9 +70,9 @@ export default {
         shares: [
           v => {
             const reg = /^[1-9]\d*00$/
-            if (!v) return '股票数量是必填字段'
+            if (!v) return 'shares is required'
             if (!reg.test(v)) {
-              return '请输入整百数值'
+              return 'please enter a value of 100'
             }
             return true
           }
@@ -120,13 +120,13 @@ export default {
     async codeCheck () {
       const {code} = this.form
       if (!code) {
-        this.codeError = '代码是必填字段'
+        this.codeError = 'code is required'
         this.form.name = ''
         return
       }
       if (code.length < 6) {
         this.form.name = ''
-        this.codeError = '代码必须为6位数字'
+        this.codeError = 'the code must be 6 digits'
         return
       }
       try {
@@ -134,7 +134,7 @@ export default {
         this.form.name = data.name || ''
         this.codeError = ''
       } catch (error) {
-        this.codeError = '代码不存在'
+        this.codeError = 'code does not exist'
       }
     },
     commit () {

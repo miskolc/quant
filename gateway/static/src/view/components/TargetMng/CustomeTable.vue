@@ -5,8 +5,8 @@
         <div class="handler-btn" :style="{
           'padding-bottom':'10px'
         }">
-          <v-btn @click="addCustome" color="info">新增</v-btn>
-          <v-btn @click="openDelete(true)" :disabled="!selected.length">删除</v-btn>
+          <v-btn @click="addCustome" color="info">new</v-btn>
+          <v-btn @click="openDelete(true)" :disabled="!selected.length">delete</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -75,11 +75,11 @@ export default {
       currentItem: {},
       selected: [],
       headers: [
-        { text: '代码', value: 'code' },
-        { text: '名称', value: 'name', sortable: false },
-        { text: '当前价格', value: 'price', sortable: false },
-        { text: '买入点', value: 'pointcut', sortable: false },
-        { text: '操作', sortable: false }
+        { text: 'code', value: 'code' },
+        { text: 'name', value: 'name', sortable: false },
+        { text: 'price', value: 'price', sortable: false },
+        { text: 'pointcut', value: 'pointcut', sortable: false },
+        { text: 'handler', sortable: false }
       ],
       isEdit: false
     }

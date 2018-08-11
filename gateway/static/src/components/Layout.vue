@@ -65,7 +65,6 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar dark fixed app>
-      <v-toolbar-title>Stock</v-toolbar-title>
     </v-toolbar>
     <v-content>
       <v-container fluid fill-height>
@@ -76,9 +75,6 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-footer app>
-      <span class="white--text">&copy; 2018</span>
-    </v-footer>
   </v-app>
 </template>
 
