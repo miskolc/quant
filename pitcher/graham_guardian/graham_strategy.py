@@ -107,12 +107,12 @@ if __name__ == '__main__':
         graham_defender.handle_data()
 
         # context.current_date = '2018-01-22'
-        # graham_defender.before_handle_data()
-        # graham_defender.handle_data()
+        # graham_guardian.before_handle_data()
+        # graham_guardian.handle_data()
         #context_json = json.dumps(context, default=obj_dict)
 
         #logger.debug("context:" + context_json)
-        # graham_defender.futu_quote_ctx.close()
+        # graham_guardian.futu_quote_ctx.close()
     finally:
-        # graham_defender.futu_quote_ctx.close()
+        # graham_guardian.futu_quote_ctx.close()
         pass

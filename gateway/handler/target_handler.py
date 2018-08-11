@@ -134,6 +134,7 @@ class TargetSearchHandler(BaseHandler):
         self.on_success(resp=resp, data=group)
 
 
+
 class Collection(BaseHandler):
     @falcon.before(validate_target_create)
     def on_post(self, req, res):
