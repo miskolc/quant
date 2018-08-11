@@ -5,8 +5,8 @@
       </v-flex>
       <v-flex xs12 md6>
         <div class="handler-btn">
-          <v-btn color="info" @click="addHandle">新增</v-btn>
-          <v-btn  @click="isHandle=!isHandle">操作</v-btn>
+          <v-btn color="info" @click="addHandle">new</v-btn>
+          <v-btn  @click="isHandle=!isHandle">handler</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -30,43 +30,54 @@
             <v-divider></v-divider>
             <v-list dense>
               <v-list-tile>
-                <v-list-tile-content>名称:</v-list-tile-content>
+                <v-list-tile-content>name:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.name || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>当前价格:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.price | toFixed }}</v-list-tile-content>
+                <v-list-tile-content>price:</v-list-tile-content>
+                <v-list-tile-content class="align-end">{{ props.item.price || 0 }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>买入价:</v-list-tile-content>
+                <v-list-tile-content>price in:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.price_in || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>盈亏比例:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.profit || '—' }}</v-list-tile-content>
+                <v-list-tile-content>profit:</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  <span :class="{
+                  'make-text':props.item.profit>0,
+                  'kui-text':props.item.profit<0
+                }">{{ props.item.profit || '—' }}
+                </span>
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>盈亏金额:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{ props.item.profit_value || '—' }}</v-list-tile-content>
-              </v-list-tile>
+                <v-list-tile-content>profit value:</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  <span :class="{
+                  'make-text':props.item.profit_value>0,
+                  'kui-text':props.item.profit_value<0
+                }">{{ props.item.profit_value || '—' }}</span>
+                  </v-list-tile-content>
+                </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>股数:</v-list-tile-content>
+                <v-list-tile-content>shares:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.shares || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>策略码:</v-list-tile-content>
+                <v-list-tile-content>strategy code:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.strategy_code || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>总资产:</v-list-tile-content>
+                <v-list-tile-content>worth:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.worth || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>更新时间:</v-list-tile-content>
+                <v-list-tile-content>update_time:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.update_time || '—' }}</v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
-                <v-list-tile-content>创建时间:</v-list-tile-content>
+                <v-list-tile-content>create_time:</v-list-tile-content>
                 <v-list-tile-content class="align-end">{{ props.item.create_time || '—' }}</v-list-tile-content>
               </v-list-tile>
             </v-list>

@@ -3,12 +3,12 @@
     <v-dialog v-model="dialog" persistent max-width="400px">
       <v-card>
         <v-card-title>
-          <span class="headline">{{isEdit?'编辑':'新增'}}</span>
+          <span class="headline">{{isEdit?'Edit':'New'}}</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid" lazy-validation>
             <v-text-field
-              label="代码"
+              label="code"
               :mask="mask"
               v-model="form.code"
               :error-messages="codeError"
@@ -17,11 +17,11 @@
               @blur="codeCheck"
               required/>
             <v-text-field
-              label="名称"
+              label="name"
               v-model="form.name"
               disabled/>
             <v-text-field
-              label="买入点"
+              label="pointcut"
               v-model="form.pointcut"
               :rules="rules.pointcut"
               required/>
@@ -29,8 +29,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click.native="commit" color="info">{{isEdit?'编辑':'新增'}}</v-btn>
-          <v-btn @click.native="close">取消</v-btn>
+          <v-btn @click.native="commit" color="info">commit</v-btn>
+          <v-btn @click.native="close">cancel</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -55,7 +55,7 @@ export default {
             const reg = /^[0-9]+([.]{1}[0-9]{1,2})?$/
             if (!v) return true
             if (!reg.test(v)) {
-              return '请输入正整数或者两位小数'
+              return 'please enter a positive integer or two decimal places'
             }
             return true
           }
@@ -104,12 +104,12 @@ export default {
     async codeCheck () {
       const {code} = this.form
       if (!code) {
-        this.codeError = '代码是必填字段'
+        this.codeError = 'code is required'
         this.form.name = ''
         return
       }
       if (code.length < 6) {
-        this.codeError = '代码必须为6位数字'
+        this.codeError = 'the code must be 6 digits'
         this.form.name = ''
         return
       }
@@ -118,7 +118,7 @@ export default {
         this.form.name = data.name || ''
         this.codeError = ''
       } catch (error) {
-        this.codeError = '代码不存在'
+        this.codeError = 'code does not exist'
       }
     },
     async commit () {

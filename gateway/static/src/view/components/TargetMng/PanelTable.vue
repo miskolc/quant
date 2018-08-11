@@ -21,10 +21,10 @@ export default {
   data () {
     return {
       headers: [
-        { text: '代码', value: 'code' },
-        { text: '名称', value: 'name', sortable: false },
-        { text: '当前价格', value: 'price', sortable: false },
-        { text: '买入点', value: 'pointcut', sortable: false }
+        { text: 'code', value: 'code' },
+        { text: 'name', value: 'name', sortable: false },
+        { text: 'price', value: 'price', sortable: false },
+        { text: 'pointcut', value: 'pointcut', sortable: false }
       ]
     }
   },

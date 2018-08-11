@@ -4,7 +4,7 @@
       <v-layout justify-space-between align-center>
       <v-flex xs12 md6>
         <div class="search-input">
-          <v-text-field label="代码、名称" v-model="search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
+          <v-text-field label="code、name" v-model="search" prepend-icon="search" clearable clear-icon="cancel" single-line/>
         </div>
       </v-flex>
       <v-flex xs12 md6>
